@@ -1,0 +1,44 @@
+{
+  "name": "mini-board",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack-dev-server --host 0.0.0.0 --config \"./webpack.config.js\" --watch --progress --hot --inline",
+    "build": "rimraf ./dist && webpack --config \"./webpack.config.js\"",
+    "sync": "rimraf ~/AndroidStudioProjects/htest/app/src/main/assets/drawing-pad/* && cp -r ./dist/* ~/AndroidStudioProjects/htest/app/src/main/assets/drawing-pad/"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "awesome-typescript-loader": "^5.2.1",
+    "babel-loader": "^8.1.0",
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "6.1.1",
+    "cross-env": "^7.0.2",
+    "fork-ts-checker-webpack-plugin": "^4.1.2",
+    "friendly-errors-webpack-plugin": "^1.7.0",
+    "happypack": "^5.0.1",
+    "html-webpack-plugin": "^3.2.0",
+    "raw-loader": "^4.0.2",
+    "terser-webpack-plugin": "^2.3.5",
+    "ts-loader": "^6.2.1",
+    "tsconfig-paths-webpack-plugin": "^3.2.0",
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.1",
+    "webpack-bundle-analyzer": "^3.8.0",
+    "webpack-cli": "^3.3.3",
+    "webpack-dev-server": "^3.10.3",
+    "webpack-merge": "^4.2.2",
+    "webpack-obfuscator": "^0.27.2",
+    "zip-webpack-plugin": "^3.0.0"
+  },
+  "dependencies": {
+    "dat.gui": "^0.7.7",
+    "pixi-text-input": "^1.0.6",
+    "pixi.js": "^6.2.0"
+  }
+}
