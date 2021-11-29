@@ -23,9 +23,9 @@ interface IPadState {
 
 const defaultState: IPadState = {
 	isStartPlay: false,
-	histroyLength: 20,
-	histroyIndex: 0,
-	brushName: BrushName.PENCIL,
+	histroyLength: 20,	//历史栈长度
+	histroyIndex: 0,	//当前历史指针
+	brushName: BrushName.PENCIL,	//默认画笔类型
 };
 
 const PadRecordDataStorageKey = "__drawing_board_record_data";

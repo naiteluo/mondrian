@@ -25,8 +25,9 @@ export const enum BrushType {
 
   const defaultBrushOptions: ExtendedLineStyle = {
     color: 0x000000,
-    width: 2,
+    width: 10,
     alpha: 1,
+    native: false,
     __brushType: BrushType.Normal,
     cap: LINE_CAP.ROUND,
     join: LINE_JOIN.ROUND,
@@ -59,20 +60,19 @@ export class BaseBrush {
         if(this.isDrawing) return;
         this.isDrawing = true;
 
-        //设置画笔类型和样式
-        this.g.lineStyle(this.lineStyleOption);
-
         switch(this.lineStyleOption.__brushType) {
             case BrushType.Eraser:
                 this.g.blendMode = BLEND_MODES.ERASE;
                 this.g.lineStyle({
+                    ...this.lineStyleOption,
                     color: 0x000000,
                     alpha: 1,
                 });
-                console.log('设置橡皮擦');
+                // console.log('设置橡皮擦');
                 break;
             case BrushType.Normal:
-                this.g.blendMode = BLEND_MODES.NORMAL;
+                this.g.blendMode = BLEND_MODES.NONE;
+                this.g.lineStyle(this.lineStyleOption);
                 break;
             default:
                 break;
@@ -87,9 +87,12 @@ export class BaseBrush {
         if(!this.isDrawing) return;
 
         this.isDrawing = false;
-        this.g.cacheAsBitmapResolution = 1;
-        this.g.cacheAsBitmapMultisample = 4;       //4次采样
-        this.g.cacheAsBitmap = true;
+        //如果不是橡皮擦模式 则换成成bitmap
+        if(this.lineStyleOption.__brushType !== BrushType.Eraser) {
+            this.g.cacheAsBitmapResolution = 1;
+            this.g.cacheAsBitmapMultisample = 4;       //4次采样
+            this.g.cacheAsBitmap = true;
+        }
         this.lineStyleOption = null;
         this.startPos = null;
         this.currPos = null;

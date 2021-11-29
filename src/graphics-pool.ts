@@ -24,6 +24,9 @@ export class GraphicsPool {
         return g;
     }
 
+    /**
+     * 回收visible标记为false的graphics
+     */
     public recover() {
         let i: number = 0;
         while(i < this._pool.length) {
