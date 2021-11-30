@@ -89,4 +89,5 @@ export interface SignalData {
     type: SignalType,
     data: SignalDragData | SignalStatusData | SignalActionData,
     timestamp: number,
+    delay?: number,
 }

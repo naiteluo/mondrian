@@ -79,13 +79,14 @@ class Pad {
 			setTimeout(() => this.initialGUI(), 1000);
 			//信令发送端
 			this.signalService = LocalStorageService.getInstance();
+			this.signalService.localListener = this._signalRouterAction;
+			this.signalService.start();
+		} else {
+			//信令接收端
+			this.signalClient = new LocalStorageClient();
+			this.signalClient.addListener(this._signalRouterAction);
+			this.signalClient.start();
 		}
-
-		//信令接收端
-		this.signalClient = new LocalStorageClient();
-		this.signalClient.addListener(this._signalRouterAction);
-		this.signalClient.start();
-
 		// start loop
 		this.start();
 
@@ -130,6 +131,7 @@ class Pad {
 			backgroundAlpha: 0,
 			autoDensity: true,
 			resolution: 1,
+			autoStart: true,
 		});
 		//Add the canvas that Pixi automatically created for you to the HTML document
 		this.$canvas = this.app.view;
@@ -213,7 +215,8 @@ class Pad {
 
 	private stop() {
 		this.stopTicker();
-		this.signalClient.stop();
+		this.signalClient && this.signalClient.destroy();
+		this.signalService && this.signalService.destroy();
 	}
 
 	private startTicker() {
