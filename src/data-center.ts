@@ -1,12 +1,6 @@
-import { IPoint, IPointData } from "@pixi/math";
+import { ExtendedLineStyle } from './brush';
 
 export class DataCenter {
-    private _queue: SignalData[] = [];
-    private _fn: Function;
-    private static _instance: DataCenter;
-    constructor(consumeCallback: Function) {
-        this._fn = consumeCallback;
-    }
 
     public static createDragSignalData(dragType: DragType, x: number, y: number): SignalData {
         const data: SignalDragData = {
@@ -34,35 +28,45 @@ export class DataCenter {
         return data;
     }  
 
-    public static getInstance(consumeCallback: Function): DataCenter {
-        if(this._instance instanceof DataCenter) {
-            return this._instance;
-        } else {
-            this._instance = new DataCenter(consumeCallback);
-            return this._instance;
-        }
+    public static createBrushTypeData(option: ExtendedLineStyle): SignalData {
+        const statusData: SignalStatusData = {
+            brushOption: option,
+        };
+        const data: SignalData = {
+            type: SignalType.STATUS,
+            timestamp: new Date().getTime(),
+            data: statusData
+        };
+        return data;
     }
 
-    public pushData(...args: SignalData[]) {
-        this._queue.push(...args);
-    }
-
-    public consume() {
-        while(this._queue.length > 0) {
-            this._fn(this._queue.shift());
-        }
+    public static createActionData(action: PadAction): SignalData {
+        const actionData: SignalActionData = {
+            action: action
+        };
+        const data: SignalData = {
+            type: SignalType.ACTION,
+            timestamp: new Date().getTime(),
+            data: actionData,
+        };
+        return data;
     }
 }
 
 export enum SignalType {
     DRAG_EVENT,
     STATUS,
+    ACTION,
 }
 
 export enum DragType {
     DRAG_START,
     DRAG,
     DRAG_END,
+}
+
+export enum PadAction {
+    CLEAR_ALL,
 }
 
 export interface SignalDragData {
@@ -72,13 +76,17 @@ export interface SignalDragData {
 }
 
 export interface SignalStatusData {
-    isStartPlay?: Boolean,
     histroyLength?: number,
     histroyBackIndex?: number,
+    brushOption?: ExtendedLineStyle,
+}
+
+export interface SignalActionData {
+    action: PadAction
 }
 
 export interface SignalData {
     type: SignalType,
-    data: SignalDragData | SignalStatusData,
+    data: SignalDragData | SignalStatusData | SignalActionData,
     timestamp: number,
 }

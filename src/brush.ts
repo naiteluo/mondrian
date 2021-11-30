@@ -14,6 +14,7 @@ import { Utils } from './utils';
 
 export interface ExtendedLineStyle extends ILineStyleOptions {
     __brushType?: BrushType;
+    __brushName?: BrushName;
   }
 
 export const enum BrushType {
@@ -29,6 +30,7 @@ export const enum BrushType {
     alpha: 1,
     native: false,
     __brushType: BrushType.Normal,
+    __brushName: BrushName.PENCIL,
     cap: LINE_CAP.ROUND,
     join: LINE_JOIN.ROUND,
   };
@@ -114,7 +116,6 @@ export class BrushPencil extends BaseBrush {
 
     public drawMove(p: IPointData) {
         super.drawMove(p);
-        const o: IPointData = this.startPos;
         const l: number = this.pointCache.length;
         this.pointCache.push(Utils.midPos(this.pointCache[l - 1], p), p);
         const m: IPointData = this.pointCache[this.pointCache.length - 4],
@@ -194,9 +195,9 @@ export class BrushManager {
         return this._instance;
     }
 
-    public createBursh(g: Graphics, brushName: BrushName): BaseBrush {
+    public createBursh(g: Graphics): BaseBrush {
         let brush: BaseBrush;
-        switch(brushName) {
+        switch(this._brushLineStyle.__brushName) {
             case BrushName.CIRCLE:
                 brush = new BrushCircle(g, this._brushLineStyle);
                 break;

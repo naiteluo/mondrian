@@ -10,9 +10,11 @@ import {
 import { drawDashLine } from "./dash-line";
 import { sharedAlphaFilter } from "./filters";
 import * as dat from "dat.gui";
-import { BaseBrush, BrushManager, BrushType, BrushPencil, BrushCircle, BrushRectangle, BrushName } from './brush';
-import { DataCenter, SignalType, SignalData, DragType, SignalDragData, SignalStatusData } from './data-center';
+import { BaseBrush, BrushManager, BrushType, BrushPencil, BrushCircle, BrushRectangle, BrushName, ExtendedLineStyle } from './brush';
+import { DataCenter, SignalType, SignalData, DragType, SignalDragData, SignalStatusData, PadAction, SignalActionData } from './data-center';
 import { GraphicsPool } from './graphics-pool';
+import { LocalStorageService, LocalStorageClient } from './signal-storage';
+import { Utils } from './utils';
 
 interface IPadState {
 	isStartPlay: boolean;
@@ -30,6 +32,11 @@ const defaultState: IPadState = {
 
 const PadRecordDataStorageKey = "__drawing_board_record_data";
 
+enum PadMode {
+	SERVICE,	//信令发送者
+	RECIVER,	//信令接收者
+}
+
 class Pad {
 	// static BASE_WIDTH = 1280;
 	// static BASE_HEIGHT = 720;
@@ -45,25 +52,43 @@ class Pad {
 	private brush: BaseBrush;
 	private gpool: GraphicsPool;
 	private state: IPadState = { ...defaultState };
-	private dataCenter: DataCenter;
 	private isDrawing: Boolean;
 	private tempGraphicsList: Graphics[];
+	private mode: PadMode;
+	private signalService: LocalStorageService;
+	private signalClient: LocalStorageClient;
 
-	constructor() {
+	constructor(mode: PadMode = PadMode.SERVICE) {
+
+		this.mode = mode;
+
+		const isService: Boolean = this.mode === PadMode.SERVICE;
+
 		PIXI.utils.sayHello("WebGL");
 		// initial web page
 		this.initialPage();
 		// initial app
 		this.initialPixiApp();
-		// bind events
-		this.initialDrawEvents();
-
+		//矫正尺寸
 		this.transformCanvaAndPage();
+
+		if(isService) {
+			// bind events
+			this.initialDrawEvents();
+			//GUI
+			setTimeout(() => this.initialGUI(), 1000);
+			//信令发送端
+			this.signalService = LocalStorageService.getInstance();
+		}
+
+		//信令接收端
+		this.signalClient = new LocalStorageClient();
+		this.signalClient.addListener(this._signalRouterAction);
+		this.signalClient.start();
 
 		// start loop
 		this.start();
 
-		this.initialGUI();
 	}
 
 	private initialPage() {
@@ -90,7 +115,7 @@ class Pad {
 	}
 
 	private transformCanvaAndPage() {
-		const wh = this._getScreenWH();
+		const wh = Utils.getScreenWH();
 		this.$main.style.width = `${wh.w}px`;
 		this.$main.style.height = `${wh.h}px`;
 		this.$canvas.style.width = `${wh.w}px`;
@@ -127,7 +152,6 @@ class Pad {
 
 		this.brushManager = BrushManager.getInstance();
 		this.gpool = GraphicsPool.getInstance(this.state.histroyLength);
-		this.dataCenter = DataCenter.getInstance(this._run);
 		this.tempGraphicsList = [];
 	}
 
@@ -145,7 +169,7 @@ class Pad {
 
 		brushStyleFolder.open();
 		brushStyleFolder
-			.add(this.brushManager.lineStyle, "__brushType", [
+			.add(this, "brushType", [
 				BrushType.Normal,
 				BrushType.Eraser,
 				// BrushType.Highlighter,
@@ -153,21 +177,21 @@ class Pad {
 			.name("BrushType")
 			.onChange(this._onConfigChange);
 		brushStyleFolder
-			.add(this.state, "brushName", [
+			.add(this, "brushName", [
 				BrushName.PENCIL,
 				BrushName.CIRCLE,
 				BrushName.RECTANGLE,
 			])
-			.name("brushName")
+			.name("BrushName")
 			.onChange(this._onConfigChange);
 		brushStyleFolder
-			.add(this.brushManager.lineStyle, "width", 1, 50)
+			.add(this, "brushWidth", 1, 50)
 			.onChange(this._onConfigChange);
 		brushStyleFolder
-			.add(this.brushManager.lineStyle, "alpha", 0, 1)
+			.add(this, "brushAlpha", 0, 1)
 			.onChange(this._onConfigChange);
 		brushStyleFolder
-			.addColor(this.brushManager.lineStyle, "color")
+			.addColor(this, "brushColor")
 			.onChange(this._onConfigChange);
 
 		const controlsFolder = this.gui.addFolder("Controls");
@@ -175,6 +199,7 @@ class Pad {
 		controlsFolder.open();
 		controlsFolder.add(this, "undo").name("undo");
 		controlsFolder.add(this, "redo").name("redo");
+		controlsFolder.add(this, "clearAll").name("clear all");
 		// controlsFolder.add(this, "onRecord").name("Record Data");
 		// controlsFolder.add(this, "onTestNativeCall").name("Draw Loop");
 		// controlsFolder.add(this, "onTestNativeCallOnce").name("Draw Once");
@@ -188,6 +213,7 @@ class Pad {
 
 	private stop() {
 		this.stopTicker();
+		this.signalClient.stop();
 	}
 
 	private startTicker() {
@@ -202,43 +228,114 @@ class Pad {
 
 	private _tickerHandler = () => {
 		this._mergeStaticLayer();
-		this.dataCenter.consume();
 	}
 
 	private initialDrawEvents() {
-		this.app.renderer.plugins.interaction.on("pointerdown", this.onDrawStart);
-		this.app.renderer.plugins.interaction.on("pointermove", this.onDrawMove);
-		this.app.renderer.plugins.interaction.on("pointerup", this.onDrawEnd);
+		this.app.renderer.plugins.interaction.on("pointerdown", this.onDragStart);
+		this.app.renderer.plugins.interaction.on("pointermove", this.onDragMove);
+		this.app.renderer.plugins.interaction.on("pointerup", this.onDragEnd);
 	}
 
-	private onDrawStart = (event: InteractionEvent) => {
+	private onDragStart = (event: InteractionEvent) => {
 		
 		this.isDrawing = true;
 		let pos = event.data.getLocalPosition(this.dynamicLayer);
-		this.dataCenter.pushData(
+		this.signalService.send(
 			DataCenter.createDragSignalData(DragType.DRAG_START, pos.x, pos.y)
 		);
 	};
 
-	private onDrawEnd = (event: InteractionEvent) => {
+	private onDragEnd = (event: InteractionEvent) => {
 		this.isDrawing = false;
 		let pos = event.data.getLocalPosition(this.dynamicLayer);
-		this.dataCenter.pushData(
+		this.signalService.send(
 			DataCenter.createDragSignalData(DragType.DRAG_END, pos.x, pos.y)
 		);
 	};
 
-	private onDrawMove = (event: InteractionEvent) => {
+	private onDragMove = (event: InteractionEvent) => {
 		if (!this.isDrawing) return;
 		let pos = event.data.getLocalPosition(this.dynamicLayer);
-		this.dataCenter.pushData(
+		this.signalService.send(
 			DataCenter.createDragSignalData(DragType.DRAG, pos.x, pos.y)
 		);
+	}
+
+	private set brushType(brushType: BrushType) {
+		this.signalService.send(
+			DataCenter.createBrushTypeData({ 
+				__brushType: brushType,
+			 })
+		);
+	}
+
+	private get brushType(): BrushType {
+		return this.brushManager.lineStyle.__brushType;
+	}
+
+	private set brushName(brushName: BrushName) {
+		this.signalService.send(
+			DataCenter.createBrushTypeData({
+				__brushName: brushName,
+			})
+		);
+	}
+
+	private get brushName(): BrushName {
+		return this.brushManager.lineStyle.__brushName;
+	}
+
+	private set brushWidth(width: number) {
+		this.signalService.send(
+			DataCenter.createBrushTypeData({
+				width: width
+			})
+		);
+	}
+
+	private get brushWidth(): number {
+		return this.brushManager.lineStyle.width;
+	}
+
+	private set brushColor(color: number) {
+		this.signalService.send(
+			DataCenter.createBrushTypeData({
+				color: color
+			})
+		);
+	}
+
+	private get brushColor(): number {
+		return this.brushManager.lineStyle.color;
+	}
+
+	private set brushAlpha(alpha: number) {
+		this.signalService.send(
+			DataCenter.createBrushTypeData({
+				alpha: alpha
+			})
+		);
+	}
+
+	private get brushAlpha(): number {
+		return this.brushManager.lineStyle.alpha;
+	} 
+
+	private _clearAllHandler() {
+		this._resetHistry();
+
+		const g: Graphics = this.gpool.getNewGraphics();
+		this.dynamicLayer.addChild(g);
+		g.x = g.y = 0;
+		g.blendMode = PIXI.BLEND_MODES.ERASE;
+		g.beginFill(0x000000, 1)
+			.drawRect(0, 0, this.$canvas.width, this.$canvas.height)
+			.endFill();
 	}
 	
 	private _drawStart(p: IPointData) {
 		this._resetHistry();
-		this.brush = this.brushManager.createBursh(this.gpool.getNewGraphics(), this.state.brushName);
+		this.brush = this.brushManager.createBursh(this.gpool.getNewGraphics());
 		this.dynamicLayer.addChild(this.brush.graphics);
 		this.brush.graphics.x = this.brush.graphics.y = 0;
 		this.brush.drawStart(p);
@@ -277,7 +374,7 @@ class Pad {
 		this.tempGraphicsList = [];
 	}
 
-	private _run = (data: SignalData) => {
+	private _signalRouterAction = (data: SignalData) => {
 		if (data.type == SignalType.DRAG_EVENT) {
 			const d: SignalDragData = data.data as SignalDragData;
 			const p: IPointData = { x: d.x, y: d.y };
@@ -294,12 +391,23 @@ class Pad {
 			}
 		} else if (data.type == SignalType.STATUS) {
 			const d: SignalStatusData = data.data as SignalStatusData;
-			console.log('recevie', d);
 			if (d.hasOwnProperty('histroyBackIndex')
 				&& typeof (d.histroyBackIndex) == 'number'
 				&& d.histroyBackIndex != this.state.histroyIndex) {
-					console.log('seekHistroy', d.histroyBackIndex);
 				this._seekHistroy(d.histroyBackIndex);
+			}
+
+			if(d.hasOwnProperty('brushOption')) {
+				this.brushManager.lineStyle = d.brushOption;
+			}
+		} else if(data.type == SignalType.ACTION) {
+			const action: PadAction = (data.data as SignalActionData).action;
+			switch(action) {
+				case PadAction.CLEAR_ALL:
+					this._clearAllHandler();
+					break;
+				default:
+					break;
 			}
 		}
 	}
@@ -326,15 +434,11 @@ class Pad {
 		console.log(evt);
 	}
 
-	private _getScreenWH(): {w: number, h: number} {
-		return {w: window.innerWidth, h: window.innerHeight};
-	}
-
 	public undo() {
 		console.log('undo');
 		const curr = this.state.histroyIndex;
 		if(curr >= 0) {
-			this.dataCenter.pushData(
+			this.signalService.send(
 				DataCenter.createHistroyIndexData(curr - 1)
 			);
 		}
@@ -344,12 +448,22 @@ class Pad {
 		console.log('redo');
 		const curr = this.state.histroyIndex;
 		if (this.tempGraphicsList.length > 0) {
-			this.dataCenter.pushData(
+			this.signalService.send(
 				DataCenter.createHistroyIndexData(curr + 1)
 			);
 		}
 	}
 
+	public clearAll() {
+		console.log('clear all');
+		this.signalService.send(
+			DataCenter.createActionData(PadAction.CLEAR_ALL)
+		);
+	}
+
 }
-const pad = new Pad();
+
+
+const padMode: PadMode = (Utils.getQueryString('mode') == 'reciver') ? PadMode.RECIVER : PadMode.SERVICE;
+const pad = new Pad(padMode);
 
