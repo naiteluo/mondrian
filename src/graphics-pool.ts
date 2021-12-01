@@ -38,4 +38,10 @@ export class GraphicsPool {
             }
         }
     }
+
+    public clear() {
+        while(this._pool.length > 0) {
+            this._pool.pop().destroy({ texture: true, baseTexture: true, children: true });
+        }
+    }
 }

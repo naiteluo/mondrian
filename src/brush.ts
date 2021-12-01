@@ -107,7 +107,7 @@ export class BaseBrush {
  */
 export class BrushPencil extends BaseBrush {
 
-    private pointCache: IPointData[];
+    private pointCache: IPointData[] = [];
 
     public drawStart(p: IPointData) {
         super.drawStart(p);

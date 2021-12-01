@@ -202,6 +202,7 @@ class Pad {
 		controlsFolder.add(this, "undo").name("undo");
 		controlsFolder.add(this, "redo").name("redo");
 		controlsFolder.add(this, "clearAll").name("clear all");
+		controlsFolder.add(this, "clearAllData").name("clear data");
 		// controlsFolder.add(this, "onRecord").name("Record Data");
 		// controlsFolder.add(this, "onTestNativeCall").name("Draw Loop");
 		// controlsFolder.add(this, "onTestNativeCallOnce").name("Draw Once");
@@ -461,6 +462,20 @@ class Pad {
 		console.log('clear all');
 		this.signalService.send(
 			DataCenter.createActionData(PadAction.CLEAR_ALL)
+		);
+	}
+
+	public clearAllData() {
+		this.signalService.clear();
+		this.dynamicLayer.removeChildren();
+		this.staticLayer.removeChildren();
+		this.staticLayer.texture.destroy();
+		this.staticLayer.texture = null;
+		this.gpool.clear();
+		this.signalService.send(
+			DataCenter.createBrushTypeData(
+				this.brushManager.lineStyle
+			)
 		);
 	}
 

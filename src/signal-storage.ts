@@ -3,7 +3,7 @@ import { Utils } from './utils';
 
 const SIGNAL_KEY: string = 'signal';
 const SIGNAL_INDEX: string = 'signal-index';
-const MAX_SEND_RATE: number = 300;//最大发送频率
+const MAX_SEND_RATE: number = 1000;//最大发送频率
 
 export class LocalStorageService {
 
