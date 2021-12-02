@@ -70,7 +70,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({}),
     new CopyWebpackPlugin({
-      patterns: [{ from: "assets", to:"assets" }],
+      patterns: [{ from: "assets", to: "assets" }],
     }),
   ],
 };
