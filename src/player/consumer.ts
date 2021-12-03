@@ -1,7 +1,7 @@
 import { Graphics } from "@pixi/graphics";
 import { IPoint, IPointData } from "@pixi/math";
-import { DataType, IData, InteractType } from "src/data-manager";
-import { ModrianRenderer } from "src/modrian-renderer";
+import { DataType, IData, InteractType } from "../data-manager";
+import { ModrianRenderer } from "../modrian-renderer";
 import { Utils } from "../common/utils";
 import { Player, PlayerState } from "./player";
 

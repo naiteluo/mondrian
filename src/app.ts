@@ -1,5 +1,4 @@
 import { defaultBrushOptions } from "./brush";
-import { DataType } from "./data-manager";
 import { Modrian } from "./modrian";
 import { PlayerState } from "./player/player";
 
@@ -27,11 +26,6 @@ const modrian = new Modrian({
 
 const testPlayerState: PlayerState = { selectedBrush: defaultBrushOptions };
 
-modrian.player.consume([
-  {
-    type: DataType.STATE,
-    data: testPlayerState,
-  },
-]);
+modrian.player.onStateChange(testPlayerState);
 
 // import "./tmp/app";

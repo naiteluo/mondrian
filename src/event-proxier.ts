@@ -13,13 +13,11 @@ export class EventProxier extends EventEmitter {
 
   constructor(
     private application: Application,
-    private consumers: Interactor[]
+    private interactors: Interactor[]
   ) {
     super();
     this.stage = application.stage;
     this.stage.interactive = true;
-    // @ts-ignore
-    window.appp = application;
     this.interaction = application.renderer.plugins.interaction;
     this.interaction.on("pointerdown", this.onDragStart);
     this.interaction.on("pointermove", this.onDragMove);
@@ -30,58 +28,53 @@ export class EventProxier extends EventEmitter {
     this.on("play:action:redo", this.onRedo);
   }
 
-  addTarget(target: Interactor) {
-    if (this.consumers.indexOf(target)) {
-      this.consumers.push(target);
+  addInteractor(target: Interactor) {
+    if (this.interactors.indexOf(target)) {
+      this.interactors.push(target);
     }
   }
 
-  removeTarget(target: Interactor) {}
+  removeInteractor(target: Interactor) {
+    const i = this.interactors.indexOf(target);
+    if (i !== -1) {
+      this.interactors.splice(i, 1);
+    }
+  }
 
   private onStateChange = (state: PlayerState) => {
-    this.consumers.forEach((t) => {
-      t.consume([{ type: DataType.STATE, data: { ...state } }]);
+    this.interactors.forEach((t) => {
+      t.onStateChange(state);
     });
   };
 
-  private onUndo = () => {};
+  private onUndo = (event: any) => {
+    this.interactors.forEach((interactor) => {
+      interactor.onUndo(event);
+    });
+  };
 
-  private onRedo = () => {};
+  private onRedo = (event: any) => {
+    this.interactors.forEach((interactor) => {
+      interactor.onRedo(event);
+    });
+  };
 
   private onDragStart = (event: InteractionEvent) => {
-    let { x, y } = event.data.getLocalPosition(this.stage);
-    this.iterateConsumersAndConsume([
-      {
-        type: DataType.INTERACT,
-        data: { subType: InteractType.DRAG_START, x, y },
-      },
-    ]);
+    this.interactors.forEach((interactor) => {
+      interactor.onDragStart(event);
+    });
   };
 
   private onDragMove = (event: InteractionEvent) => {
-    let { x, y } = event.data.getLocalPosition(this.stage);
-    this.iterateConsumersAndConsume([
-      {
-        type: DataType.INTERACT,
-        data: { subType: InteractType.DRAG, x, y },
-      },
-    ]);
+    this.interactors.forEach((interactor) => {
+      interactor.onDragMove(event);
+    });
   };
   private onDragEnd = (event: InteractionEvent) => {
-    let { x, y } = event.data.getLocalPosition(this.stage);
-    this.iterateConsumersAndConsume([
-      {
-        type: DataType.INTERACT,
-        data: { subType: InteractType.DRAG_END, x, y },
-      },
-    ]);
-  };
-
-  private iterateConsumersAndConsume(datas: IData[]) {
-    this.consumers.forEach((t) => {
-      t.consume(datas);
+    this.interactors.forEach((interactor) => {
+      interactor.onDragEnd(event);
     });
-  }
+  };
 
   destroy() {
     this.interaction.off("pointerdown", this.onDragStart);
@@ -95,6 +88,6 @@ export class EventProxier extends EventEmitter {
 
     this.interaction = undefined;
     this.application = undefined;
-    this.consumers = undefined;
+    this.interactors = undefined;
   }
 }

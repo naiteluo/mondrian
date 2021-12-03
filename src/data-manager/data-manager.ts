@@ -1,4 +1,4 @@
-import { IPlayer } from "src/player/player";
+import { IPlayer } from "../player";
 import { IData } from "./data";
 
 export * from "./data";

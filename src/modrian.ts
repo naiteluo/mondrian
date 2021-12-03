@@ -66,7 +66,7 @@ export class Modrian {
   }
 
   initializeProducer() {
-    this.producer = new Producer(this.dataManager);
+    this.producer = new Producer(this.app, this.dataManager);
     this.eventProxier = new EventProxier(this.app, [this.producer]);
   }
 
