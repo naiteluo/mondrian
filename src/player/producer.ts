@@ -19,7 +19,6 @@ export class Producer extends Player implements Interactor {
   }
 
   onStateChange(state: PlayerState) {
-    console.log(111, state);
     this.dataManager.push([{ type: DataType.STATE, data: { ...state } }]);
   }
 
