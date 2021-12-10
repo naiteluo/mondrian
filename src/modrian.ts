@@ -27,6 +27,10 @@ export class Modrian {
 
   dataManager: DataManager;
 
+  get interaction() {
+    return this.eventProxier;
+  }
+
   constructor(private params: IModrianParams) {
     this.$container = params.container;
     this.initializeContainer();

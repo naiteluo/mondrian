@@ -11,6 +11,7 @@ export const enum InteractType {
 }
 
 interface ICommonData {
+  seq?: number;
   playerID?: string;
 }
 

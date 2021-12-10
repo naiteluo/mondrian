@@ -1,31 +1,98 @@
-import { defaultBrushOptions } from "./brush";
+import {
+  BrushName,
+  BrushPluginState,
+  BrushType,
+  defaultBrushOptions,
+} from "./plugin/brush-plugin";
 import { Modrian } from "./modrian";
-import { PlayerState } from "./player/player";
+import * as dat from "dat.gui";
 
-// reset css
-const html = document.getElementsByTagName("html")[0];
-const body = document.body;
-html.style.margin = `0px`;
-html.style.padding = `0px`;
-html.style.height = "100%";
-body.style.margin = `0px`;
-body.style.padding = `0px`;
-body.style.height = `100%`;
-body.style.lineHeight = `0px`;
-body.style.overflow = `hidden`;
+const AUTO_START = true;
 
-// initial page
+class App {
+  modrian!: Modrian;
+  $div: HTMLElement;
+  gui;
 
-const $div = document.createElement("div");
-document.body.appendChild($div);
+  brushConfig: BrushPluginState = defaultBrushOptions;
 
-const modrian = new Modrian({
-  container: $div,
-  isProducer: true,
-});
+  constructor() {
+    // reset css
+    const html = document.getElementsByTagName("html")[0];
+    const body = document.body;
+    html.style.margin = `0px`;
+    html.style.padding = `0px`;
+    html.style.height = "100%";
+    body.style.margin = `0px`;
+    body.style.padding = `0px`;
+    body.style.height = `100%`;
+    body.style.lineHeight = `0px`;
+    body.style.overflow = `hidden`;
 
-const testPlayerState: PlayerState = { selectedBrush: defaultBrushOptions };
+    this.$div = document.createElement("div");
+    document.body.appendChild(this.$div);
 
-modrian.player.onStateChange(testPlayerState);
+    this.initialGUI();
+    this.initialModrian();
+  }
 
-// import "./tmp/app";
+  initialGUI() {
+    // create ui
+    this.gui = new dat.GUI();
+    this.gui.domElement.parentElement.style.zIndex = "1";
+    this.gui.domElement.style.transformOrigin = "top right";
+
+    const brushFolder = this.gui.addFolder("Brush");
+    brushFolder.open();
+    brushFolder.open();
+    brushFolder
+      .add(this.brushConfig, "__brushType", [
+        BrushType.Normal,
+        BrushType.Eraser,
+        // BrushType.Highlighter,
+      ])
+      .name("BrushType")
+      .onChange(this._onBrushStateChange);
+    brushFolder
+      .add(this.brushConfig, "__brushName", [
+        BrushName.PENCIL,
+        BrushName.CIRCLE,
+        BrushName.RECTANGLE,
+      ])
+      .name("BrushName")
+      .onChange(this._onBrushStateChange);
+    brushFolder
+      .add(this.brushConfig, "width", 1, 50)
+      .onChange(this._onBrushStateChange);
+    brushFolder
+      .add(this.brushConfig, "alpha", 0, 1)
+      .onChange(this._onBrushStateChange);
+    brushFolder
+      .addColor(this.brushConfig, "color")
+      .onChange(this._onBrushStateChange);
+  }
+
+  initialModrian() {
+    // create instance
+    this.modrian = new Modrian({
+      container: this.$div,
+      isProducer: true,
+    });
+
+    this.modrian.interaction.emit("player:state:change", {
+      selectedBrush: this.brushConfig,
+    });
+  }
+
+  private _onBrushStateChange = (evt) => {
+    this.sendBrushUpdateSignal();
+  };
+
+  sendBrushUpdateSignal() {
+    this.modrian.interaction.emit("player:state:change", {
+      selectedBrush: this.brushConfig,
+    });
+  }
+}
+
+new App();

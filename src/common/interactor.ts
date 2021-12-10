@@ -1,7 +1,7 @@
 import { InteractionEvent } from "@pixi/interaction";
 import { PlayerState } from "../player";
 
-export interface Interactor {
+export interface IInteractor {
   onStateChange(state: PlayerState): void;
   onDragStart(event: InteractionEvent): void;
   onDragMove(event: InteractionEvent): void;

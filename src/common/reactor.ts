@@ -1,6 +1,6 @@
 import { IData } from "../data-manager";
 
-export interface Reactor {
+export interface IReactor {
   reactDragStart(data: IData): void;
   reactDragMove(data: IData): void;
   reactDragEnd(data: IData): void;

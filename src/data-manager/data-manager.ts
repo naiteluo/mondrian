@@ -18,10 +18,6 @@ class TestDownStreamSource implements UnderlyingSource {
           controller.enqueue(tmp);
           this.lastTimeStamp = stamp;
         }
-        //  else {
-        //   controller.close();
-        //   return;
-        // }
       }
       this.tickerId = requestAnimationFrame(step);
     };
@@ -38,15 +34,11 @@ class TestUpStreamSink implements UnderlyingSink {
   start(controller) {
     console.log("[start]");
   }
-  // async write(chunk: IData[], controller) {
-  write(chunk: IData[], controller) {
-    // console.log("[write]", chunk);
-    // Wait for next write.
+  async write(chunk: IData[], controller) {
     this.buffer.push(...chunk);
-    // await new Promise((resolve) => {
-
-    //   resolve(undefined);
-    // });
+    await new Promise((resolve) => {
+      resolve(undefined);
+    });
   }
   close() {
     console.log("[close]");

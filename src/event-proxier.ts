@@ -2,9 +2,8 @@ import { Application } from "@pixi/app";
 import { IRendererPlugins } from "@pixi/core";
 import { Container } from "@pixi/display";
 import { InteractionEvent } from "@pixi/interaction";
-import { Interactor } from "./common/interactor";
+import { IInteractor } from "./common/interactor";
 import { EventEmitter } from "./common/event-emitter";
-import { DataType, IData, InteractType } from "./data-manager";
 import { PlayerState } from "./player/player";
 
 export class EventProxier extends EventEmitter {
@@ -13,7 +12,7 @@ export class EventProxier extends EventEmitter {
 
   constructor(
     private application: Application,
-    private interactors: Interactor[]
+    private interactors: IInteractor[]
   ) {
     super();
     this.stage = application.stage;
@@ -28,13 +27,13 @@ export class EventProxier extends EventEmitter {
     this.on("play:action:redo", this.onRedo);
   }
 
-  addInteractor(target: Interactor) {
+  addInteractor(target: IInteractor) {
     if (this.interactors.indexOf(target)) {
       this.interactors.push(target);
     }
   }
 
-  removeInteractor(target: Interactor) {
+  removeInteractor(target: IInteractor) {
     const i = this.interactors.indexOf(target);
     if (i !== -1) {
       this.interactors.splice(i, 1);

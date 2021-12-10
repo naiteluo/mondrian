@@ -1,8 +1,8 @@
-import { ExtendedLineStyle } from "../brush";
-import { IData } from "../data-manager/data";
+import { BrushPluginState } from "../plugin/brush-plugin";
+import { IData } from "../data-manager";
 
 export interface PlayerState {
-  selectedBrush: ExtendedLineStyle;
+  selectedBrush: BrushPluginState;
 }
 
 export interface IPlayer {
@@ -13,8 +13,8 @@ export interface IPlayer {
 }
 
 export class Player implements IPlayer {
-  _id: string;
-  _state: PlayerState;
+  private _id: string;
+  private _state: PlayerState;
 
   consume(datas: IData[]) {}
 

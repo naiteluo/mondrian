@@ -1,9 +1,9 @@
 import { Application, Container, InteractionEvent } from "pixi.js";
-import { Interactor } from "../common/interactor";
+import { IInteractor } from "../common/interactor";
 import { DataType, IData, DataManager, InteractType } from "../data-manager";
 import { Player, PlayerState } from "./player";
 
-export class Producer extends Player implements Interactor {
+export class Producer extends Player implements IInteractor {
   private stage: Container;
 
   constructor(

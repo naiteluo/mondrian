@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "target": "ES6",
     "moduleResolution": "node",
     // Required for importing 3rd-party dependencies like EventEmitter3
@@ -8,6 +10,6 @@
     "paths": {
       "mini-signals": ["node_modules/resource-loader/typings/mini-signals.d.ts"]
     },
-    "baseUrl": "src"
+    "baseUrl": "./src"
   }
 }
