@@ -1,4 +1,5 @@
 import { ModrianRenderer } from "modrian-renderer";
+import { CursorPlugin } from "./cursor-plugin";
 import { PencilBrushPlugin, PencilBrushPluginPID } from "./pencil-plugin";
 import { IPlugin, IPluginConfig, Plugin } from "./plugin";
 
@@ -19,6 +20,13 @@ const PluginList: IPluginRegisterConfig[] = [
       return true;
     },
     c: PencilBrushPlugin,
+  },
+  {
+    pid: CursorPlugin.PID,
+    matcher: () => {
+      return true;
+    },
+    c: CursorPlugin,
   },
 ];
 

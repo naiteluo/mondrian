@@ -3,6 +3,7 @@ import { ModrianRenderer } from "../modrian-renderer";
 import { Player } from "./player";
 import { PluginManager } from "../plugin/plugin-manager";
 import { PencilBrushPlugin } from "../plugin/pencil-plugin";
+import { CursorPlugin } from "../plugin/cursor-plugin";
 
 export class Consumer extends Player {
   private pluginManager: PluginManager;
@@ -10,6 +11,7 @@ export class Consumer extends Player {
   constructor(private renderer: ModrianRenderer) {
     super();
     this.pluginManager = new PluginManager(this.renderer);
+    this.pluginManager.loadPlugin(CursorPlugin.PID);
   }
 
   consume(datas: IData[]) {

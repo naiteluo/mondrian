@@ -1,59 +1,23 @@
 import { IPlayer } from "../player";
 import { IData } from "./data";
+import { LocalDownStreamSource, WsDownStreamSource } from "./down-stream";
+import { LocalUpStreamSink, WsUpStreamSink } from "./up-stream";
+import { IoClient } from "./ws-client";
 
 export * from "./data";
-
-class TestDownStreamSource implements UnderlyingSource {
-  tickerId;
-  startTimeStamp;
-  lastTimeStamp;
-
-  constructor(private buffer: IData[]) {}
-
-  start(controller: ReadableStreamDefaultController) {
-    const step = (stamp) => {
-      if (this.lastTimeStamp === undefined || stamp - this.lastTimeStamp > 0) {
-        const tmp = this.buffer.splice(0, this.buffer.length);
-        if (tmp.length !== 0) {
-          controller.enqueue(tmp);
-          this.lastTimeStamp = stamp;
-        }
-      }
-      this.tickerId = requestAnimationFrame(step);
-    };
-    this.tickerId = requestAnimationFrame(step);
-  }
-
-  cancel() {
-    cancelAnimationFrame(this.tickerId);
-  }
-}
-
-class TestUpStreamSink implements UnderlyingSink {
-  constructor(private buffer: IData[]) {}
-  start(controller) {
-    console.log("[start]");
-  }
-  async write(chunk: IData[], controller) {
-    this.buffer.push(...chunk);
-    await new Promise((resolve) => {
-      resolve(undefined);
-    });
-  }
-  close() {
-    console.log("[close]");
-  }
-  abort(reason) {
-    console.log("[abort]", reason);
-  }
-}
 
 export class DataManager {
   buffer: IData[] = [];
 
-  private upStream = new WritableStream(new TestUpStreamSink(this.buffer));
+  client: IoClient = new IoClient();
+
+  private upStream = new WritableStream(
+    new WsUpStreamSink(this.buffer, this.client)
+    // new LocalUpStreamSink(this.buffer)
+  );
   private downStream = new ReadableStream<IData>(
-    new TestDownStreamSource(this.buffer)
+    new WsDownStreamSource(this.buffer, this.client)
+    // new LocalDownStreamSource(this.buffer)
   );
 
   private reader: ReadableStreamDefaultReader;
@@ -64,6 +28,7 @@ export class DataManager {
 
   constructor() {
     this.$panel = document.getElementById("debug-panel");
+    this.client.start();
   }
 
   start() {

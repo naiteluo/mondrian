@@ -9,6 +9,9 @@ import { ModrianGraphicsHandle } from "modrian-renderer";
 export const PencilBrushPluginPID = Symbol("pencil-plugin");
 
 export class PencilBrushPlugin extends BrushPlugin {
+  PID = PencilBrushPluginPID;
+  static PID = PencilBrushPluginPID;
+
   private isDrawing = false;
   private startPos: IPointData;
   private currentPos: IPointData;
@@ -55,7 +58,4 @@ export class PencilBrushPlugin extends BrushPlugin {
   reactStateChange(data: IData): void {
     this.state = data.data as PlayerState;
   }
-
-  PID = PencilBrushPluginPID;
-  static PID = PencilBrushPluginPID;
 }

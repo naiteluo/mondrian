@@ -23,20 +23,20 @@ type Trash =
 export class ModrianRenderer {
   private rootLayer: Container;
   // high update freqency element like cursor or performces ui
-  private uiLayer: Container;
+  // todo unsafe
+  public uiLayer: Container;
   // real contents of stage
   private dynamicLayer: Container;
   // cached static texture layer
   private staticLayer: Sprite;
 
-  private dynamicLevel = 5;
-
+  private dynamicLevel = 20;
   private dynamicCache: ModrianGraphicsHandle[] = [];
   private dynamicCacheIndex: number = 0;
 
   private trash: Trash[] = [];
 
-  constructor(private app: Application) {
+  constructor(private app: Application, private $panel: HTMLDivElement) {
     this.rootLayer = new Container();
     this.uiLayer = new Container();
     this.dynamicLayer = new Container();
@@ -52,6 +52,17 @@ export class ModrianRenderer {
      * add gc ticker
      */
     this.app.ticker.add(this.gc, undefined, UPDATE_PRIORITY.LOW);
+    // show perf info
+    this.initialPerfTool();
+  }
+
+  private initialPerfTool() {
+    /**
+     * add perf ticker
+     */
+    this.app.ticker.add(this.perf, undefined, UPDATE_PRIORITY.LOW);
+
+    // expose base texture cache to window for debeg
     // @ts-ignore
     window.BaseTextureCache = BaseTextureCache;
   }
@@ -140,6 +151,29 @@ export class ModrianRenderer {
   private markGc(Trash) {
     this.trash.push(Trash);
   }
+
+  lastPerfDt = 0;
+  textureMem = 0;
+
+  private perf = (dt) => {
+    if (this.lastPerfDt < 20) {
+      this.lastPerfDt += dt;
+      return;
+    }
+    this.lastPerfDt = 0;
+    let tmp = 0;
+    for (const key in BaseTextureCache) {
+      if (Object.prototype.hasOwnProperty.call(BaseTextureCache, key)) {
+        const element = BaseTextureCache[key];
+        //  (baseTexture.realWidth * baseTexture.realHeight * 4) / 1024 / 1024
+        tmp += (element.realWidth * element.realHeight * 4) / 1024 / 1024;
+      }
+    }
+    if (tmp !== this.textureMem) {
+      this.$panel.innerHTML = `tx mem: ${this.textureMem} MB`;
+      this.textureMem = tmp;
+    }
+  };
 }
 
 interface ModrianGraphicsHandleOptions {

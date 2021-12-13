@@ -61,6 +61,7 @@ export class Modrian {
     });
     //Add the canvas that Pixi automatically created for you to the HTML document
     this.$canvas = this.app.view;
+
     this.$container.appendChild(this.$canvas);
 
     window.addEventListener("resize", this.resizeEventHandler);
@@ -84,6 +85,7 @@ export class Modrian {
     this.$container.style.position = "absolute";
     this.$container.style.zIndex = "0";
     this.$container.style.margin = "0px 0px";
+    this.$container.style.cursor = "none";
   }
 
   resizeEventHandler = () => {
@@ -96,7 +98,7 @@ export class Modrian {
   };
 
   initializeModrianRenderer() {
-    this.renderer = new ModrianRenderer(this.app);
+    this.renderer = new ModrianRenderer(this.app, this.$panel);
   }
 
   initialzieDebugPanel() {
@@ -108,7 +110,15 @@ export class Modrian {
     this.$panel.style.position = "absolute";
     this.$panel.style.top = "10px";
     this.$panel.style.left = "10px";
+    this.$panel.style.backgroundColor = "#000";
+    this.$panel.style.height = "30px";
+    this.$panel.style.padding = "2px 5px";
+    this.$panel.style.color = "#13c039";
+    this.$panel.style.display = "flex";
+    this.$panel.style.alignItems = "center";
+    this.$panel.style.fontFamily = "monospace";
     this.$panel.innerHTML = "debug";
+
     document.body.appendChild(this.$panel);
   }
 
