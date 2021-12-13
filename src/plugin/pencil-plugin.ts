@@ -4,6 +4,7 @@ import { Utils } from "../common/utils";
 import { IData } from "data-manager";
 import { PlayerState } from "player";
 import { BrushPlugin } from "./brush-plugin";
+import { ModrianGraphicsHandle } from "modrian-renderer";
 
 export const PencilBrushPluginPID = Symbol("pencil-plugin");
 
@@ -12,15 +13,15 @@ export class PencilBrushPlugin extends BrushPlugin {
   private startPos: IPointData;
   private currentPos: IPointData;
   private pointCache = [];
-  private g: Graphics;
+  private handle: ModrianGraphicsHandle;
 
   private state: PlayerState;
 
   reactDragStart(data: IData): void {
     const p = { x: data.data.x, y: data.data.y };
-    this.g = this.renderer.getTestHandle();
+    this.handle = this.renderer.startGraphicsHandle();
 
-    this.g.lineStyle({
+    this.handle.g.lineStyle({
       ...this.state.selectedBrush,
     });
     this.isDrawing = true;
@@ -37,9 +38,9 @@ export class PencilBrushPlugin extends BrushPlugin {
       e: IPointData = this.pointCache[this.pointCache.length - 3],
       d: IPointData = this.pointCache[this.pointCache.length - 2];
     if (this.pointCache.length > 3) {
-      this.g.moveTo(m.x, m.y).quadraticCurveTo(e.x, e.y, d.x, d.y);
+      this.handle.g.moveTo(m.x, m.y).quadraticCurveTo(e.x, e.y, d.x, d.y);
     } else {
-      this.g.moveTo(e.x, e.y).lineTo(d.x, d.y);
+      this.handle.g.moveTo(e.x, e.y).lineTo(d.x, d.y);
     }
     this.currentPos = { ...p };
   }
@@ -48,9 +49,7 @@ export class PencilBrushPlugin extends BrushPlugin {
     this.pointCache = [];
     if (!this.isDrawing) return;
     this.isDrawing = false;
-    this.g.cacheAsBitmapResolution = 1;
-    this.g.cacheAsBitmapMultisample = 4;
-    this.g.cacheAsBitmap = true;
+    this.handle.stop();
   }
 
   reactStateChange(data: IData): void {
