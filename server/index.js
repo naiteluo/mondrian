@@ -11,7 +11,7 @@ const io = new Server(server, {
 });
 
 const cache = [];
-const CacheMaxLength = 50000;
+const CacheMaxLength = 10000;
 
 function saveToCache(data) {
   cache.push(...data);

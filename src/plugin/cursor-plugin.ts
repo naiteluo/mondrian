@@ -3,6 +3,10 @@ import { ModrianRenderer } from "modrian-renderer";
 import { Sprite } from "pixi.js";
 import { Plugin } from "./plugin";
 
+import cursorImg from "../assets/cursor.png";
+
+console.log(cursorImg);
+
 export const CursorPluginPID = Symbol("cursor-plugin");
 
 export class CursorPlugin extends Plugin {
@@ -14,7 +18,7 @@ export class CursorPlugin extends Plugin {
   constructor(_renderer: ModrianRenderer) {
     super(_renderer);
     // todo
-    this.cursor = Sprite.from("assets/cursor.png");
+    this.cursor = Sprite.from(cursorImg);
     _renderer.uiLayer.addChild(this.cursor);
   }
 
