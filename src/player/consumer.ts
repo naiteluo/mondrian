@@ -2,12 +2,14 @@ import {
   ModrianDataType,
   IModrianData,
   ModrianInteractType,
+  ModrianActionType,
 } from "../data-manager";
 import { ModrianRenderer } from "../renderer/renderer";
 import { ModrianPlayer } from "./player";
 import { ModrianPluginManager } from "../plugin/plugin-manager";
 import { PencilBrushPlugin } from "../plugin/pencil-plugin";
 import { CursorPlugin } from "../plugin/cursor-plugin";
+import { HistoryPlugin } from "../plugin/history-plugin";
 
 export class ModrianConsumer extends ModrianPlayer {
   private pluginManager: ModrianPluginManager;
@@ -17,6 +19,7 @@ export class ModrianConsumer extends ModrianPlayer {
     this.id = id;
     this.pluginManager = new ModrianPluginManager(this.renderer);
     this.pluginManager.loadPlugin(CursorPlugin.PID);
+    this.pluginManager.loadPlugin(HistoryPlugin.PID);
   }
 
   consume(datas: IModrianData[]) {
@@ -40,6 +43,21 @@ export class ModrianConsumer extends ModrianPlayer {
               break;
             case ModrianInteractType.DRAG_END:
               plugin.reactDragEnd(data);
+              break;
+            default:
+              break;
+          }
+        });
+      }
+      if (data.type === ModrianDataType.ACTION) {
+        const subType = data.data.subType;
+        this.pluginManager.interateInstances((plugin) => {
+          switch (subType) {
+            case ModrianActionType.UNDO:
+              plugin.reactUndo(undefined);
+              break;
+            case ModrianActionType.REDO:
+              plugin.reactRedo(undefined);
               break;
             default:
               break;

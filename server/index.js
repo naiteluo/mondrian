@@ -26,7 +26,8 @@ app.get("/", (req, res) => {
 
 io.on("connection", (socket) => {
   console.log("a new user connected, recover data");
-  socket.emit("r", cache);
+  // todo recover
+  socket.emit("d", cache);
   socket.on("d", (data) => {
     saveToCache(data);
     socket.broadcast.emit("d", data);

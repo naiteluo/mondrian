@@ -1,5 +1,6 @@
 import { ModrianRenderer } from "../renderer/renderer";
 import { CursorPlugin } from "./cursor-plugin";
+import { HistoryPlugin } from "./history-plugin";
 import { PencilBrushPlugin, PencilBrushPluginPID } from "./pencil-plugin";
 import { IModrianPlugin, IPluginConfig, ModrianPlugin } from "./plugin";
 
@@ -28,28 +29,37 @@ const PluginList: IPluginRegisterConfig[] = [
     },
     c: CursorPlugin,
   },
+  {
+    pid: HistoryPlugin.PID,
+    matcher: () => {
+      return true;
+    },
+    c: HistoryPlugin,
+  },
 ];
 
 export class ModrianPluginManager {
   constructor(private _renderer: ModrianRenderer) {}
 
-  private _instancesMap: Map<Symbol, ModrianPlugin> = new Map();
+  private _instancesMap: Map<symbol, ModrianPlugin> = new Map();
 
   private _instancesList: ModrianPlugin[] = [];
 
-  private findPluginConfig(type: Symbol): IPluginRegisterConfig {
+  private findPluginConfig(type: symbol): IPluginRegisterConfig {
     const config = PluginList.find((v) => {
       return v.pid === type;
     });
     if (!config)
-      throw new Error("Fail to find plugin config of: Symbol" + type);
+      throw new Error(
+        "Fail to find plugin config of: Symbol" + type.description
+      );
     return config;
   }
 
-  loadPlugin<T extends ModrianPlugin>(type: Symbol) {
+  loadPlugin<T extends ModrianPlugin>(type: symbol) {
     let plugin = this._instancesMap.get(type);
     if (!plugin) {
-      let config = this.findPluginConfig(type);
+      const config = this.findPluginConfig(type);
       plugin = new config.c(this._renderer);
       this._instancesMap.set(type, plugin);
       this._instancesList.push(plugin);
@@ -57,9 +67,9 @@ export class ModrianPluginManager {
     return plugin as T;
   }
 
-  unloadPlugin<T extends IModrianPlugin>(type: Symbol) {
+  unloadPlugin<T extends IModrianPlugin>(type: symbol) {
     this._instancesMap.delete(type);
-    let i = this._instancesList.findIndex((instance) => {
+    const i = this._instancesList.findIndex((instance) => {
       return instance.PID === type;
     });
     if (i >= 0) {

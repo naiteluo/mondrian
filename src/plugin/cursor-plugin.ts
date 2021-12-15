@@ -5,8 +5,6 @@ import { ModrianPlugin } from "./plugin";
 
 import cursorImg from "../assets/cursor.png";
 
-console.log(cursorImg);
-
 export const CursorPluginPID = Symbol("cursor-plugin");
 
 export class CursorPlugin extends ModrianPlugin {

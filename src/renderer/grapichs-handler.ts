@@ -35,7 +35,9 @@ export class ModrianGraphicsHandler {
   }
 
   refresh() {
-    this._g = undefined;
+    if (this.options.enableDiscrete) {
+      this._g = undefined;
+    }
   }
 
   start() {}
@@ -58,12 +60,20 @@ export class ModrianGraphicsHandler {
   stop() {
     if (this.options.canCacheAsBitmap) {
       this._gs.forEach((g) => {
-        g.cacheAsBitmapResolution = 1;
-        g.cacheAsBitmapMultisample = 4;
-        g.cacheAsBitmap = true;
+        if (!g.cacheAsBitmap) {
+          g.cacheAsBitmapResolution = 1;
+          g.cacheAsBitmapMultisample = 4;
+          g.cacheAsBitmap = true;
+        }
       });
     }
     this._finished = true;
+  }
+
+  attach() {
+    return this._gs.map((g) => {
+      return this.layer.addChild(g);
+    });
   }
 
   detach() {

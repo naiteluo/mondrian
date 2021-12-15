@@ -10,6 +10,12 @@ export const enum ModrianInteractType {
   DRAG_END = "de",
 }
 
+export const enum ModrianActionType {
+  UNDO = "ud",
+  REDO = "rd",
+  CLEAR = "clear",
+}
+
 interface IModrianCommonData {
   seq?: number;
   playerID?: string;
@@ -34,8 +40,12 @@ interface IModrianStateData extends IModrianCommonData {
 interface IModrianActionData extends IModrianCommonData {
   type: ModrianDataType.ACTION;
   data: {
+    subType: ModrianActionType;
     [key: string]: any;
   };
 }
 
-export type IModrianData = IModrianInteractData | IModrianStateData | IModrianActionData;
+export type IModrianData =
+  | IModrianInteractData
+  | IModrianStateData
+  | IModrianActionData;

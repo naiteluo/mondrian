@@ -44,7 +44,6 @@ class App {
 
     const brushFolder = this.gui.addFolder("Brush");
     brushFolder.open();
-    brushFolder.open();
     brushFolder
       .add(this.brushConfig, "__brushType", [
         BrushType.Normal,
@@ -70,6 +69,11 @@ class App {
     brushFolder
       .addColor(this.brushConfig, "color")
       .onChange(this._onBrushStateChange);
+
+    const actionFolder = this.gui.addFolder("Action");
+    actionFolder.open();
+    actionFolder.add(this, "onUndo").name("Undo");
+    actionFolder.add(this, "onRedo").name("Redo");
   }
 
   initialModrian() {
@@ -92,6 +96,14 @@ class App {
     this.modrian.interaction.emit("player:state:change", {
       selectedBrush: this.brushConfig,
     });
+  }
+
+  onUndo() {
+    this.modrian.interaction.emit("player:action:undo");
+  }
+
+  onRedo() {
+    this.modrian.interaction.emit("player:action:redo");
   }
 }
 

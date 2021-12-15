@@ -1,15 +1,8 @@
 import { Application } from "@pixi/app";
 import { Container, DisplayObject } from "@pixi/display";
-import { Graphics } from "@pixi/graphics";
 import { Rectangle } from "@pixi/math";
 import { BaseTextureCache } from "@pixi/utils";
-import {
-  BaseTexture,
-  settings,
-  Sprite,
-  Texture,
-  UPDATE_PRIORITY,
-} from "pixi.js";
+import { Sprite, Texture, UPDATE_PRIORITY } from "pixi.js";
 import {
   ModrianGraphicsHandler,
   ModrianGraphicsHandlerOptions,
@@ -36,7 +29,8 @@ export class ModrianRenderer {
 
   private dynamicLevel = 20;
   private dynamicCache: ModrianGraphicsHandler[] = [];
-  private dynamicCacheIndex: number = 0;
+
+  private dynamicCacheIndex = -1;
 
   private trash: Trash[] = [];
 
@@ -67,13 +61,14 @@ export class ModrianRenderer {
     this.app.ticker.add(this.perf, undefined, UPDATE_PRIORITY.LOW);
 
     // expose base texture cache to window for debeg
-    // @ts-ignore
-    window.BaseTextureCache = BaseTextureCache;
+    // @ ts-ignore
+    (window as any).BaseTextureCache = BaseTextureCache;
   }
 
   private shiftGrapicsHandlersToStatic() {
     while (this.dynamicCache.length > this.dynamicLevel) {
       const handler = this.dynamicCache.shift();
+      this.dynamicCacheIndex--;
       const gs = handler.detach();
       gs.forEach((g) => {
         this.staticLayer.addChild(g);
@@ -84,9 +79,48 @@ export class ModrianRenderer {
 
   startGraphicsHandler(options?: ModrianGraphicsHandlerOptions) {
     const handler = new ModrianGraphicsHandler(this.dynamicLayer, options);
+    const countOfTails =
+      this.dynamicCache.length - (this.dynamicCacheIndex + 1);
+    if (this.dynamicCache.length >= this.dynamicLevel) {
+      this.shiftGrapicsHandlersToStatic();
+    }
+    if (countOfTails > 0) {
+      const toBeDelete = this.dynamicCache.splice(
+        this.dynamicCacheIndex + 1,
+        countOfTails
+      );
+      toBeDelete.map((h) => {
+        h.detach();
+        h.gs.forEach((g) => {
+          this.markGc({ type: TrashType.DisplayObject, target: g });
+        });
+        h.destroy();
+      });
+    }
     this.dynamicCache.push(handler);
+    this.dynamicCacheIndex += 1;
     handler.start();
     return handler;
+  }
+
+  forward() {
+    if (this.dynamicCacheIndex < this.dynamicCache.length - 1) {
+      this.dynamicCacheIndex++;
+      const handler = this.dynamicCache[this.dynamicCacheIndex];
+      handler.attach();
+    } else {
+      console.warn("can't forward dynamic cache anymore");
+    }
+  }
+
+  backward() {
+    if (this.dynamicCacheIndex >= 0) {
+      const handler = this.dynamicCache[this.dynamicCacheIndex];
+      handler.detach();
+      this.dynamicCacheIndex--;
+    } else {
+      console.warn("can't backward dynamic cache anymore");
+    }
   }
 
   stopGraphicsHandler(handler: ModrianGraphicsHandler) {
@@ -143,8 +177,8 @@ export class ModrianRenderer {
     this.trash = [];
   };
 
-  private markGc(Trash) {
-    this.trash.push(Trash);
+  private markGc(item) {
+    this.trash.push(item);
   }
 
   lastPerfDt = 0;
@@ -165,7 +199,7 @@ export class ModrianRenderer {
           (element.realWidth * element.realHeight * 4) / 1024 / 1024;
       }
     }
-    let tmpGraphicsCount = this.dynamicCache.reduce((prev, v) => {
+    const tmpGraphicsCount = this.dynamicCache.reduce((prev, v) => {
       return prev + v.gs.length;
     }, 0);
     if (tmpMemSize !== this.textureMem) {

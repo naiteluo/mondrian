@@ -1,9 +1,18 @@
 import { Application, Container, InteractionEvent } from "pixi.js";
 import { IModrianInteractor } from "../common/interactor";
-import { ModrianDataType, IModrianData, ModrianDataManager, ModrianInteractType } from "../data-manager";
+import {
+  ModrianDataType,
+  IModrianData,
+  ModrianDataManager,
+  ModrianInteractType,
+  ModrianActionType,
+} from "../data-manager";
 import { ModrianPlayer, IModrianPlayerState } from "./player";
 
-export class ModrianProducer extends ModrianPlayer implements IModrianInteractor {
+export class ModrianProducer
+  extends ModrianPlayer
+  implements IModrianInteractor
+{
   private stage: Container;
 
   constructor(
@@ -27,7 +36,7 @@ export class ModrianProducer extends ModrianPlayer implements IModrianInteractor
   }
 
   onDragStart(event: InteractionEvent): void {
-    let { x, y } = event.data.getLocalPosition(this.stage);
+    const { x, y } = event.data.getLocalPosition(this.stage);
     this.dataManager.push([
       {
         playerID: this.id,
@@ -37,7 +46,7 @@ export class ModrianProducer extends ModrianPlayer implements IModrianInteractor
     ]);
   }
   onDragMove(event: InteractionEvent): void {
-    let { x, y } = event.data.getLocalPosition(this.stage);
+    const { x, y } = event.data.getLocalPosition(this.stage);
     this.dataManager.push([
       {
         playerID: this.id,
@@ -47,7 +56,7 @@ export class ModrianProducer extends ModrianPlayer implements IModrianInteractor
     ]);
   }
   onDragEnd(event: InteractionEvent): void {
-    let { x, y } = event.data.getLocalPosition(this.stage);
+    const { x, y } = event.data.getLocalPosition(this.stage);
     this.dataManager.push([
       {
         playerID: this.id,
@@ -56,8 +65,24 @@ export class ModrianProducer extends ModrianPlayer implements IModrianInteractor
       },
     ]);
   }
-  onUndo(event: any): void {}
-  onRedo(event: any): void {}
+  onUndo(event: any): void {
+    this.dataManager.push([
+      {
+        playerID: this.id,
+        type: ModrianDataType.ACTION,
+        data: { subType: ModrianActionType.UNDO },
+      },
+    ]);
+  }
+  onRedo(event: any): void {
+    this.dataManager.push([
+      {
+        playerID: this.id,
+        type: ModrianDataType.ACTION,
+        data: { subType: ModrianActionType.REDO },
+      },
+    ]);
+  }
   onClick(event: any): void {}
   onInput(event: any): void {}
 }

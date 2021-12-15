@@ -23,8 +23,8 @@ export class EventProxier extends ModrianEventEmitter {
     this.interaction.on("pointerup", this.onDragEnd);
 
     this.on("player:state:change", this.onStateChange);
-    this.on("play:action:undo", this.onUndo);
-    this.on("play:action:redo", this.onRedo);
+    this.on("player:action:undo", this.onUndo);
+    this.on("player:action:redo", this.onRedo);
   }
 
   addInteractor(target: IModrianInteractor) {
