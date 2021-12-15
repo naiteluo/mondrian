@@ -1,8 +1,7 @@
-import { Graphics } from "@pixi/graphics";
 import { IPointData } from "@pixi/math";
-import { Utils } from "../common/utils";
-import { IData } from "data-manager";
-import { PlayerState } from "player";
+import { ModrianUtils } from "../common/utils";
+import { IModrianData } from "../data-manager";
+import { IModrianPlayerState } from "../player";
 import { BrushPlugin } from "./brush-plugin";
 import { ModrianGraphicsHandler } from "renderer/grapichs-handler";
 
@@ -18,9 +17,9 @@ export class PencilBrushPlugin extends BrushPlugin {
   private pointCache = [];
   private handler: ModrianGraphicsHandler;
 
-  private state: PlayerState;
+  private state: IModrianPlayerState;
 
-  reactDragStart(data: IData): void {
+  reactDragStart(data: IModrianData): void {
     const p = { x: data.data.x, y: data.data.y };
     this.handler = this.renderer.startGraphicsHandler();
     this.handler.lineStyle = this.state.selectedBrush;
@@ -29,11 +28,11 @@ export class PencilBrushPlugin extends BrushPlugin {
     this.pointCache = [p];
   }
 
-  reactDragMove(data: IData): void {
+  reactDragMove(data: IModrianData): void {
     const p = { x: data.data.x, y: data.data.y };
     if (!this.isDrawing) return;
     const l = this.pointCache.length;
-    this.pointCache.push(Utils.midPos(this.pointCache[l - 1], p), p);
+    this.pointCache.push(ModrianUtils.midPos(this.pointCache[l - 1], p), p);
     const m = this.pointCache[this.pointCache.length - 4],
       e: IPointData = this.pointCache[this.pointCache.length - 3],
       d: IPointData = this.pointCache[this.pointCache.length - 2];
@@ -46,14 +45,14 @@ export class PencilBrushPlugin extends BrushPlugin {
   }
 
   // todo handle unclosed drag event properly
-  reactDragEnd(data: IData): void {
+  reactDragEnd(data: IModrianData): void {
     this.pointCache = [];
     if (!this.isDrawing) return;
     this.isDrawing = false;
     this.handler.stop();
   }
 
-  reactStateChange(data: IData): void {
-    this.state = data.data as PlayerState;
+  reactStateChange(data: IModrianData): void {
+    this.state = data.data as IModrianPlayerState;
   }
 }

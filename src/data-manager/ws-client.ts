@@ -1,12 +1,13 @@
 import { io, Socket } from "socket.io-client";
-import { IData } from "./data";
+import { IModrianData } from "./data";
 
-type IoDataListener = (datas: IData[], isRecover?: boolean) => void;
+type IoDataListener = (datas: IModrianData[], isRecover?: boolean) => void;
 
-const IoEmptyListener = (datas: IData[]) => {
+const IoEmptyListener = (datas: IModrianData[]) => {
   console.log("empty", datas);
 };
 
+// todo refactor
 export class IoClient {
   private socket: Socket;
   private _listener: IoDataListener = IoEmptyListener;
@@ -18,7 +19,7 @@ export class IoClient {
       this._listener(datas);
     });
   }
-  send(datas: IData[]) {
+  send(datas: IModrianData[]) {
     this.socket.emit("d", datas);
   }
   on(listner: IoDataListener) {

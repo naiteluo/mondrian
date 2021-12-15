@@ -1,8 +1,8 @@
 import { InteractionEvent } from "@pixi/interaction";
-import { PlayerState } from "../player";
+import { IModrianPlayerState } from "../player";
 
-export interface IInteractor {
-  onStateChange(state: PlayerState): void;
+export interface IModrianInteractor {
+  onStateChange(state: IModrianPlayerState): void;
   onDragStart(event: InteractionEvent): void;
   onDragMove(event: InteractionEvent): void;
   onDragEnd(event: InteractionEvent): void;

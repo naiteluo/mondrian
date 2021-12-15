@@ -1,7 +1,7 @@
-import { IData } from "data-manager";
+import { IModrianData } from "../data-manager";
 import { ModrianRenderer } from "../renderer/modrian-renderer";
 import { Sprite } from "pixi.js";
-import { Plugin } from "./plugin";
+import { ModrianPlugin } from "./plugin";
 
 import cursorImg from "../assets/cursor.png";
 
@@ -9,7 +9,7 @@ console.log(cursorImg);
 
 export const CursorPluginPID = Symbol("cursor-plugin");
 
-export class CursorPlugin extends Plugin {
+export class CursorPlugin extends ModrianPlugin {
   PID = CursorPluginPID;
   static PID = CursorPluginPID;
 
@@ -22,7 +22,7 @@ export class CursorPlugin extends Plugin {
     _renderer.uiLayer.addChild(this.cursor);
   }
 
-  reactDragMove(data: IData): void {
+  reactDragMove(data: IModrianData): void {
     this.cursor.x = data.data.x;
     this.cursor.y = data.data.y;
   }

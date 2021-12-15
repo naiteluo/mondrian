@@ -2,17 +2,17 @@ import { Application } from "@pixi/app";
 import { IRendererPlugins } from "@pixi/core";
 import { Container } from "@pixi/display";
 import { InteractionEvent } from "@pixi/interaction";
-import { IInteractor } from "./common/interactor";
-import { EventEmitter } from "./common/event-emitter";
-import { PlayerState } from "./player/player";
+import { IModrianInteractor } from "./common/interactor";
+import { ModrianEventEmitter } from "./common/event-emitter";
+import { IModrianPlayerState } from "./player/player";
 
-export class EventProxier extends EventEmitter {
+export class EventProxier extends ModrianEventEmitter {
   private stage: Container;
   private interaction: IRendererPlugins;
 
   constructor(
     private application: Application,
-    private interactors: IInteractor[]
+    private interactors: IModrianInteractor[]
   ) {
     super();
     this.stage = application.stage;
@@ -27,20 +27,20 @@ export class EventProxier extends EventEmitter {
     this.on("play:action:redo", this.onRedo);
   }
 
-  addInteractor(target: IInteractor) {
+  addInteractor(target: IModrianInteractor) {
     if (this.interactors.indexOf(target)) {
       this.interactors.push(target);
     }
   }
 
-  removeInteractor(target: IInteractor) {
+  removeInteractor(target: IModrianInteractor) {
     const i = this.interactors.indexOf(target);
     if (i !== -1) {
       this.interactors.splice(i, 1);
     }
   }
 
-  private onStateChange = (state: PlayerState) => {
+  private onStateChange = (state: IModrianPlayerState) => {
     this.interactors.forEach((t) => {
       t.onStateChange(state);
     });

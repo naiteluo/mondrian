@@ -2,10 +2,10 @@ import "pixi.js";
 
 import { Application } from "@pixi/app";
 import { EventProxier } from "./event-proxier";
-import { Consumer, Producer } from "./player";
-import { Utils } from "./common/utils";
+import { ModrianConsumer, ModrianProducer } from "./player";
+import { ModrianUtils } from "./common/utils";
 import { ModrianRenderer } from "./renderer/modrian-renderer";
-import { DataManager } from "./data-manager";
+import { ModrianDataManager } from "./data-manager";
 
 export interface IModrianParams {
   container: HTMLElement;
@@ -22,12 +22,12 @@ export class Modrian {
 
   private eventProxier: EventProxier;
 
-  private producer: Producer;
+  private producer: ModrianProducer;
   private renderer: ModrianRenderer;
 
-  private consumers: Map<string, Consumer> = new Map();
+  private consumers: Map<string, ModrianConsumer> = new Map();
 
-  dataManager: DataManager;
+  dataManager: ModrianDataManager;
 
   get interaction() {
     return this.eventProxier;
@@ -40,7 +40,7 @@ export class Modrian {
     this.initializePIXIApplication();
     this.resizeEventHandler();
 
-    this.dataManager = new DataManager(this);
+    this.dataManager = new ModrianDataManager(this);
     this.initializeModrianRenderer();
 
     if (params.isProducer) {
@@ -73,7 +73,7 @@ export class Modrian {
   }
 
   initializeProducer() {
-    this.producer = new Producer(this.ID, this.app, this.dataManager);
+    this.producer = new ModrianProducer(this.ID, this.app, this.dataManager);
     this.eventProxier = new EventProxier(this.app, [this.producer]);
   }
 
@@ -82,7 +82,7 @@ export class Modrian {
   }
 
   addConsumer(id: string) {
-    const consumer = new Consumer(id, this.renderer);
+    const consumer = new ModrianConsumer(id, this.renderer);
     this.consumers.set(id, consumer);
     this.dataManager.registerConsumer(id, consumer);
   }
@@ -95,7 +95,7 @@ export class Modrian {
   }
 
   resizeEventHandler = () => {
-    const wh = Utils.getScreenWH();
+    const wh = ModrianUtils.getScreenWH();
     this.$container.style.width = `${wh.w}px`;
     this.$container.style.height = `${wh.h}px`;
     this.$canvas.style.width = `${wh.w}px`;

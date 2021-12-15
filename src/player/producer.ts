@@ -1,28 +1,28 @@
 import { Application, Container, InteractionEvent } from "pixi.js";
-import { IInteractor } from "../common/interactor";
-import { DataType, IData, DataManager, InteractType } from "../data-manager";
-import { Player, PlayerState } from "./player";
+import { IModrianInteractor } from "../common/interactor";
+import { ModrianDataType, IModrianData, ModrianDataManager, ModrianInteractType } from "../data-manager";
+import { ModrianPlayer, IModrianPlayerState } from "./player";
 
-export class Producer extends Player implements IInteractor {
+export class ModrianProducer extends ModrianPlayer implements IModrianInteractor {
   private stage: Container;
 
   constructor(
     id: string,
     private application: Application,
-    private dataManager: DataManager
+    private dataManager: ModrianDataManager
   ) {
     super();
     this.id = id;
     this.stage = application.stage;
   }
 
-  consume(datas: IData[]) {
+  consume(datas: IModrianData[]) {
     super.consume(datas);
   }
 
-  onStateChange(state: PlayerState) {
+  onStateChange(state: IModrianPlayerState) {
     this.dataManager.push([
-      { playerID: this.id, type: DataType.STATE, data: { ...state } },
+      { playerID: this.id, type: ModrianDataType.STATE, data: { ...state } },
     ]);
   }
 
@@ -31,8 +31,8 @@ export class Producer extends Player implements IInteractor {
     this.dataManager.push([
       {
         playerID: this.id,
-        type: DataType.INTERACT,
-        data: { subType: InteractType.DRAG_START, x, y },
+        type: ModrianDataType.INTERACT,
+        data: { subType: ModrianInteractType.DRAG_START, x, y },
       },
     ]);
   }
@@ -41,8 +41,8 @@ export class Producer extends Player implements IInteractor {
     this.dataManager.push([
       {
         playerID: this.id,
-        type: DataType.INTERACT,
-        data: { subType: InteractType.DRAG, x, y },
+        type: ModrianDataType.INTERACT,
+        data: { subType: ModrianInteractType.DRAG, x, y },
       },
     ]);
   }
@@ -51,8 +51,8 @@ export class Producer extends Player implements IInteractor {
     this.dataManager.push([
       {
         playerID: this.id,
-        type: DataType.INTERACT,
-        data: { subType: InteractType.DRAG_END, x, y },
+        type: ModrianDataType.INTERACT,
+        data: { subType: ModrianInteractType.DRAG_END, x, y },
       },
     ]);
   }

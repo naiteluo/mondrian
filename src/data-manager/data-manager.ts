@@ -1,30 +1,33 @@
 import { Modrian } from "modrian";
-import { IPlayer } from "../player";
-import { IData } from "./data";
-import { LocalDownStreamSource, WsDownStreamSource } from "./down-stream";
-import { LocalUpStreamSink, WsUpStreamSink } from "./up-stream";
+import { IModrianPlayer } from "../player";
+import { IModrianData } from "./data";
+import {
+  ModrianLocalDownStreamSource,
+  ModrianWsDownStreamSource,
+} from "./down-stream";
+import { ModrianLocalUpStreamSink, ModrianWsUpStreamSink } from "./up-stream";
 import { IoClient } from "./ws-client";
 
 export * from "./data";
 
-export class DataManager {
-  buffer: IData[] = [];
+export class ModrianDataManager {
+  buffer: IModrianData[] = [];
 
   client: IoClient = new IoClient();
 
   private upStream = new WritableStream(
-    new WsUpStreamSink(this.buffer, this.client)
+    new ModrianWsUpStreamSink(this.buffer, this.client)
     // new LocalUpStreamSink(this.buffer)
   );
-  private downStream = new ReadableStream<IData>(
-    new WsDownStreamSource(this.buffer, this.client)
+  private downStream = new ReadableStream<IModrianData>(
+    new ModrianWsDownStreamSource(this.buffer, this.client)
     // new LocalDownStreamSource(this.buffer)
   );
 
   private reader: ReadableStreamDefaultReader;
   private writer: WritableStreamDefaultWriter;
 
-  private consumers: Map<string, IPlayer> = new Map();
+  private consumers: Map<string, IModrianPlayer> = new Map();
   private $panel: HTMLElement;
 
   constructor(private modrian: Modrian) {
@@ -54,7 +57,7 @@ export class DataManager {
 
   private dLast = +new Date();
 
-  dispatch(datas: IData[]) {
+  dispatch(datas: IModrianData[]) {
     // dispatch messages to every activated consumer
     datas.forEach((v) => {
       if (v.playerID) {
@@ -71,9 +74,9 @@ export class DataManager {
     // });
   }
 
-  tmp: IData[] = [];
+  tmp: IModrianData[] = [];
 
-  async push(datas: IData[]) {
+  async push(datas: IModrianData[]) {
     await this.writer.write(datas);
 
     // datas.map((d) => {
@@ -81,7 +84,7 @@ export class DataManager {
     // });
   }
 
-  registerConsumer(id: string, consumer: IPlayer) {
+  registerConsumer(id: string, consumer: IModrianPlayer) {
     this.consumers.set(id, consumer);
   }
 
@@ -90,7 +93,7 @@ export class DataManager {
   }
 
   consumeTmp() {
-    let datas: IData[] = JSON.parse(localStorage.getItem("test"));
+    const datas: IModrianData[] = JSON.parse(localStorage.getItem("test"));
     this.dispatch(datas);
   }
 }

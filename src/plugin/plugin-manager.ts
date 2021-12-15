@@ -1,14 +1,14 @@
 import { ModrianRenderer } from "../renderer/modrian-renderer";
 import { CursorPlugin } from "./cursor-plugin";
 import { PencilBrushPlugin, PencilBrushPluginPID } from "./pencil-plugin";
-import { IPlugin, IPluginConfig, Plugin } from "./plugin";
+import { IModrianPlugin, IPluginConfig, ModrianPlugin } from "./plugin";
 
 interface PluginConstructor {
-  new (...args: any[]): Plugin;
+  new (...args: any[]): ModrianPlugin;
 }
 
 export interface IPluginRegisterConfig {
-  pid: Symbol;
+  pid: symbol;
   matcher: (ptype: string) => boolean;
   c: PluginConstructor;
 }
@@ -30,12 +30,12 @@ const PluginList: IPluginRegisterConfig[] = [
   },
 ];
 
-export class PluginManager {
+export class ModrianPluginManager {
   constructor(private _renderer: ModrianRenderer) {}
 
-  private _instancesMap: Map<Symbol, Plugin> = new Map();
+  private _instancesMap: Map<Symbol, ModrianPlugin> = new Map();
 
-  private _instancesList: Plugin[] = [];
+  private _instancesList: ModrianPlugin[] = [];
 
   private findPluginConfig(type: Symbol): IPluginRegisterConfig {
     const config = PluginList.find((v) => {
@@ -46,7 +46,7 @@ export class PluginManager {
     return config;
   }
 
-  loadPlugin<T extends Plugin>(type: Symbol) {
+  loadPlugin<T extends ModrianPlugin>(type: Symbol) {
     let plugin = this._instancesMap.get(type);
     if (!plugin) {
       let config = this.findPluginConfig(type);
@@ -57,7 +57,7 @@ export class PluginManager {
     return plugin as T;
   }
 
-  unloadPlugin<T extends IPlugin>(type: Symbol) {
+  unloadPlugin<T extends IModrianPlugin>(type: Symbol) {
     this._instancesMap.delete(type);
     let i = this._instancesList.findIndex((instance) => {
       return instance.PID === type;
@@ -71,7 +71,7 @@ export class PluginManager {
     return this._instancesList;
   }
 
-  interateInstances(cb: (plugin: Plugin) => void) {
+  interateInstances(cb: (plugin: ModrianPlugin) => void) {
     this.instancesList.forEach((p) => {
       cb(p);
     });

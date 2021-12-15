@@ -1,3 +1,4 @@
-export interface IState {
-    
+export interface IModrianState {
+  // todo
+  something: string;
 }

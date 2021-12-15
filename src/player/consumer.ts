@@ -1,40 +1,44 @@
-import { DataType, IData, InteractType } from "../data-manager";
+import {
+  ModrianDataType,
+  IModrianData,
+  ModrianInteractType,
+} from "../data-manager";
 import { ModrianRenderer } from "../renderer/modrian-renderer";
-import { Player } from "./player";
-import { PluginManager } from "../plugin/plugin-manager";
+import { ModrianPlayer } from "./player";
+import { ModrianPluginManager } from "../plugin/plugin-manager";
 import { PencilBrushPlugin } from "../plugin/pencil-plugin";
 import { CursorPlugin } from "../plugin/cursor-plugin";
 
-export class Consumer extends Player {
-  private pluginManager: PluginManager;
+export class ModrianConsumer extends ModrianPlayer {
+  private pluginManager: ModrianPluginManager;
 
   constructor(id: string, private renderer: ModrianRenderer) {
     super();
     this.id = id;
-    this.pluginManager = new PluginManager(this.renderer);
+    this.pluginManager = new ModrianPluginManager(this.renderer);
     this.pluginManager.loadPlugin(CursorPlugin.PID);
   }
 
-  consume(datas: IData[]) {
+  consume(datas: IModrianData[]) {
     datas.forEach((data) => {
-      if (data.type === DataType.STATE) {
+      if (data.type === ModrianDataType.STATE) {
         this.pluginManager.loadPlugin(PencilBrushPlugin.PID);
         this.pluginManager.interateInstances((plugin) => {
           plugin.reactStateChange(data);
         });
         return;
       }
-      if (data.type === DataType.INTERACT) {
+      if (data.type === ModrianDataType.INTERACT) {
         const subType = data.data.subType;
         this.pluginManager.interateInstances((plugin) => {
           switch (subType) {
-            case InteractType.DRAG_START:
+            case ModrianInteractType.DRAG_START:
               plugin.reactDragStart(data);
               break;
-            case InteractType.DRAG:
+            case ModrianInteractType.DRAG:
               plugin.reactDragMove(data);
               break;
-            case InteractType.DRAG_END:
+            case ModrianInteractType.DRAG_END:
               plugin.reactDragEnd(data);
               break;
             default:

@@ -1,12 +1,12 @@
-import { IData } from "data-manager";
-import { IoClient } from "data-manager/ws-client";
+import { IModrianData } from "../data-manager";
+import { IoClient } from "../ws-client";
 
-export class LocalUpStreamSink implements UnderlyingSink {
-  constructor(private buffer: IData[]) {}
+export class ModrianLocalUpStreamSink implements UnderlyingSink {
+  constructor(private buffer: IModrianData[]) {}
   start(controller) {
     console.log("[start]");
   }
-  async write(chunk: IData[], controller) {
+  async write(chunk: IModrianData[], controller) {
     this.buffer.push(...chunk);
     await new Promise((resolve) => {
       resolve(undefined);
@@ -20,12 +20,12 @@ export class LocalUpStreamSink implements UnderlyingSink {
   }
 }
 
-export class WsUpStreamSink implements UnderlyingSink {
-  constructor(private buffer: IData[], private client: IoClient) {}
+export class ModrianWsUpStreamSink implements UnderlyingSink {
+  constructor(private buffer: IModrianData[], private client: IoClient) {}
   start(controller) {
     console.log("[start]");
   }
-  async write(chunk: IData[], controller) {
+  async write(chunk: IModrianData[], controller) {
     this.buffer.push(...chunk);
     this.client.send(chunk);
     await new Promise((resolve) => {

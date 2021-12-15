@@ -1,10 +1,10 @@
-import { IData } from "../data-manager";
+import { IModrianData } from "../data-manager";
 
-export interface IReactor {
-  reactDragStart(data: IData): void;
-  reactDragMove(data: IData): void;
-  reactDragEnd(data: IData): void;
-  reactStateChange(data: IData): void;
+export interface IModrianReactor {
+  reactDragStart(data: IModrianData): void;
+  reactDragMove(data: IModrianData): void;
+  reactDragEnd(data: IModrianData): void;
+  reactStateChange(data: IModrianData): void;
   reactUndo(event: any): void;
   reactRedo(event: any): void;
   reactClick(event: any): void;

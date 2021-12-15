@@ -1,41 +1,41 @@
-export const enum DataType {
+export const enum ModrianDataType {
   INTERACT = "i",
   STATE = "s",
   ACTION = "a",
 }
 
-export const enum InteractType {
+export const enum ModrianInteractType {
   DRAG_START = "ds",
   DRAG = "d",
   DRAG_END = "de",
 }
 
-interface ICommonData {
+interface IModrianCommonData {
   seq?: number;
   playerID?: string;
 }
 
-interface IInteractData extends ICommonData {
-  type: DataType.INTERACT;
+interface IModrianInteractData extends IModrianCommonData {
+  type: ModrianDataType.INTERACT;
   data: {
-    subType: InteractType;
+    subType: ModrianInteractType;
     x: number;
     y: number;
   };
 }
 
-interface IStateData extends ICommonData {
-  type: DataType.STATE;
+interface IModrianStateData extends IModrianCommonData {
+  type: ModrianDataType.STATE;
   data: {
     [key: string]: any;
   };
 }
 
-interface IActionData extends ICommonData {
-  type: DataType.ACTION;
+interface IModrianActionData extends IModrianCommonData {
+  type: ModrianDataType.ACTION;
   data: {
     [key: string]: any;
   };
 }
 
-export type IData = IInteractData | IStateData | IActionData;
+export type IModrianData = IModrianInteractData | IModrianStateData | IModrianActionData;

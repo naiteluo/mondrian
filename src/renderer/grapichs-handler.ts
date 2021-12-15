@@ -75,6 +75,8 @@ export class ModrianGraphicsHandler {
   destroy() {
     this._gs = [];
     this._g = undefined;
+    // this.layer = undefined;
+    // this.options = undefined;
   }
 
   get finished() {

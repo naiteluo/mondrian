@@ -1,4 +1,4 @@
-export class EventEmitter {
+export class ModrianEventEmitter {
   listeners = {};
 
   addListener(eventName, fn) {
@@ -26,7 +26,7 @@ export class EventEmitter {
   }
 
   removeListener(eventName, fn) {
-    let lis = this.listeners[eventName];
+    const lis = this.listeners[eventName];
     if (!lis) return this;
     for (let i = lis.length; i > 0; i--) {
       if (lis[i] === fn) {
@@ -38,7 +38,7 @@ export class EventEmitter {
   }
 
   emit(eventName, ...args) {
-    let fns = this.listeners[eventName];
+    const fns = this.listeners[eventName];
     if (!fns) return false;
     fns.forEach((f) => {
       f(...args);
@@ -47,7 +47,7 @@ export class EventEmitter {
   }
 
   listenerCount(eventName) {
-    let fns = this.listeners[eventName] || [];
+    const fns = this.listeners[eventName] || [];
     return fns.length;
   }
 

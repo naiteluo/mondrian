@@ -1,9 +1,9 @@
-import { IPlugin } from "plugin/plugin";
+import { IModrianPlugin } from "../plugin/plugin";
 
 export interface IModuleConfig {
   name: string;
   plugins: {
-    [key: string]: IPlugin;
+    [key: string]: IModrianPlugin;
   };
 }
 
@@ -12,7 +12,7 @@ interface Constructable {
 }
 
 interface PluginConstructor {
-  new (...args: any[]): IPlugin;
+  new (...args: any[]): IModrianPlugin;
 }
 
 interface IModule {
