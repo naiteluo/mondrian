@@ -4,7 +4,7 @@ import { Application } from "@pixi/app";
 import { EventProxier } from "./event-proxier";
 import { ModrianConsumer, ModrianProducer } from "./player";
 import { ModrianUtils } from "./common/utils";
-import { ModrianRenderer } from "./renderer/modrian-renderer";
+import { ModrianRenderer } from "./renderer/renderer";
 import { ModrianDataManager } from "./data-manager";
 
 export interface IModrianParams {

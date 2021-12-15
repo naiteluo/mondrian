@@ -3,7 +3,7 @@ import {
   IModrianData,
   ModrianInteractType,
 } from "../data-manager";
-import { ModrianRenderer } from "../renderer/modrian-renderer";
+import { ModrianRenderer } from "../renderer/renderer";
 import { ModrianPlayer } from "./player";
 import { ModrianPluginManager } from "../plugin/plugin-manager";
 import { PencilBrushPlugin } from "../plugin/pencil-plugin";

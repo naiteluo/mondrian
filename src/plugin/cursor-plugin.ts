@@ -1,5 +1,5 @@
 import { IModrianData } from "../data-manager";
-import { ModrianRenderer } from "../renderer/modrian-renderer";
+import { ModrianRenderer } from "../renderer/renderer";
 import { Sprite } from "pixi.js";
 import { ModrianPlugin } from "./plugin";
 

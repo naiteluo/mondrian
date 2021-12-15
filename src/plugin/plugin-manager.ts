@@ -1,4 +1,4 @@
-import { ModrianRenderer } from "../renderer/modrian-renderer";
+import { ModrianRenderer } from "../renderer/renderer";
 import { CursorPlugin } from "./cursor-plugin";
 import { PencilBrushPlugin, PencilBrushPluginPID } from "./pencil-plugin";
 import { IModrianPlugin, IPluginConfig, ModrianPlugin } from "./plugin";

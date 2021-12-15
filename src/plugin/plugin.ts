@@ -1,6 +1,6 @@
 import { IModrianReactor } from "../common/reactor";
 import { IModrianData } from "../data-manager";
-import { ModrianRenderer } from "../renderer/modrian-renderer";
+import { ModrianRenderer } from "../renderer/renderer";
 
 export interface IPluginConfig {}
 
