@@ -4,7 +4,7 @@ import { Utils } from "../common/utils";
 import { IData } from "data-manager";
 import { PlayerState } from "player";
 import { BrushPlugin } from "./brush-plugin";
-import { ModrianGraphicsHandle } from "modrian-renderer";
+import { ModrianGraphicsHandler } from "renderer/grapichs-handler";
 
 export const PencilBrushPluginPID = Symbol("pencil-plugin");
 
@@ -16,17 +16,14 @@ export class PencilBrushPlugin extends BrushPlugin {
   private startPos: IPointData;
   private currentPos: IPointData;
   private pointCache = [];
-  private handle: ModrianGraphicsHandle;
+  private handler: ModrianGraphicsHandler;
 
   private state: PlayerState;
 
   reactDragStart(data: IData): void {
     const p = { x: data.data.x, y: data.data.y };
-    this.handle = this.renderer.startGraphicsHandle();
-
-    this.handle.g.lineStyle({
-      ...this.state.selectedBrush,
-    });
+    this.handler = this.renderer.startGraphicsHandler();
+    this.handler.lineStyle = this.state.selectedBrush;
     this.isDrawing = true;
     this.startPos = this.currentPos = { ...p };
     this.pointCache = [p];
@@ -41,18 +38,19 @@ export class PencilBrushPlugin extends BrushPlugin {
       e: IPointData = this.pointCache[this.pointCache.length - 3],
       d: IPointData = this.pointCache[this.pointCache.length - 2];
     if (this.pointCache.length > 3) {
-      this.handle.g.moveTo(m.x, m.y).quadraticCurveTo(e.x, e.y, d.x, d.y);
+      this.handler.g.moveTo(m.x, m.y).quadraticCurveTo(e.x, e.y, d.x, d.y);
     } else {
-      this.handle.g.moveTo(e.x, e.y).lineTo(d.x, d.y);
+      this.handler.g.moveTo(e.x, e.y).lineTo(d.x, d.y);
     }
     this.currentPos = { ...p };
   }
 
+  // todo handle unclosed drag event properly
   reactDragEnd(data: IData): void {
     this.pointCache = [];
     if (!this.isDrawing) return;
     this.isDrawing = false;
-    this.handle.stop();
+    this.handler.stop();
   }
 
   reactStateChange(data: IData): void {

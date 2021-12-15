@@ -7,10 +7,12 @@ export class Producer extends Player implements IInteractor {
   private stage: Container;
 
   constructor(
+    id: string,
     private application: Application,
     private dataManager: DataManager
   ) {
     super();
+    this.id = id;
     this.stage = application.stage;
   }
 
@@ -19,13 +21,16 @@ export class Producer extends Player implements IInteractor {
   }
 
   onStateChange(state: PlayerState) {
-    this.dataManager.push([{ type: DataType.STATE, data: { ...state } }]);
+    this.dataManager.push([
+      { playerID: this.id, type: DataType.STATE, data: { ...state } },
+    ]);
   }
 
   onDragStart(event: InteractionEvent): void {
     let { x, y } = event.data.getLocalPosition(this.stage);
     this.dataManager.push([
       {
+        playerID: this.id,
         type: DataType.INTERACT,
         data: { subType: InteractType.DRAG_START, x, y },
       },
@@ -35,6 +40,7 @@ export class Producer extends Player implements IInteractor {
     let { x, y } = event.data.getLocalPosition(this.stage);
     this.dataManager.push([
       {
+        playerID: this.id,
         type: DataType.INTERACT,
         data: { subType: InteractType.DRAG, x, y },
       },
@@ -44,6 +50,7 @@ export class Producer extends Player implements IInteractor {
     let { x, y } = event.data.getLocalPosition(this.stage);
     this.dataManager.push([
       {
+        playerID: this.id,
         type: DataType.INTERACT,
         data: { subType: InteractType.DRAG_END, x, y },
       },

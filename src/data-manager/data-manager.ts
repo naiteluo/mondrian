@@ -1,3 +1,4 @@
+import { Modrian } from "modrian";
 import { IPlayer } from "../player";
 import { IData } from "./data";
 import { LocalDownStreamSource, WsDownStreamSource } from "./down-stream";
@@ -26,7 +27,7 @@ export class DataManager {
   private consumers: Map<string, IPlayer> = new Map();
   private $panel: HTMLElement;
 
-  constructor() {
+  constructor(private modrian: Modrian) {
     this.$panel = document.getElementById("debug-panel");
     this.client.start();
   }
@@ -55,9 +56,19 @@ export class DataManager {
 
   dispatch(datas: IData[]) {
     // dispatch messages to every activated consumer
-    this.consumers.forEach((player) => {
-      player.consume(datas);
+    datas.forEach((v) => {
+      if (v.playerID) {
+        if (!this.consumers.has(v.playerID)) {
+          this.modrian.addConsumer(v.playerID);
+        }
+        this.consumers.get(v.playerID).consume([v]);
+      } else {
+        console.error("!!!");
+      }
     });
+    // this.consumers.forEach((player) => {
+    //   player.consume(datas);
+    // });
   }
 
   tmp: IData[] = [];

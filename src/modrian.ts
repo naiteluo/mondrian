@@ -4,7 +4,7 @@ import { Application } from "@pixi/app";
 import { EventProxier } from "./event-proxier";
 import { Consumer, Producer } from "./player";
 import { Utils } from "./common/utils";
-import { ModrianRenderer } from "./modrian-renderer";
+import { ModrianRenderer } from "./renderer/modrian-renderer";
 import { DataManager } from "./data-manager";
 
 export interface IModrianParams {
@@ -13,6 +13,8 @@ export interface IModrianParams {
 }
 
 export class Modrian {
+  private ID = `${+new Date()}-${Math.round(Math.random() * 100)}`;
+
   private app: Application;
   private $container: HTMLElement;
   private $canvas: HTMLCanvasElement;
@@ -38,7 +40,7 @@ export class Modrian {
     this.initializePIXIApplication();
     this.resizeEventHandler();
 
-    this.dataManager = new DataManager();
+    this.dataManager = new DataManager(this);
     this.initializeModrianRenderer();
 
     if (params.isProducer) {
@@ -71,14 +73,18 @@ export class Modrian {
   }
 
   initializeProducer() {
-    this.producer = new Producer(this.app, this.dataManager);
+    this.producer = new Producer(this.ID, this.app, this.dataManager);
     this.eventProxier = new EventProxier(this.app, [this.producer]);
   }
 
   initializeConsumer() {
-    const consumer = new Consumer(this.renderer);
-    this.consumers.set("test", consumer);
-    this.dataManager.registerConsumer("test", consumer);
+    this.addConsumer(this.ID);
+  }
+
+  addConsumer(id: string) {
+    const consumer = new Consumer(id, this.renderer);
+    this.consumers.set(id, consumer);
+    this.dataManager.registerConsumer(id, consumer);
   }
 
   initializeContainer() {
@@ -115,6 +121,7 @@ export class Modrian {
     this.$panel.style.padding = "2px 5px";
     this.$panel.style.color = "#13c039";
     this.$panel.style.display = "flex";
+    this.$panel.style.opacity = "0.6";
     this.$panel.style.alignItems = "center";
     this.$panel.style.fontFamily = "monospace";
     this.$panel.innerHTML = "debug";

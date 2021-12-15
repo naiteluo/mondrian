@@ -10,6 +10,10 @@ import {
   Texture,
   UPDATE_PRIORITY,
 } from "pixi.js";
+import {
+  ModrianGraphicsHandler,
+  ModrianGraphicsHandlerOptions,
+} from "./grapichs-handler";
 
 const enum TrashType {
   DisplayObject,
@@ -31,7 +35,7 @@ export class ModrianRenderer {
   private staticLayer: Sprite;
 
   private dynamicLevel = 20;
-  private dynamicCache: ModrianGraphicsHandle[] = [];
+  private dynamicCache: ModrianGraphicsHandler[] = [];
   private dynamicCacheIndex: number = 0;
 
   private trash: Trash[] = [];
@@ -67,26 +71,26 @@ export class ModrianRenderer {
     window.BaseTextureCache = BaseTextureCache;
   }
 
-  private shiftGrapicsHandlesToStatic() {
+  private shiftGrapicsHandlersToStatic() {
     while (this.dynamicCache.length > this.dynamicLevel) {
-      const handle = this.dynamicCache.shift();
-      const g = handle.g;
-      this.dynamicLayer.removeChild(g);
-      this.staticLayer.addChild(g);
-      handle.destroy();
+      const handler = this.dynamicCache.shift();
+      const gs = handler.detach();
+      gs.forEach((g) => {
+        this.staticLayer.addChild(g);
+      });
+      handler.destroy();
     }
   }
 
-  startGraphicsHandle(options?: ModrianGraphicsHandleOptions) {
-    const handle = new ModrianGraphicsHandle(options);
-    this.dynamicLayer.addChild(handle.g);
-    this.dynamicCache.push(handle);
-    handle.start();
-    return handle;
+  startGraphicsHandler(options?: ModrianGraphicsHandlerOptions) {
+    const handler = new ModrianGraphicsHandler(this.dynamicLayer, options);
+    this.dynamicCache.push(handler);
+    handler.start();
+    return handler;
   }
 
-  stopGraphicsHandle(handle: ModrianGraphicsHandle) {
-    handle.stop();
+  stopGraphicsHandler(handler: ModrianGraphicsHandler) {
+    handler.stop();
   }
 
   /**
@@ -96,12 +100,11 @@ export class ModrianRenderer {
    */
   private main = () => {
     if (this.dynamicCache.length <= this.dynamicLevel) return;
-    this.shiftGrapicsHandlesToStatic();
+    this.shiftGrapicsHandlersToStatic();
     const wh = { w: this.app.stage.width, h: this.app.stage.height };
     const texture = this.app.renderer.generateTexture(this.staticLayer, {
       region: new Rectangle(0, 0, wh.w, wh.h),
     });
-
     this.staticLayer.removeChildren().forEach((v) => {
       v.visible = false;
       this.markGc({ type: TrashType.DisplayObject, target: v });
@@ -117,6 +120,9 @@ export class ModrianRenderer {
    * low priority
    */
   private gc = () => {
+    this.dynamicCache.forEach((v) => {
+      v.refresh();
+    });
     this.trash.forEach((r) => {
       switch (r.type) {
         case TrashType.DisplayObject:
@@ -135,17 +141,6 @@ export class ModrianRenderer {
     });
     // clean trash
     this.trash = [];
-
-    this.unfinishedCount = 0;
-    // check and warn unfinshed graphic handles
-    this.dynamicCache.forEach((handle) => {
-      if (!handle.finished) {
-        this.unfinishedCount++;
-      }
-    });
-    if (this.unfinishedCount > 1) {
-      console.error("unfinished graphic handle!!!!");
-    }
   };
 
   private markGc(Trash) {
@@ -161,67 +156,45 @@ export class ModrianRenderer {
       return;
     }
     this.lastPerfDt = 0;
-    let tmp = 0;
+    let tmpMemSize = 0;
     for (const key in BaseTextureCache) {
       if (Object.prototype.hasOwnProperty.call(BaseTextureCache, key)) {
         const element = BaseTextureCache[key];
         //  (baseTexture.realWidth * baseTexture.realHeight * 4) / 1024 / 1024
-        tmp += (element.realWidth * element.realHeight * 4) / 1024 / 1024;
+        tmpMemSize +=
+          (element.realWidth * element.realHeight * 4) / 1024 / 1024;
       }
     }
-    if (tmp !== this.textureMem) {
-      this.$panel.innerHTML = `tx mem: ${this.textureMem} MB`;
-      this.textureMem = tmp;
+    let tmpGraphicsCount = this.dynamicCache.reduce((prev, v) => {
+      return prev + v.gs.length;
+    }, 0);
+    if (tmpMemSize !== this.textureMem) {
+      this.$panel.innerHTML = `
+        <div style="display:block">tx mem: ${this.textureMem.toFixed(
+          2
+        )} MB | </div> 
+        <div> g count: ${tmpGraphicsCount}</div>
+      `;
+      this.textureMem = tmpMemSize;
     }
-  };
-}
 
-interface ModrianGraphicsHandleOptions {
-  canCacheAsBitmap?: boolean;
-}
-
-/**
- * 感觉这么封装不太舒服，再想想
- */
-export class ModrianGraphicsHandle {
-  static DefaultOptions: ModrianGraphicsHandleOptions = {
-    canCacheAsBitmap: true,
+    this.__debug_checkUnfinishedHandler();
   };
 
-  private _g: Graphics;
+  private __debug_unfinishedHandlerCount = 0;
 
-  private _finished = false;
-
-  private options: ModrianGraphicsHandleOptions;
-
-  constructor(options?: { canCacheAsBitmap?: boolean }) {
-    this.options = {
-      ...ModrianGraphicsHandle.DefaultOptions,
-      ...(options || {}),
-    };
-    this._g = new Graphics();
-  }
-
-  start() {}
-
-  stop() {
-    if (this.options.canCacheAsBitmap) {
-      this.g.cacheAsBitmapResolution = 1;
-      this.g.cacheAsBitmapMultisample = 4;
-      this.g.cacheAsBitmap = true;
+  private __debug_checkUnfinishedHandler() {
+    this.__debug_unfinishedHandlerCount = 0;
+    // check and warn unfinshed graphic handles
+    this.dynamicCache.forEach((handle) => {
+      if (!handle.finished) {
+        this.__debug_unfinishedHandlerCount++;
+      }
+    });
+    if (this.__debug_unfinishedHandlerCount > 1) {
+      console.warn(
+        `unfinished graphic (${this.__debug_unfinishedHandlerCount}) handle!!!!`
+      );
     }
-    this._finished = true;
-  }
-
-  destroy() {
-    this._g = undefined;
-  }
-
-  get g() {
-    return this._g;
-  }
-
-  get finished() {
-    return this._finished;
   }
 }

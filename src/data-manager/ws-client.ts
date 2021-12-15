@@ -1,7 +1,7 @@
 import { io, Socket } from "socket.io-client";
 import { IData } from "./data";
 
-type IoDataListener = (datas: IData[]) => void;
+type IoDataListener = (datas: IData[], isRecover?: boolean) => void;
 
 const IoEmptyListener = (datas: IData[]) => {
   console.log("empty", datas);
@@ -11,7 +11,9 @@ export class IoClient {
   private socket: Socket;
   private _listener: IoDataListener = IoEmptyListener;
   constructor() {
-    this.socket = io("ws://localhost:3000", { autoConnect: false });
+    this.socket = io(`ws://${window.location.hostname}:3000`, {
+      autoConnect: false,
+    });
     this.socket.on("d", (datas) => {
       this._listener(datas);
     });

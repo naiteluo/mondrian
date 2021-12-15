@@ -1,7 +1,7 @@
 import { IReactor } from "common/reactor";
 import { IState } from "common/state";
 import { IData } from "data-manager";
-import { ModrianRenderer } from "modrian-renderer";
+import { ModrianRenderer } from "../renderer/modrian-renderer";
 
 export interface IPluginConfig {}
 

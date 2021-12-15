@@ -1,5 +1,5 @@
 import { DataType, IData, InteractType } from "../data-manager";
-import { ModrianRenderer } from "../modrian-renderer";
+import { ModrianRenderer } from "../renderer/modrian-renderer";
 import { Player } from "./player";
 import { PluginManager } from "../plugin/plugin-manager";
 import { PencilBrushPlugin } from "../plugin/pencil-plugin";
@@ -8,8 +8,9 @@ import { CursorPlugin } from "../plugin/cursor-plugin";
 export class Consumer extends Player {
   private pluginManager: PluginManager;
 
-  constructor(private renderer: ModrianRenderer) {
+  constructor(id: string, private renderer: ModrianRenderer) {
     super();
+    this.id = id;
     this.pluginManager = new PluginManager(this.renderer);
     this.pluginManager.loadPlugin(CursorPlugin.PID);
   }
