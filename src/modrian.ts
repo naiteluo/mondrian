@@ -33,6 +33,10 @@ export class Modrian {
     return this.eventProxier;
   }
 
+  get pixiApp() {
+    return this.app;
+  }
+
   constructor(private params: IModrianParams) {
     this.$container = params.container;
     this.initializeContainer();

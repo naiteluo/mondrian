@@ -2,7 +2,10 @@ import { Application } from "@pixi/app";
 import { IRendererPlugins } from "@pixi/core";
 import { Container } from "@pixi/display";
 import { InteractionEvent } from "@pixi/interaction";
-import { IModrianInteractor } from "./common/interactor";
+import {
+  IModrianInteractor,
+  IModrianMockInteractionEvent,
+} from "./common/interactor";
 import { ModrianEventEmitter } from "./common/event-emitter";
 import { IModrianPlayerState } from "./player/player";
 
@@ -18,9 +21,12 @@ export class EventProxier extends ModrianEventEmitter {
     this.stage = application.stage;
     this.stage.interactive = true;
     this.interaction = application.renderer.plugins.interaction;
-    this.interaction.on("pointerdown", this.onDragStart);
-    this.interaction.on("pointermove", this.onDragMove);
-    this.interaction.on("pointerup", this.onDragEnd);
+
+    this.startPixiEventWatch();
+
+    this.on("player:interaction:pointerdown", this.onDragStart);
+    this.on("player:interaction:pointermove", this.onDragMove);
+    this.on("player:interaction:pointerup", this.onDragEnd);
 
     this.on("player:state:change", this.onStateChange);
     this.on("player:action:undo", this.onUndo);
@@ -38,6 +44,19 @@ export class EventProxier extends ModrianEventEmitter {
     if (i !== -1) {
       this.interactors.splice(i, 1);
     }
+  }
+
+  public startPixiEventWatch() {
+    this.stopPixiEventWatch();
+    this.interaction.on("pointerdown", this.onDragStart);
+    this.interaction.on("pointermove", this.onDragMove);
+    this.interaction.on("pointerup", this.onDragEnd);
+  }
+
+  public stopPixiEventWatch() {
+    this.interaction.off("pointerdown", this.onDragStart);
+    this.interaction.off("pointermove", this.onDragMove);
+    this.interaction.off("pointerup", this.onDragEnd);
   }
 
   private onStateChange = (state: IModrianPlayerState) => {
@@ -58,18 +77,18 @@ export class EventProxier extends ModrianEventEmitter {
     });
   };
 
-  private onDragStart = (event: InteractionEvent) => {
+  private onDragStart = (event: IModrianMockInteractionEvent) => {
     this.interactors.forEach((interactor) => {
       interactor.onDragStart(event);
     });
   };
 
-  private onDragMove = (event: InteractionEvent) => {
+  private onDragMove = (event: IModrianMockInteractionEvent) => {
     this.interactors.forEach((interactor) => {
       interactor.onDragMove(event);
     });
   };
-  private onDragEnd = (event: InteractionEvent) => {
+  private onDragEnd = (event: IModrianMockInteractionEvent) => {
     this.interactors.forEach((interactor) => {
       interactor.onDragEnd(event);
     });

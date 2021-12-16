@@ -25,7 +25,7 @@ export interface BrushPluginState extends ILineStyleOptions {
 
 export const defaultBrushOptions: BrushPluginState = {
   color: 0x000000,
-  width: 10,
+  width: 5,
   alpha: 1,
   native: false,
   __brushType: BrushType.Normal,

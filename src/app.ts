@@ -74,6 +74,7 @@ class App {
     actionFolder.open();
     actionFolder.add(this, "onUndo").name("Undo");
     actionFolder.add(this, "onRedo").name("Redo");
+    actionFolder.add(this, "onAuto").name("Auto");
   }
 
   initialModrian() {
@@ -104,6 +105,87 @@ class App {
 
   onRedo() {
     this.modrian.interaction.emit("player:action:redo");
+  }
+
+  private isAutoOn = false;
+  private lastPoint = { x: 0, y: 0 };
+  private autoStepLength = 40;
+  private autoStepIndex = 0;
+  private autoStepCountPerTick = 20;
+  private viewWidth = 0;
+  private viewHeight = 0;
+  private lt = 0;
+
+  private step = (nt) => {
+    if (this.isAutoOn) {
+      if (nt - this.lt > 50) {
+        this.lt = nt;
+        switch (this.autoStepIndex) {
+          case 0:
+            // simulate self drag
+            this.modrian.interaction.emit("player:state:change", {
+              selectedBrush: {
+                ...this.brushConfig,
+                color: (Math.random() * 0xffffff) << 0,
+              },
+            });
+            this.modrian.interaction.emit("player:interaction:pointerdown", {
+              mock: true,
+              mockX: this.lastPoint.x,
+              mockY: this.lastPoint.y,
+            });
+            break;
+          case this.autoStepCountPerTick:
+            this.modrian.interaction.emit("player:interaction:pointerup", {
+              mock: true,
+              mockX: this.lastPoint.x,
+              mockY: this.lastPoint.y,
+            });
+            break;
+          default:
+            this.randomUpdatePoint();
+            this.modrian.interaction.emit("player:interaction:pointermove", {
+              mock: true,
+              mockX: this.lastPoint.x,
+              mockY: this.lastPoint.y,
+            });
+            break;
+        }
+        this.autoStepIndex =
+          this.autoStepIndex === this.autoStepCountPerTick
+            ? 0
+            : this.autoStepIndex + 1;
+      }
+    }
+    requestAnimationFrame(this.step);
+  };
+
+  private randomUpdatePoint() {
+    this.lastPoint.x +=
+      Math.random() * this.autoStepLength * 2 - this.autoStepLength;
+    this.lastPoint.y +=
+      Math.random() * this.autoStepLength * 2 - this.autoStepLength;
+    this.lastPoint.x = this.lastPoint.x < 0 ? 0 : this.lastPoint.x;
+    this.lastPoint.y = this.lastPoint.y < 0 ? 0 : this.lastPoint.y;
+    this.lastPoint.x = this.lastPoint.x > this.viewWidth ? 0 : this.lastPoint.x;
+    this.lastPoint.y =
+      this.lastPoint.y > this.viewHeight ? 0 : this.lastPoint.y;
+  }
+
+  onAuto() {
+    if (this.isAutoOn) {
+      this.isAutoOn = false;
+      this.modrian.interaction.startPixiEventWatch();
+      return;
+    }
+    // update view size
+    this.viewWidth = this.modrian.pixiApp.view.width;
+    this.viewHeight = this.modrian.pixiApp.view.height;
+    this.isAutoOn = true;
+    // stop real mouse events watching
+    this.modrian.interaction.stopPixiEventWatch();
+    requestAnimationFrame(this.step);
+    
   }
 }
 

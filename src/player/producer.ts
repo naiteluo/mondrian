@@ -1,5 +1,8 @@
 import { Application, Container, InteractionEvent } from "pixi.js";
-import { IModrianInteractor } from "../common/interactor";
+import {
+  IModrianInteractor,
+  IModrianMockInteractionEvent,
+} from "../common/interactor";
 import {
   ModrianDataType,
   IModrianData,
@@ -35,8 +38,10 @@ export class ModrianProducer
     ]);
   }
 
-  onDragStart(event: InteractionEvent): void {
-    const { x, y } = event.data.getLocalPosition(this.stage);
+  onDragStart(event: IModrianMockInteractionEvent): void {
+    const { x, y } = event.mock
+      ? { x: event.mockX, y: event.mockY }
+      : event.data.getLocalPosition(this.stage);
     this.dataManager.push([
       {
         playerID: this.id,
@@ -45,8 +50,10 @@ export class ModrianProducer
       },
     ]);
   }
-  onDragMove(event: InteractionEvent): void {
-    const { x, y } = event.data.getLocalPosition(this.stage);
+  onDragMove(event: IModrianMockInteractionEvent): void {
+    const { x, y } = event.mock
+      ? { x: event.mockX, y: event.mockY }
+      : event.data.getLocalPosition(this.stage);
     this.dataManager.push([
       {
         playerID: this.id,
@@ -55,8 +62,10 @@ export class ModrianProducer
       },
     ]);
   }
-  onDragEnd(event: InteractionEvent): void {
-    const { x, y } = event.data.getLocalPosition(this.stage);
+  onDragEnd(event: IModrianMockInteractionEvent): void {
+    const { x, y } = event.mock
+      ? { x: event.mockX, y: event.mockY }
+      : event.data.getLocalPosition(this.stage);
     this.dataManager.push([
       {
         playerID: this.id,
