@@ -68,7 +68,9 @@ module.exports = {
   },
 
   plugins: [
-    new HtmlWebpackPlugin({}),
+    new HtmlWebpackPlugin({
+      title: "Mondrian",
+    }),
     new CopyWebpackPlugin({
       patterns: [{ from: "assets", to: "assets" }],
     }),
