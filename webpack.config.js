@@ -56,7 +56,7 @@ module.exports = {
   devtool: "source-map",
   context: __dirname,
   target: "web",
-  watch: true,
+  watch: false,
   devServer: {
     proxy: {
       "/api": "http://localhost:3000",
