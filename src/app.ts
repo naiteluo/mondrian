@@ -75,6 +75,7 @@ class App {
     actionFolder.add(this, "onUndo").name("Undo");
     actionFolder.add(this, "onRedo").name("Redo");
     actionFolder.add(this, "onAuto").name("Auto");
+    actionFolder.add(this, "onClearServerCache").name("clearServerCache");
   }
 
   initialModrian() {
@@ -185,7 +186,10 @@ class App {
     // stop real mouse events watching
     this.modrian.interaction.stopPixiEventWatch();
     requestAnimationFrame(this.step);
-    
+  }
+
+  onClearServerCache() {
+    this.modrian.dataManager.client.forceClear();
   }
 }
 

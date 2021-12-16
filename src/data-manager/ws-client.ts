@@ -7,12 +7,15 @@ const IoEmptyListener = (datas: IModrianData[]) => {
   console.log("empty", datas);
 };
 
+// const hostname = '161.117.225.178'
+const hostname = window.location.hostname
+
 // todo refactor
 export class IoClient {
   private socket: Socket;
   private _listener: IoDataListener = IoEmptyListener;
   constructor() {
-    this.socket = io(`ws://${window.location.hostname}:3000`, {
+    this.socket = io(`ws://${hostname}:3000`, {
       autoConnect: false,
     });
     this.socket.on("d", (datas) => {
@@ -30,5 +33,8 @@ export class IoClient {
   }
   start() {
     this.socket.open();
+  }
+  forceClear() {
+    this.socket.emit("fr");
   }
 }
