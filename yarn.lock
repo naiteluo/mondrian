@@ -1177,6 +1177,11 @@
   resolved "https://registry.npmmirror.com/@types/cors/download/@types/cors-2.8.12.tgz?cache=0&sync_timestamp=1637264558127&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40types%2Fcors%2Fdownload%2F%40types%2Fcors-2.8.12.tgz#6b2c510a7ad7039e98e7b8d3d6598f4359e5c080"
   integrity sha1-ayxRCnrXA56Y57jT1lmPQ1nlwIA=
 
+"@types/dat.gui@^0.7.7":
+  version "0.7.7"
+  resolved "https://registry.npmmirror.com/@types/dat.gui/download/@types/dat.gui-0.7.7.tgz#2125aedfaa190364c5a50b0447858a7e159aea2e"
+  integrity sha1-ISWu36oZA2TFpQsER4WKfhWa6i4=
+
 "@types/earcut@^2.1.0":
   version "2.1.1"
   resolved "https://registry.npmmirror.com/@types/earcut/download/@types/earcut-2.1.1.tgz#573a0af609f17005c751f6f4ffec49cfe358ea51"
@@ -4661,6 +4666,11 @@ levn@~0.3.0:
   dependencies:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
+
+lil-gui@^0.15.0:
+  version "0.15.0"
+  resolved "https://registry.npmmirror.com/lil-gui/download/lil-gui-0.15.0.tgz#18f50bccbbf7ab59fdf12840031d6ba113e9e729"
+  integrity sha512-S2KJSkudOHpw30wry2vrFVgcI+2W1nUIhSRUDhJJK7Mbs7jaMbTVd4ayKuSfarzx8ZonTS8xOxx40NmsF44tAw==
 
 loader-runner@^2.4.0:
   version "2.4.0"

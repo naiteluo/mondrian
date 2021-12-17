@@ -5,14 +5,14 @@ import {
   defaultBrushOptions,
 } from "./plugin/brush-plugin";
 import { Modrian } from "./modrian";
-import * as dat from "dat.gui";
+import { GUI } from "lil-gui";
 
 const AUTO_START = true;
 
 class App {
-  modrian!: Modrian;
   $div: HTMLElement;
-  gui;
+  modrian!: Modrian;
+  gui: GUI;
 
   brushConfig: BrushPluginState = defaultBrushOptions;
 
@@ -32,18 +32,14 @@ class App {
     this.$div = document.createElement("div");
     document.body.appendChild(this.$div);
 
-    this.initialGUI();
+    this.initialLilGUI();
     this.initialModrian();
   }
 
-  initialGUI() {
-    // create ui
-    this.gui = new dat.GUI();
-    this.gui.domElement.parentElement.style.zIndex = "1";
-    this.gui.domElement.style.transformOrigin = "top right";
+  initialLilGUI() {
+    this.gui = new GUI();
 
     const brushFolder = this.gui.addFolder("Brush");
-    brushFolder.open();
     brushFolder
       .add(this.brushConfig, "__brushType", [
         BrushType.Normal,
