@@ -24,14 +24,6 @@ module.exports = {
         use: [{ loader: "style-loader" }, { loader: "css-loader" }],
       },
       {
-        test: /\.html$/,
-        use: [
-          {
-            loader: "html-loader",
-          },
-        ],
-      },
-      {
         test: /\.(woff2?|eot|ttf|otf|png|gif|jpg|jpeg)(\?.*)?$/,
         loader: "file-loader",
       },
@@ -70,6 +62,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       title: "Mondrian",
+      template: "assets/__index.html",
     }),
     new CopyWebpackPlugin({
       patterns: [{ from: "assets", to: "assets" }],

@@ -5,7 +5,7 @@ import {
   defaultBrushOptions,
 } from "./plugin/brush-plugin";
 import { Mondrian } from "./mondrian";
-import { GUI } from "lil-gui";
+import { Controller, GUI } from "lil-gui";
 
 const AUTO_START = true;
 
@@ -13,6 +13,7 @@ class App {
   $div: HTMLElement;
   mondrian!: Mondrian;
   gui: GUI;
+  guiAutoCtrl: Controller;
 
   brushConfig: BrushPluginState = defaultBrushOptions;
 
@@ -39,7 +40,7 @@ class App {
   initialLilGUI() {
     this.gui = new GUI();
 
-    const brushFolder = this.gui.addFolder("Brush");
+    const brushFolder = this.gui.addFolder("Brush").close();
     brushFolder
       .add(this.brushConfig, "__brushType", [
         BrushType.Normal,
@@ -66,12 +67,15 @@ class App {
       .addColor(this.brushConfig, "color")
       .onChange(this._onBrushStateChange);
 
-    const actionFolder = this.gui.addFolder("Action");
-    actionFolder.open();
-    actionFolder.add(this, "onUndo").name("Undo");
-    actionFolder.add(this, "onRedo").name("Redo");
-    actionFolder.add(this, "onAuto").name("Auto");
-    actionFolder.add(this, "onClearServerCache").name("clearServerCache");
+    const commandFolder = this.gui.addFolder("Command");
+    commandFolder.open();
+    commandFolder.add(this, "onUndo").name("Undo");
+    commandFolder.add(this, "onRedo").name("Redo");
+    commandFolder.add(this, "onClear").name("Clear");
+
+    const testFolder = this.gui.addFolder("Test");
+    this.guiAutoCtrl = testFolder.add(this, "onAuto").name("Start Auto Draw");
+    testFolder.add(this, "onClearServerCache").name("Clear Server Cache");
   }
 
   initialMondrian() {
@@ -104,9 +108,13 @@ class App {
     this.mondrian.interaction.emit("player:action:redo");
   }
 
+  onClear() {
+    this.mondrian.interaction.emit("player:action:clear");
+  }
+
   private isAutoOn = false;
   private lastPoint = { x: 0, y: 0 };
-  private autoStepLength = 40;
+  private autoStepLength = 80;
   private autoStepIndex = 0;
   private autoStepCountPerTick = 20;
   private viewWidth = 0;
@@ -115,7 +123,7 @@ class App {
 
   private step = (nt) => {
     if (this.isAutoOn) {
-      if (nt - this.lt > 50) {
+      if (nt - this.lt > 100) {
         this.lt = nt;
         switch (this.autoStepIndex) {
           case 0:
@@ -157,27 +165,44 @@ class App {
     requestAnimationFrame(this.step);
   };
 
+  private forcePointerUp() {
+    this.mondrian.interaction.emit("player:interaction:pointerup", {
+      mock: true,
+      mockX: this.lastPoint.x,
+      mockY: this.lastPoint.y,
+    });
+  }
+
   private randomUpdatePoint() {
     this.lastPoint.x +=
       Math.random() * this.autoStepLength * 2 - this.autoStepLength;
     this.lastPoint.y +=
       Math.random() * this.autoStepLength * 2 - this.autoStepLength;
-    this.lastPoint.x = this.lastPoint.x < 0 ? 0 : this.lastPoint.x;
-    this.lastPoint.y = this.lastPoint.y < 0 ? 0 : this.lastPoint.y;
-    this.lastPoint.x = this.lastPoint.x > this.viewWidth ? 0 : this.lastPoint.x;
+    this.lastPoint.x =
+      this.lastPoint.x < 0 ? this.viewWidth / 2 : this.lastPoint.x;
     this.lastPoint.y =
-      this.lastPoint.y > this.viewHeight ? 0 : this.lastPoint.y;
+      this.lastPoint.y < 0 ? this.viewHeight / 2 : this.lastPoint.y;
+    this.lastPoint.x =
+      this.lastPoint.x > this.viewWidth ? this.viewWidth / 2 : this.lastPoint.x;
+    this.lastPoint.y =
+      this.lastPoint.y > this.viewHeight
+        ? this.viewHeight / 2
+        : this.lastPoint.y;
   }
 
   onAuto() {
     if (this.isAutoOn) {
       this.isAutoOn = false;
+      this.forcePointerUp();
       this.mondrian.interaction.startPixiEventWatch();
+      this.guiAutoCtrl.name("Start Auto Draw");
       return;
     }
+    this.guiAutoCtrl.name("Stop Auto Draw");
     // update view size
     this.viewWidth = this.mondrian.pixiApp.view.width;
     this.viewHeight = this.mondrian.pixiApp.view.height;
+    this.lastPoint = { x: this.viewWidth / 2, y: this.viewHeight / 2 };
     this.isAutoOn = true;
     // stop real mouse events watching
     this.mondrian.interaction.stopPixiEventWatch();
@@ -185,7 +210,7 @@ class App {
   }
 
   onClearServerCache() {
-    this.mondrian.dataManager.client.forceClear();
+    this.mondrian.dm.client.forceClear();
   }
 }
 

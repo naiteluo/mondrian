@@ -13,7 +13,7 @@ export const enum MondrianInteractType {
 export const enum MondrianActionType {
   UNDO = "ud",
   REDO = "rd",
-  CLEAR = "clear",
+  CLEAR = "cl",
 }
 
 interface IMondrianCommonData {

@@ -27,15 +27,7 @@ export class Mondrian {
 
   private consumers: Map<string, MondrianConsumer> = new Map();
 
-  dataManager: MondrianDataManager;
-
-  get interaction() {
-    return this.eventProxier;
-  }
-
-  get pixiApp() {
-    return this.app;
-  }
+  private dataManager: MondrianDataManager;
 
   constructor(private params: IMondrianParams) {
     this.$container = params.container;
@@ -52,11 +44,12 @@ export class Mondrian {
     }
     this.initializeConsumer();
     this.dataManager.start();
-    // @ts-ignore
-    window.mo = this;
+
+    // todo remove debug
+    (window as any).mo = this;
   }
 
-  initializePIXIApplication() {
+  private initializePIXIApplication() {
     //Create a Pixi Application
     this.app = new Application({
       antialias: true,
@@ -76,12 +69,12 @@ export class Mondrian {
     this.app.stage.interactive = true;
   }
 
-  initializeProducer() {
+  private initializeProducer() {
     this.producer = new MondrianProducer(this.ID, this.app, this.dataManager);
     this.eventProxier = new EventProxier(this.app, [this.producer]);
   }
 
-  initializeConsumer() {
+  private initializeConsumer() {
     this.addConsumer(this.ID);
   }
 
@@ -91,14 +84,14 @@ export class Mondrian {
     this.dataManager.registerConsumer(id, consumer);
   }
 
-  initializeContainer() {
+  private initializeContainer() {
     this.$container.style.position = "absolute";
     this.$container.style.zIndex = "0";
     this.$container.style.margin = "0px 0px";
     this.$container.style.cursor = "none";
   }
 
-  resizeEventHandler = () => {
+  private resizeEventHandler = () => {
     const wh = MondrianUtils.getScreenWH();
     this.$container.style.width = `${wh.w}px`;
     this.$container.style.height = `${wh.h}px`;
@@ -107,7 +100,7 @@ export class Mondrian {
     this.app.renderer.resize(wh.w, wh.h);
   };
 
-  initializeMondrianRenderer() {
+  private initializeMondrianRenderer() {
     this.renderer = new MondrianRenderer(this.app, this.$panel);
   }
 
@@ -135,5 +128,18 @@ export class Mondrian {
 
   get player() {
     return this.producer;
+  }
+
+  get interaction() {
+    return this.eventProxier;
+  }
+
+  // data manager
+  get dm() {
+    return this.dataManager;
+  }
+
+  get pixiApp() {
+    return this.app;
   }
 }
