@@ -50,6 +50,9 @@ export class MondrianGraphicsHandler {
     if (this._g) {
       return this._g;
     }
+    if (this._finished) {
+      throw new Error("Accessing finished handler is forbidden.");
+    }
     this._g = new Graphics();
     this._gs.push(this._g);
     this.layer.addChild(this._g);
@@ -77,6 +80,9 @@ export class MondrianGraphicsHandler {
   }
 
   detach() {
+    if (!this._finished) {
+      throw new Error("Detaching unfinished handler is forbidden.");
+    }
     return this._gs.map((g) => {
       return this.layer.removeChild(g);
     });
@@ -85,8 +91,8 @@ export class MondrianGraphicsHandler {
   destroy() {
     this._gs = [];
     this._g = undefined;
-    // this.layer = undefined;
-    // this.options = undefined;
+    this.layer = undefined;
+    this.options = undefined;
   }
 
   get finished() {
