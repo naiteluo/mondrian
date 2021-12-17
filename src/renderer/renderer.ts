@@ -1,8 +1,7 @@
 import { Application } from "@pixi/app";
 import { Container, DisplayObject } from "@pixi/display";
-import { Rectangle } from "@pixi/math";
 import { BaseTextureCache } from "@pixi/utils";
-import { Sprite, Texture, UPDATE_PRIORITY } from "pixi.js";
+import { RenderTexture, Sprite, Texture, UPDATE_PRIORITY } from "pixi.js";
 import {
   MondrianGraphicsHandler,
   MondrianGraphicsHandlerOptions,
@@ -19,13 +18,17 @@ type Trash =
 
 export class MondrianRenderer {
   private rootLayer: Container;
-  // high update freqency element like cursor or performces ui
   // todo unsafe
+  // high update freqency element like cursor or performces ui
   public uiLayer: Container;
   // real contents of stage
   private dynamicLayer: Container;
   // cached static texture layer
-  private staticLayer: Sprite;
+  private staticLayer: Container;
+  // rewritable texture for snapshot
+  private fixedTexture: RenderTexture;
+  // sprite that hold snapshot
+  private fixedSprite: Sprite;
 
   private dynamicLevel = 20;
   private dynamicCache: MondrianGraphicsHandler[] = [];
@@ -38,9 +41,25 @@ export class MondrianRenderer {
     this.rootLayer = new Container();
     this.uiLayer = new Container();
     this.dynamicLayer = new Container();
-    this.staticLayer = new Sprite();
-    this.rootLayer.addChild(this.staticLayer, this.dynamicLayer, this.uiLayer);
+    this.staticLayer = new Container();
+
+    // init a big enough texture,
+    // draw static layer to this fixedTexture, and reuse this texture,
+    // instead of creating new texture again an again.
+    this.fixedTexture = RenderTexture.create({
+      width: this.app.screen.width,
+      height: this.app.screen.height,
+    });
+    this.fixedSprite = new Sprite(this.fixedTexture);
+
+    this.rootLayer.addChild(
+      this.fixedSprite,
+      this.staticLayer,
+      this.dynamicLayer,
+      this.uiLayer
+    );
     this.app.stage.addChild(this.rootLayer);
+
     this.app.ticker.minFPS = 60;
     /**
      * add main loop ticker
@@ -59,37 +78,66 @@ export class MondrianRenderer {
      * add perf ticker
      */
     this.app.ticker.add(this.perf, undefined, UPDATE_PRIORITY.LOW);
-
-    // expose base texture cache to window for debeg
-    // @ ts-ignore
-    (window as any).BaseTextureCache = BaseTextureCache;
   }
 
+  /**
+   * shift graphics handler out when reach dynamicLevel,
+   *
+   */
   private shiftGrapicsHandlersToStatic() {
     while (this.dynamicCache.length > this.dynamicLevel) {
       const handler = this.dynamicCache.shift();
       this.dynamicCacheIndex--;
+      // todo handler which is unfinished might also be shifted. Causing some unexpected behavior like unfinisded line.
+      // todo these situation will be easily re-produce if dynamicLevel is set a small value like 2.
+      // todo now just simple force stop the handler.
+      handler.stop();
       const gs = handler.detach();
       gs.forEach((g) => {
         this.staticLayer.addChild(g);
       });
       handler.destroy();
+
+      // Notices:
+      // now, graphics objs that holding by handler are moved to static layer
     }
   }
 
   startGraphicsHandler(options?: MondrianGraphicsHandlerOptions) {
+    // make sure dynamic cache size fit to history stack.
+    // discard handlers if reaching dynamic level,
+
+    // 1. check and discard leading cache
+    this.shiftGrapicsHandlersToStatic();
+
+    // 2. check and discard tail of cache
+    this.checkAndCleanDiscardableDynamicCache();
+
+    // create handler and add to cache
     const handler = new MondrianGraphicsHandler(this.dynamicLayer, options);
+    this.dynamicCache.push(handler);
+    handler.start();
+
+    // move indicator
+    this.dynamicCacheIndex += 1;
+
+    return handler;
+  }
+
+  /**
+   * these handler would not be moved to static layer
+   * will be mark gc-able now.
+   */
+  checkAndCleanDiscardableDynamicCache() {
     const countOfTails =
       this.dynamicCache.length - (this.dynamicCacheIndex + 1);
-    if (this.dynamicCache.length >= this.dynamicLevel) {
-      this.shiftGrapicsHandlersToStatic();
-    }
     if (countOfTails > 0) {
       const toBeDelete = this.dynamicCache.splice(
         this.dynamicCacheIndex + 1,
         countOfTails
       );
       toBeDelete.map((h) => {
+        h.stop();
         h.detach();
         h.gs.forEach((g) => {
           this.markGc({ type: TrashType.DisplayObject, target: g });
@@ -97,10 +145,6 @@ export class MondrianRenderer {
         h.destroy();
       });
     }
-    this.dynamicCache.push(handler);
-    this.dynamicCacheIndex += 1;
-    handler.start();
-    return handler;
   }
 
   forward() {
@@ -127,24 +171,30 @@ export class MondrianRenderer {
     handler.stop();
   }
 
+  private lastMainDt = 0;
+
   /**
    * main loop
    * normal prioriry
    * @returns
    */
-  private main = () => {
+  private main = (dt) => {
+    if (this.lastMainDt < 30) {
+      this.lastMainDt += dt;
+      return;
+    }
+    this.lastMainDt = 0;
     if (this.dynamicCache.length <= this.dynamicLevel) return;
     this.shiftGrapicsHandlersToStatic();
-    const wh = { w: this.app.stage.width, h: this.app.stage.height };
-    const texture = this.app.renderer.generateTexture(this.staticLayer, {
-      region: new Rectangle(0, 0, wh.w, wh.h),
+    this.app.renderer.render(this.staticLayer, {
+      renderTexture: this.fixedTexture,
+      clear: false,
     });
+
     this.staticLayer.removeChildren().forEach((v) => {
       v.visible = false;
       this.markGc({ type: TrashType.DisplayObject, target: v });
     });
-    this.markGc({ type: TrashType.Texture, target: this.staticLayer.texture });
-    this.staticLayer.texture = texture;
   };
 
   unfinishedCount = 0;
@@ -185,7 +235,7 @@ export class MondrianRenderer {
   textureMem = 0;
 
   private perf = (dt) => {
-    if (this.lastPerfDt < 20) {
+    if (this.lastPerfDt < 100) {
       this.lastPerfDt += dt;
       return;
     }
