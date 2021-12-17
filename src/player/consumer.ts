@@ -24,7 +24,7 @@ export class MondrianConsumer extends MondrianPlayer {
 
   consume(datas: IMondrianData[]) {
     datas.forEach((data) => {
-      if (data.type === MondrianDataType.STATE) {
+      if (data.type === MondrianDataType.SET_STATE) {
         this.pluginManager.loadPlugin(PencilBrushPlugin.PID);
         this.pluginManager.interateInstances((plugin) => {
           plugin.reactStateChange(data);
@@ -35,13 +35,13 @@ export class MondrianConsumer extends MondrianPlayer {
         const subType = data.data.subType;
         this.pluginManager.interateInstances((plugin) => {
           switch (subType) {
-            case MondrianInteractType.DRAG_START:
+            case MondrianInteractType.POINTER_DOWN:
               plugin.reactDragStart(data);
               break;
-            case MondrianInteractType.DRAG:
+            case MondrianInteractType.POINTER_MOVE:
               plugin.reactDragMove(data);
               break;
-            case MondrianInteractType.DRAG_END:
+            case MondrianInteractType.POINTER_UP:
               plugin.reactDragEnd(data);
               break;
             default:
@@ -49,7 +49,7 @@ export class MondrianConsumer extends MondrianPlayer {
           }
         });
       }
-      if (data.type === MondrianDataType.ACTION) {
+      if (data.type === MondrianDataType.COMMAND) {
         const subType = data.data.subType;
         this.pluginManager.interateInstances((plugin) => {
           switch (subType) {

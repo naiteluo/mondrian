@@ -1,13 +1,13 @@
 export const enum MondrianDataType {
   INTERACT = "i",
-  STATE = "s",
-  ACTION = "a",
+  SET_STATE = "s",
+  COMMAND = "a",
 }
 
 export const enum MondrianInteractType {
-  DRAG_START = "ds",
-  DRAG = "d",
-  DRAG_END = "de",
+  POINTER_DOWN = "pd",
+  POINTER_MOVE = "pm",
+  POINTER_UP = "pu",
 }
 
 export const enum MondrianActionType {
@@ -31,14 +31,14 @@ interface IMondrianInteractData extends IMondrianCommonData {
 }
 
 interface IMondrianStateData extends IMondrianCommonData {
-  type: MondrianDataType.STATE;
+  type: MondrianDataType.SET_STATE;
   data: {
     [key: string]: any;
   };
 }
 
 interface IMondrianActionData extends IMondrianCommonData {
-  type: MondrianDataType.ACTION;
+  type: MondrianDataType.COMMAND;
   data: {
     subType: MondrianActionType;
     [key: string]: any;

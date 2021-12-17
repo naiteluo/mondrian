@@ -34,7 +34,7 @@ export class MondrianProducer
 
   onStateChange(state: IMondrianPlayerState) {
     this.dataManager.push([
-      { playerID: this.id, type: MondrianDataType.STATE, data: { ...state } },
+      { playerID: this.id, type: MondrianDataType.SET_STATE, data: { ...state } },
     ]);
   }
 
@@ -46,7 +46,7 @@ export class MondrianProducer
       {
         playerID: this.id,
         type: MondrianDataType.INTERACT,
-        data: { subType: MondrianInteractType.DRAG_START, x, y },
+        data: { subType: MondrianInteractType.POINTER_DOWN, x, y },
       },
     ]);
   }
@@ -58,7 +58,7 @@ export class MondrianProducer
       {
         playerID: this.id,
         type: MondrianDataType.INTERACT,
-        data: { subType: MondrianInteractType.DRAG, x, y },
+        data: { subType: MondrianInteractType.POINTER_MOVE, x, y },
       },
     ]);
   }
@@ -70,7 +70,7 @@ export class MondrianProducer
       {
         playerID: this.id,
         type: MondrianDataType.INTERACT,
-        data: { subType: MondrianInteractType.DRAG_END, x, y },
+        data: { subType: MondrianInteractType.POINTER_UP, x, y },
       },
     ]);
   }
@@ -78,7 +78,7 @@ export class MondrianProducer
     this.dataManager.push([
       {
         playerID: this.id,
-        type: MondrianDataType.ACTION,
+        type: MondrianDataType.COMMAND,
         data: { subType: MondrianActionType.UNDO },
       },
     ]);
@@ -87,7 +87,7 @@ export class MondrianProducer
     this.dataManager.push([
       {
         playerID: this.id,
-        type: MondrianDataType.ACTION,
+        type: MondrianDataType.COMMAND,
         data: { subType: MondrianActionType.REDO },
       },
     ]);
