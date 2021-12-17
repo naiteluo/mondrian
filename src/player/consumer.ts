@@ -1,47 +1,47 @@
 import {
-  ModrianDataType,
-  IModrianData,
-  ModrianInteractType,
-  ModrianActionType,
+  MondrianDataType,
+  IMondrianData,
+  MondrianInteractType,
+  MondrianActionType,
 } from "../data-manager";
-import { ModrianRenderer } from "../renderer/renderer";
-import { ModrianPlayer } from "./player";
-import { ModrianPluginManager } from "../plugin/plugin-manager";
+import { MondrianRenderer } from "../renderer/renderer";
+import { MondrianPlayer } from "./player";
+import { MondrianPluginManager } from "../plugin/plugin-manager";
 import { PencilBrushPlugin } from "../plugin/pencil-plugin";
 import { CursorPlugin } from "../plugin/cursor-plugin";
 import { HistoryPlugin } from "../plugin/history-plugin";
 
-export class ModrianConsumer extends ModrianPlayer {
-  private pluginManager: ModrianPluginManager;
+export class MondrianConsumer extends MondrianPlayer {
+  private pluginManager: MondrianPluginManager;
 
-  constructor(id: string, private renderer: ModrianRenderer) {
+  constructor(id: string, private renderer: MondrianRenderer) {
     super();
     this.id = id;
-    this.pluginManager = new ModrianPluginManager(this.renderer);
+    this.pluginManager = new MondrianPluginManager(this.renderer);
     this.pluginManager.loadPlugin(CursorPlugin.PID);
     this.pluginManager.loadPlugin(HistoryPlugin.PID);
   }
 
-  consume(datas: IModrianData[]) {
+  consume(datas: IMondrianData[]) {
     datas.forEach((data) => {
-      if (data.type === ModrianDataType.STATE) {
+      if (data.type === MondrianDataType.STATE) {
         this.pluginManager.loadPlugin(PencilBrushPlugin.PID);
         this.pluginManager.interateInstances((plugin) => {
           plugin.reactStateChange(data);
         });
         return;
       }
-      if (data.type === ModrianDataType.INTERACT) {
+      if (data.type === MondrianDataType.INTERACT) {
         const subType = data.data.subType;
         this.pluginManager.interateInstances((plugin) => {
           switch (subType) {
-            case ModrianInteractType.DRAG_START:
+            case MondrianInteractType.DRAG_START:
               plugin.reactDragStart(data);
               break;
-            case ModrianInteractType.DRAG:
+            case MondrianInteractType.DRAG:
               plugin.reactDragMove(data);
               break;
-            case ModrianInteractType.DRAG_END:
+            case MondrianInteractType.DRAG_END:
               plugin.reactDragEnd(data);
               break;
             default:
@@ -49,14 +49,14 @@ export class ModrianConsumer extends ModrianPlayer {
           }
         });
       }
-      if (data.type === ModrianDataType.ACTION) {
+      if (data.type === MondrianDataType.ACTION) {
         const subType = data.data.subType;
         this.pluginManager.interateInstances((plugin) => {
           switch (subType) {
-            case ModrianActionType.UNDO:
+            case MondrianActionType.UNDO:
               plugin.reactUndo(undefined);
               break;
-            case ModrianActionType.REDO:
+            case MondrianActionType.REDO:
               plugin.reactRedo(undefined);
               break;
             default:

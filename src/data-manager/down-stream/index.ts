@@ -1,12 +1,12 @@
-import { IModrianData } from "data-manager";
+import { IMondrianData } from "data-manager";
 import { IoClient } from "data-manager/ws-client";
 
-export class ModrianLocalDownStreamSource implements UnderlyingSource {
+export class MondrianLocalDownStreamSource implements UnderlyingSource {
   tickerId;
   startTimeStamp;
   lastTimeStamp;
 
-  constructor(private buffer: IModrianData[]) {}
+  constructor(private buffer: IMondrianData[]) {}
 
   start(controller: ReadableStreamDefaultController) {
     const step = (stamp) => {
@@ -27,12 +27,12 @@ export class ModrianLocalDownStreamSource implements UnderlyingSource {
   }
 }
 
-export class ModrianWsDownStreamSource implements UnderlyingSource {
+export class MondrianWsDownStreamSource implements UnderlyingSource {
   tickerId;
   startTimeStamp;
   lastTimeStamp;
 
-  constructor(private buffer: IModrianData[], private client: IoClient) {
+  constructor(private buffer: IMondrianData[], private client: IoClient) {
     this.client.on((datas) => {
       this.buffer.push(...datas);
     });

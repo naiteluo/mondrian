@@ -1,9 +1,9 @@
 import { io, Socket } from "socket.io-client";
-import { IModrianData } from "./data";
+import { IMondrianData } from "./data";
 
-type IoDataListener = (datas: IModrianData[], isRecover?: boolean) => void;
+type IoDataListener = (datas: IMondrianData[], isRecover?: boolean) => void;
 
-const IoEmptyListener = (datas: IModrianData[]) => {
+const IoEmptyListener = (datas: IMondrianData[]) => {
   console.log("empty", datas);
 };
 
@@ -22,7 +22,7 @@ export class IoClient {
       this._listener(datas);
     });
   }
-  send(datas: IModrianData[]) {
+  send(datas: IMondrianData[]) {
     this.socket.emit("d", datas);
   }
   on(listner: IoDataListener) {

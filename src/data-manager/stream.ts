@@ -1,1 +1,1 @@
-import { IModrianData } from ".";
+import { IMondrianData } from ".";

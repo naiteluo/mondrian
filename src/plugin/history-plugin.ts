@@ -1,23 +1,23 @@
-import { IModrianData } from "../data-manager";
-import { ModrianRenderer } from "../renderer/renderer";
+import { IMondrianData } from "../data-manager";
+import { MondrianRenderer } from "../renderer/renderer";
 import { Sprite } from "pixi.js";
-import { ModrianPlugin } from "./plugin";
+import { MondrianPlugin } from "./plugin";
 
 export const HistoryPluginPID = Symbol("history-plugin");
 
-export class HistoryPlugin extends ModrianPlugin {
+export class HistoryPlugin extends MondrianPlugin {
   PID = HistoryPluginPID;
   static PID = HistoryPluginPID;
 
-  constructor(_renderer: ModrianRenderer) {
+  constructor(_renderer: MondrianRenderer) {
     super(_renderer);
   }
 
-  reactUndo(data: IModrianData): void {
+  reactUndo(data: IMondrianData): void {
     this.renderer.backward();
   }
 
-  reactRedo(data: IModrianData): void {
+  reactRedo(data: IMondrianData): void {
     this.renderer.forward();
   }
 }

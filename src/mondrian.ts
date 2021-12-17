@@ -2,17 +2,17 @@ import "pixi.js";
 
 import { Application } from "@pixi/app";
 import { EventProxier } from "./event-proxier";
-import { ModrianConsumer, ModrianProducer } from "./player";
-import { ModrianUtils } from "./common/utils";
-import { ModrianRenderer } from "./renderer/renderer";
-import { ModrianDataManager } from "./data-manager";
+import { MondrianConsumer, MondrianProducer } from "./player";
+import { MondrianUtils } from "./common/utils";
+import { MondrianRenderer } from "./renderer/renderer";
+import { MondrianDataManager } from "./data-manager";
 
-export interface IModrianParams {
+export interface IMondrianParams {
   container: HTMLElement;
   isProducer: boolean;
 }
 
-export class Modrian {
+export class Mondrian {
   private ID = `${+new Date()}-${Math.round(Math.random() * 100)}`;
 
   private app: Application;
@@ -22,12 +22,12 @@ export class Modrian {
 
   private eventProxier: EventProxier;
 
-  private producer: ModrianProducer;
-  private renderer: ModrianRenderer;
+  private producer: MondrianProducer;
+  private renderer: MondrianRenderer;
 
-  private consumers: Map<string, ModrianConsumer> = new Map();
+  private consumers: Map<string, MondrianConsumer> = new Map();
 
-  dataManager: ModrianDataManager;
+  dataManager: MondrianDataManager;
 
   get interaction() {
     return this.eventProxier;
@@ -37,15 +37,15 @@ export class Modrian {
     return this.app;
   }
 
-  constructor(private params: IModrianParams) {
+  constructor(private params: IMondrianParams) {
     this.$container = params.container;
     this.initializeContainer();
     this.initialzieDebugPanel();
     this.initializePIXIApplication();
     this.resizeEventHandler();
 
-    this.dataManager = new ModrianDataManager(this);
-    this.initializeModrianRenderer();
+    this.dataManager = new MondrianDataManager(this);
+    this.initializeMondrianRenderer();
 
     if (params.isProducer) {
       this.initializeProducer();
@@ -77,7 +77,7 @@ export class Modrian {
   }
 
   initializeProducer() {
-    this.producer = new ModrianProducer(this.ID, this.app, this.dataManager);
+    this.producer = new MondrianProducer(this.ID, this.app, this.dataManager);
     this.eventProxier = new EventProxier(this.app, [this.producer]);
   }
 
@@ -86,7 +86,7 @@ export class Modrian {
   }
 
   addConsumer(id: string) {
-    const consumer = new ModrianConsumer(id, this.renderer);
+    const consumer = new MondrianConsumer(id, this.renderer);
     this.consumers.set(id, consumer);
     this.dataManager.registerConsumer(id, consumer);
   }
@@ -99,7 +99,7 @@ export class Modrian {
   }
 
   resizeEventHandler = () => {
-    const wh = ModrianUtils.getScreenWH();
+    const wh = MondrianUtils.getScreenWH();
     this.$container.style.width = `${wh.w}px`;
     this.$container.style.height = `${wh.h}px`;
     this.$canvas.style.width = `${wh.w}px`;
@@ -107,8 +107,8 @@ export class Modrian {
     this.app.renderer.resize(wh.w, wh.h);
   };
 
-  initializeModrianRenderer() {
-    this.renderer = new ModrianRenderer(this.app, this.$panel);
+  initializeMondrianRenderer() {
+    this.renderer = new MondrianRenderer(this.app, this.$panel);
   }
 
   initialzieDebugPanel() {

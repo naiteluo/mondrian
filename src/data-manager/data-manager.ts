@@ -1,36 +1,36 @@
-import { Modrian } from "modrian";
-import { IModrianPlayer } from "../player";
-import { IModrianData } from "./data";
+import { Mondrian } from "mondrian";
+import { IMondrianPlayer } from "../player";
+import { IMondrianData } from "./data";
 import {
-  ModrianLocalDownStreamSource,
-  ModrianWsDownStreamSource,
+  MondrianLocalDownStreamSource,
+  MondrianWsDownStreamSource,
 } from "./down-stream";
-import { ModrianLocalUpStreamSink, ModrianWsUpStreamSink } from "./up-stream";
+import { MondrianLocalUpStreamSink, MondrianWsUpStreamSink } from "./up-stream";
 import { IoClient } from "./ws-client";
 
 export * from "./data";
 
-export class ModrianDataManager {
-  buffer: IModrianData[] = [];
+export class MondrianDataManager {
+  buffer: IMondrianData[] = [];
 
   client: IoClient = new IoClient();
 
   private upStream = new WritableStream(
-    new ModrianWsUpStreamSink(this.buffer, this.client)
+    new MondrianWsUpStreamSink(this.buffer, this.client)
     // new LocalUpStreamSink(this.buffer)
   );
-  private downStream = new ReadableStream<IModrianData>(
-    new ModrianWsDownStreamSource(this.buffer, this.client)
+  private downStream = new ReadableStream<IMondrianData>(
+    new MondrianWsDownStreamSource(this.buffer, this.client)
     // new LocalDownStreamSource(this.buffer)
   );
 
   private reader: ReadableStreamDefaultReader;
   private writer: WritableStreamDefaultWriter;
 
-  private consumers: Map<string, IModrianPlayer> = new Map();
+  private consumers: Map<string, IMondrianPlayer> = new Map();
   private $panel: HTMLElement;
 
-  constructor(private modrian: Modrian) {
+  constructor(private mondrian: Mondrian) {
     this.$panel = document.getElementById("debug-panel");
     this.client.start();
   }
@@ -57,12 +57,12 @@ export class ModrianDataManager {
 
   private dLast = +new Date();
 
-  dispatch(datas: IModrianData[]) {
+  dispatch(datas: IMondrianData[]) {
     // dispatch messages to every activated consumer
     datas.forEach((v) => {
       if (v.playerID) {
         if (!this.consumers.has(v.playerID)) {
-          this.modrian.addConsumer(v.playerID);
+          this.mondrian.addConsumer(v.playerID);
         }
         this.consumers.get(v.playerID).consume([v]);
       } else {
@@ -74,9 +74,9 @@ export class ModrianDataManager {
     // });
   }
 
-  tmp: IModrianData[] = [];
+  tmp: IMondrianData[] = [];
 
-  async push(datas: IModrianData[]) {
+  async push(datas: IMondrianData[]) {
     await this.writer.write(datas);
 
     // datas.map((d) => {
@@ -84,7 +84,7 @@ export class ModrianDataManager {
     // });
   }
 
-  registerConsumer(id: string, consumer: IModrianPlayer) {
+  registerConsumer(id: string, consumer: IMondrianPlayer) {
     this.consumers.set(id, consumer);
   }
 
@@ -93,7 +93,7 @@ export class ModrianDataManager {
   }
 
   consumeTmp() {
-    const datas: IModrianData[] = JSON.parse(localStorage.getItem("test"));
+    const datas: IMondrianData[] = JSON.parse(localStorage.getItem("test"));
     this.dispatch(datas);
   }
 }

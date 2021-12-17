@@ -1,9 +1,9 @@
 import { IPointData } from "@pixi/math";
-import { ModrianUtils } from "../common/utils";
-import { IModrianData } from "../data-manager";
-import { IModrianPlayerState } from "../player";
+import { MondrianUtils } from "../common/utils";
+import { IMondrianData } from "../data-manager";
+import { IMondrianPlayerState } from "../player";
 import { BrushPlugin } from "./brush-plugin";
-import { ModrianGraphicsHandler } from "renderer/grapichs-handler";
+import { MondrianGraphicsHandler } from "renderer/grapichs-handler";
 
 export const PencilBrushPluginPID = Symbol("pencil-plugin");
 
@@ -15,11 +15,11 @@ export class PencilBrushPlugin extends BrushPlugin {
   private startPos: IPointData;
   private currentPos: IPointData;
   private pointCache = [];
-  private handler: ModrianGraphicsHandler;
+  private handler: MondrianGraphicsHandler;
 
-  private state: IModrianPlayerState;
+  private state: IMondrianPlayerState;
 
-  reactDragStart(data: IModrianData): void {
+  reactDragStart(data: IMondrianData): void {
     const p = { x: data.data.x, y: data.data.y };
     this.handler = this.renderer.startGraphicsHandler();
     this.handler.lineStyle = this.state.selectedBrush;
@@ -28,11 +28,11 @@ export class PencilBrushPlugin extends BrushPlugin {
     this.pointCache = [p];
   }
 
-  reactDragMove(data: IModrianData): void {
+  reactDragMove(data: IMondrianData): void {
     const p = { x: data.data.x, y: data.data.y };
     if (!this.isDrawing) return;
     const l = this.pointCache.length;
-    this.pointCache.push(ModrianUtils.midPos(this.pointCache[l - 1], p), p);
+    this.pointCache.push(MondrianUtils.midPos(this.pointCache[l - 1], p), p);
     const m = this.pointCache[this.pointCache.length - 4],
       e: IPointData = this.pointCache[this.pointCache.length - 3],
       d: IPointData = this.pointCache[this.pointCache.length - 2];
@@ -45,14 +45,14 @@ export class PencilBrushPlugin extends BrushPlugin {
   }
 
   // todo handle unclosed drag event properly
-  reactDragEnd(data: IModrianData): void {
+  reactDragEnd(data: IMondrianData): void {
     this.pointCache = [];
     if (!this.isDrawing) return;
     this.isDrawing = false;
     this.handler.stop();
   }
 
-  reactStateChange(data: IModrianData): void {
-    this.state = data.data as IModrianPlayerState;
+  reactStateChange(data: IMondrianData): void {
+    this.state = data.data as IMondrianPlayerState;
   }
 }

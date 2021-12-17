@@ -1,76 +1,76 @@
 import { Application, Container, InteractionEvent } from "pixi.js";
 import {
-  IModrianInteractor,
-  IModrianMockInteractionEvent,
+  IMondrianInteractor,
+  IMondrianMockInteractionEvent,
 } from "../common/interactor";
 import {
-  ModrianDataType,
-  IModrianData,
-  ModrianDataManager,
-  ModrianInteractType,
-  ModrianActionType,
+  MondrianDataType,
+  IMondrianData,
+  MondrianDataManager,
+  MondrianInteractType,
+  MondrianActionType,
 } from "../data-manager";
-import { ModrianPlayer, IModrianPlayerState } from "./player";
+import { MondrianPlayer, IMondrianPlayerState } from "./player";
 
-export class ModrianProducer
-  extends ModrianPlayer
-  implements IModrianInteractor
+export class MondrianProducer
+  extends MondrianPlayer
+  implements IMondrianInteractor
 {
   private stage: Container;
 
   constructor(
     id: string,
     private application: Application,
-    private dataManager: ModrianDataManager
+    private dataManager: MondrianDataManager
   ) {
     super();
     this.id = id;
     this.stage = application.stage;
   }
 
-  consume(datas: IModrianData[]) {
+  consume(datas: IMondrianData[]) {
     super.consume(datas);
   }
 
-  onStateChange(state: IModrianPlayerState) {
+  onStateChange(state: IMondrianPlayerState) {
     this.dataManager.push([
-      { playerID: this.id, type: ModrianDataType.STATE, data: { ...state } },
+      { playerID: this.id, type: MondrianDataType.STATE, data: { ...state } },
     ]);
   }
 
-  onDragStart(event: IModrianMockInteractionEvent): void {
+  onDragStart(event: IMondrianMockInteractionEvent): void {
     const { x, y } = event.mock
       ? { x: event.mockX, y: event.mockY }
       : event.data.getLocalPosition(this.stage);
     this.dataManager.push([
       {
         playerID: this.id,
-        type: ModrianDataType.INTERACT,
-        data: { subType: ModrianInteractType.DRAG_START, x, y },
+        type: MondrianDataType.INTERACT,
+        data: { subType: MondrianInteractType.DRAG_START, x, y },
       },
     ]);
   }
-  onDragMove(event: IModrianMockInteractionEvent): void {
+  onDragMove(event: IMondrianMockInteractionEvent): void {
     const { x, y } = event.mock
       ? { x: event.mockX, y: event.mockY }
       : event.data.getLocalPosition(this.stage);
     this.dataManager.push([
       {
         playerID: this.id,
-        type: ModrianDataType.INTERACT,
-        data: { subType: ModrianInteractType.DRAG, x, y },
+        type: MondrianDataType.INTERACT,
+        data: { subType: MondrianInteractType.DRAG, x, y },
       },
     ]);
   }
-  onDragEnd(event: IModrianMockInteractionEvent): void {
+  onDragEnd(event: IMondrianMockInteractionEvent): void {
     const { x, y } = event.mock
       ? { x: event.mockX, y: event.mockY }
       : event.data.getLocalPosition(this.stage);
     this.dataManager.push([
       {
         playerID: this.id,
-        type: ModrianDataType.INTERACT,
-        data: { subType: ModrianInteractType.DRAG_END, x, y },
+        type: MondrianDataType.INTERACT,
+        data: { subType: MondrianInteractType.DRAG_END, x, y },
       },
     ]);
   }
@@ -78,8 +78,8 @@ export class ModrianProducer
     this.dataManager.push([
       {
         playerID: this.id,
-        type: ModrianDataType.ACTION,
-        data: { subType: ModrianActionType.UNDO },
+        type: MondrianDataType.ACTION,
+        data: { subType: MondrianActionType.UNDO },
       },
     ]);
   }
@@ -87,8 +87,8 @@ export class ModrianProducer
     this.dataManager.push([
       {
         playerID: this.id,
-        type: ModrianDataType.ACTION,
-        data: { subType: ModrianActionType.REDO },
+        type: MondrianDataType.ACTION,
+        data: { subType: MondrianActionType.REDO },
       },
     ]);
   }

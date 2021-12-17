@@ -1,17 +1,17 @@
 import { InteractionEvent } from "@pixi/interaction";
-import { IModrianPlayerState } from "../player";
+import { IMondrianPlayerState } from "../player";
 
-export type IModrianMockInteractionEvent = InteractionEvent & {
+export type IMondrianMockInteractionEvent = InteractionEvent & {
   mock?: boolean;
   mockX: number;
   mockY: number;
 };
 
-export interface IModrianInteractor {
-  onStateChange(state: IModrianPlayerState): void;
-  onDragStart(event: IModrianMockInteractionEvent): void;
-  onDragMove(event: IModrianMockInteractionEvent): void;
-  onDragEnd(event: IModrianMockInteractionEvent): void;
+export interface IMondrianInteractor {
+  onStateChange(state: IMondrianPlayerState): void;
+  onDragStart(event: IMondrianMockInteractionEvent): void;
+  onDragMove(event: IMondrianMockInteractionEvent): void;
+  onDragEnd(event: IMondrianMockInteractionEvent): void;
   onUndo(event: any): void;
   onRedo(event: any): void;
   onClick(event: any): void;

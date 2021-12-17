@@ -1,4 +1,4 @@
-export class ModrianEventEmitter {
+export class MondrianEventEmitter {
   listeners = {};
 
   addListener(eventName, fn) {

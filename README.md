@@ -1,6 +1,6 @@
-# Modrian
+# Mondrian
 
-Yet another drawing board. Piet Modrian, one of the greatest abstract style artists of the 20th century.
+Yet another drawing board. Piet Mondrian, one of the greatest abstract style artists of the 20th century.
 
 Background
 

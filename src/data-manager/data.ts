@@ -1,51 +1,51 @@
-export const enum ModrianDataType {
+export const enum MondrianDataType {
   INTERACT = "i",
   STATE = "s",
   ACTION = "a",
 }
 
-export const enum ModrianInteractType {
+export const enum MondrianInteractType {
   DRAG_START = "ds",
   DRAG = "d",
   DRAG_END = "de",
 }
 
-export const enum ModrianActionType {
+export const enum MondrianActionType {
   UNDO = "ud",
   REDO = "rd",
   CLEAR = "clear",
 }
 
-interface IModrianCommonData {
+interface IMondrianCommonData {
   seq?: number;
   playerID?: string;
 }
 
-interface IModrianInteractData extends IModrianCommonData {
-  type: ModrianDataType.INTERACT;
+interface IMondrianInteractData extends IMondrianCommonData {
+  type: MondrianDataType.INTERACT;
   data: {
-    subType: ModrianInteractType;
+    subType: MondrianInteractType;
     x: number;
     y: number;
   };
 }
 
-interface IModrianStateData extends IModrianCommonData {
-  type: ModrianDataType.STATE;
+interface IMondrianStateData extends IMondrianCommonData {
+  type: MondrianDataType.STATE;
   data: {
     [key: string]: any;
   };
 }
 
-interface IModrianActionData extends IModrianCommonData {
-  type: ModrianDataType.ACTION;
+interface IMondrianActionData extends IMondrianCommonData {
+  type: MondrianDataType.ACTION;
   data: {
-    subType: ModrianActionType;
+    subType: MondrianActionType;
     [key: string]: any;
   };
 }
 
-export type IModrianData =
-  | IModrianInteractData
-  | IModrianStateData
-  | IModrianActionData;
+export type IMondrianData =
+  | IMondrianInteractData
+  | IMondrianStateData
+  | IMondrianActionData;

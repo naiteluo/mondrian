@@ -4,8 +4,8 @@ import { Rectangle } from "@pixi/math";
 import { BaseTextureCache } from "@pixi/utils";
 import { Sprite, Texture, UPDATE_PRIORITY } from "pixi.js";
 import {
-  ModrianGraphicsHandler,
-  ModrianGraphicsHandlerOptions,
+  MondrianGraphicsHandler,
+  MondrianGraphicsHandlerOptions,
 } from "./grapichs-handler";
 
 const enum TrashType {
@@ -17,7 +17,7 @@ type Trash =
   | { type: TrashType.DisplayObject; target: DisplayObject }
   | { type: TrashType.Texture; target: Texture };
 
-export class ModrianRenderer {
+export class MondrianRenderer {
   private rootLayer: Container;
   // high update freqency element like cursor or performces ui
   // todo unsafe
@@ -28,7 +28,7 @@ export class ModrianRenderer {
   private staticLayer: Sprite;
 
   private dynamicLevel = 20;
-  private dynamicCache: ModrianGraphicsHandler[] = [];
+  private dynamicCache: MondrianGraphicsHandler[] = [];
 
   private dynamicCacheIndex = -1;
 
@@ -77,8 +77,8 @@ export class ModrianRenderer {
     }
   }
 
-  startGraphicsHandler(options?: ModrianGraphicsHandlerOptions) {
-    const handler = new ModrianGraphicsHandler(this.dynamicLayer, options);
+  startGraphicsHandler(options?: MondrianGraphicsHandlerOptions) {
+    const handler = new MondrianGraphicsHandler(this.dynamicLayer, options);
     const countOfTails =
       this.dynamicCache.length - (this.dynamicCacheIndex + 1);
     if (this.dynamicCache.length >= this.dynamicLevel) {
@@ -123,7 +123,7 @@ export class ModrianRenderer {
     }
   }
 
-  stopGraphicsHandler(handler: ModrianGraphicsHandler) {
+  stopGraphicsHandler(handler: MondrianGraphicsHandler) {
     handler.stop();
   }
 

@@ -1,22 +1,22 @@
 import { BrushPluginState } from "../plugin/brush-plugin";
-import { IModrianData } from "../data-manager";
+import { IMondrianData } from "../data-manager";
 
-export interface IModrianPlayerState {
+export interface IMondrianPlayerState {
   selectedBrush: BrushPluginState;
 }
 
-export interface IModrianPlayer {
+export interface IMondrianPlayer {
   id: string;
-  state: IModrianPlayerState;
+  state: IMondrianPlayerState;
 
-  consume(datas: IModrianData[]);
+  consume(datas: IMondrianData[]);
 }
 
-export class ModrianPlayer implements IModrianPlayer {
+export class MondrianPlayer implements IMondrianPlayer {
   private _id: string;
-  private _state: IModrianPlayerState;
+  private _state: IMondrianPlayerState;
 
-  consume(datas: IModrianData[]) {}
+  consume(datas: IMondrianData[]) {}
 
   get id(): string {
     return this._id;
@@ -27,11 +27,11 @@ export class ModrianPlayer implements IModrianPlayer {
     this._id = id;
   }
 
-  get state(): IModrianPlayerState {
+  get state(): IMondrianPlayerState {
     return this._state;
   }
 
-  set state(state: IModrianPlayerState) {
+  set state(state: IMondrianPlayerState) {
     this._state = { ...state };
   }
 }

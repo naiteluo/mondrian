@@ -1,7 +1,7 @@
 import { Container, Graphics, ILineStyleOptions } from "pixi.js";
 import { BrushPluginState } from "plugin/brush-plugin";
 
-export interface ModrianGraphicsHandlerOptions {
+export interface MondrianGraphicsHandlerOptions {
   canCacheAsBitmap?: boolean;
   /**
    * enable discrete graphics
@@ -10,8 +10,8 @@ export interface ModrianGraphicsHandlerOptions {
   lineStyle: ILineStyleOptions;
 }
 
-export class ModrianGraphicsHandler {
-  static DefaultOptions: ModrianGraphicsHandlerOptions = {
+export class MondrianGraphicsHandler {
+  static DefaultOptions: MondrianGraphicsHandlerOptions = {
     canCacheAsBitmap: true,
     enableDiscrete: true,
     lineStyle: {},
@@ -22,14 +22,14 @@ export class ModrianGraphicsHandler {
 
   private _finished = false;
 
-  private options: ModrianGraphicsHandlerOptions;
+  private options: MondrianGraphicsHandlerOptions;
 
   constructor(
     private layer: Container,
-    options?: ModrianGraphicsHandlerOptions
+    options?: MondrianGraphicsHandlerOptions
   ) {
     this.options = {
-      ...ModrianGraphicsHandler.DefaultOptions,
+      ...MondrianGraphicsHandler.DefaultOptions,
       ...(options || {}),
     };
   }

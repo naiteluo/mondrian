@@ -1,9 +1,9 @@
-import { ModrianDataType, IModrianData } from "../data-manager";
+import { MondrianDataType, IMondrianData } from "../data-manager";
 import { Service } from "typedi";
-import { ModrianPlugin } from "./plugin";
+import { MondrianPlugin } from "./plugin";
 
 import { ILineStyleOptions, LINE_CAP, LINE_JOIN } from "@pixi/graphics";
-import { IModrianPlayerState } from "../player";
+import { IMondrianPlayerState } from "../player";
 
 export const enum BrushName {
   PENCIL = "Pencil",
@@ -34,12 +34,12 @@ export const defaultBrushOptions: BrushPluginState = {
   join: LINE_JOIN.ROUND,
 };
 
-export class BrushPlugin extends ModrianPlugin {
+export class BrushPlugin extends MondrianPlugin {
   private brushState;
-  reactDragStart(data: IModrianData): void {}
-  reactDragMove(data: IModrianData): void {}
-  reactDragEnd(data: IModrianData): void {}
-  reactStateChange(data: IModrianData): void {}
+  reactDragStart(data: IMondrianData): void {}
+  reactDragMove(data: IMondrianData): void {}
+  reactDragEnd(data: IMondrianData): void {}
+  reactStateChange(data: IMondrianData): void {}
   reactUndo(event: any): void {}
   reactRedo(event: any): void {}
   reactClick(event: any): void {}
@@ -50,5 +50,5 @@ export class BrushPlugin extends ModrianPlugin {
    * @param data
    * @returns
    */
-  static matcher(data: IModrianData) {}
+  static matcher(data: IMondrianData) {}
 }

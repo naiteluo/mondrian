@@ -4,14 +4,14 @@ import {
   BrushType,
   defaultBrushOptions,
 } from "./plugin/brush-plugin";
-import { Modrian } from "./modrian";
+import { Mondrian } from "./mondrian";
 import { GUI } from "lil-gui";
 
 const AUTO_START = true;
 
 class App {
   $div: HTMLElement;
-  modrian!: Modrian;
+  mondrian!: Mondrian;
   gui: GUI;
 
   brushConfig: BrushPluginState = defaultBrushOptions;
@@ -33,7 +33,7 @@ class App {
     document.body.appendChild(this.$div);
 
     this.initialLilGUI();
-    this.initialModrian();
+    this.initialMondrian();
   }
 
   initialLilGUI() {
@@ -74,14 +74,14 @@ class App {
     actionFolder.add(this, "onClearServerCache").name("clearServerCache");
   }
 
-  initialModrian() {
+  initialMondrian() {
     // create instance
-    this.modrian = new Modrian({
+    this.mondrian = new Mondrian({
       container: this.$div,
       isProducer: true,
     });
 
-    this.modrian.interaction.emit("player:state:change", {
+    this.mondrian.interaction.emit("player:state:change", {
       selectedBrush: this.brushConfig,
     });
   }
@@ -91,17 +91,17 @@ class App {
   };
 
   sendBrushUpdateSignal() {
-    this.modrian.interaction.emit("player:state:change", {
+    this.mondrian.interaction.emit("player:state:change", {
       selectedBrush: this.brushConfig,
     });
   }
 
   onUndo() {
-    this.modrian.interaction.emit("player:action:undo");
+    this.mondrian.interaction.emit("player:action:undo");
   }
 
   onRedo() {
-    this.modrian.interaction.emit("player:action:redo");
+    this.mondrian.interaction.emit("player:action:redo");
   }
 
   private isAutoOn = false;
@@ -120,20 +120,20 @@ class App {
         switch (this.autoStepIndex) {
           case 0:
             // simulate self drag
-            this.modrian.interaction.emit("player:state:change", {
+            this.mondrian.interaction.emit("player:state:change", {
               selectedBrush: {
                 ...this.brushConfig,
                 color: (Math.random() * 0xffffff) << 0,
               },
             });
-            this.modrian.interaction.emit("player:interaction:pointerdown", {
+            this.mondrian.interaction.emit("player:interaction:pointerdown", {
               mock: true,
               mockX: this.lastPoint.x,
               mockY: this.lastPoint.y,
             });
             break;
           case this.autoStepCountPerTick:
-            this.modrian.interaction.emit("player:interaction:pointerup", {
+            this.mondrian.interaction.emit("player:interaction:pointerup", {
               mock: true,
               mockX: this.lastPoint.x,
               mockY: this.lastPoint.y,
@@ -141,7 +141,7 @@ class App {
             break;
           default:
             this.randomUpdatePoint();
-            this.modrian.interaction.emit("player:interaction:pointermove", {
+            this.mondrian.interaction.emit("player:interaction:pointermove", {
               mock: true,
               mockX: this.lastPoint.x,
               mockY: this.lastPoint.y,
@@ -172,20 +172,20 @@ class App {
   onAuto() {
     if (this.isAutoOn) {
       this.isAutoOn = false;
-      this.modrian.interaction.startPixiEventWatch();
+      this.mondrian.interaction.startPixiEventWatch();
       return;
     }
     // update view size
-    this.viewWidth = this.modrian.pixiApp.view.width;
-    this.viewHeight = this.modrian.pixiApp.view.height;
+    this.viewWidth = this.mondrian.pixiApp.view.width;
+    this.viewHeight = this.mondrian.pixiApp.view.height;
     this.isAutoOn = true;
     // stop real mouse events watching
-    this.modrian.interaction.stopPixiEventWatch();
+    this.mondrian.interaction.stopPixiEventWatch();
     requestAnimationFrame(this.step);
   }
 
   onClearServerCache() {
-    this.modrian.dataManager.client.forceClear();
+    this.mondrian.dataManager.client.forceClear();
   }
 }
 

@@ -1,11 +1,11 @@
-import { ModrianRenderer } from "../renderer/renderer";
+import { MondrianRenderer } from "../renderer/renderer";
 import { CursorPlugin } from "./cursor-plugin";
 import { HistoryPlugin } from "./history-plugin";
 import { PencilBrushPlugin, PencilBrushPluginPID } from "./pencil-plugin";
-import { IModrianPlugin, IPluginConfig, ModrianPlugin } from "./plugin";
+import { IMondrianPlugin, IPluginConfig, MondrianPlugin } from "./plugin";
 
 interface PluginConstructor {
-  new (...args: any[]): ModrianPlugin;
+  new (...args: any[]): MondrianPlugin;
 }
 
 export interface IPluginRegisterConfig {
@@ -38,12 +38,12 @@ const PluginList: IPluginRegisterConfig[] = [
   },
 ];
 
-export class ModrianPluginManager {
-  constructor(private _renderer: ModrianRenderer) {}
+export class MondrianPluginManager {
+  constructor(private _renderer: MondrianRenderer) {}
 
-  private _instancesMap: Map<symbol, ModrianPlugin> = new Map();
+  private _instancesMap: Map<symbol, MondrianPlugin> = new Map();
 
-  private _instancesList: ModrianPlugin[] = [];
+  private _instancesList: MondrianPlugin[] = [];
 
   private findPluginConfig(type: symbol): IPluginRegisterConfig {
     const config = PluginList.find((v) => {
@@ -56,7 +56,7 @@ export class ModrianPluginManager {
     return config;
   }
 
-  loadPlugin<T extends ModrianPlugin>(type: symbol) {
+  loadPlugin<T extends MondrianPlugin>(type: symbol) {
     let plugin = this._instancesMap.get(type);
     if (!plugin) {
       const config = this.findPluginConfig(type);
@@ -67,7 +67,7 @@ export class ModrianPluginManager {
     return plugin as T;
   }
 
-  unloadPlugin<T extends IModrianPlugin>(type: symbol) {
+  unloadPlugin<T extends IMondrianPlugin>(type: symbol) {
     this._instancesMap.delete(type);
     const i = this._instancesList.findIndex((instance) => {
       return instance.PID === type;
@@ -81,7 +81,7 @@ export class ModrianPluginManager {
     return this._instancesList;
   }
 
-  interateInstances(cb: (plugin: ModrianPlugin) => void) {
+  interateInstances(cb: (plugin: MondrianPlugin) => void) {
     this.instancesList.forEach((p) => {
       cb(p);
     });
