@@ -64,8 +64,8 @@ export class MondrianGraphicsHandler {
     if (this.options.canCacheAsBitmap) {
       this._gs.forEach((g) => {
         if (!g.cacheAsBitmap) {
-          // g.cacheAsBitmapResolution = 1;
-          g.cacheAsBitmapMultisample = MSAA_QUALITY.NONE;
+          g.cacheAsBitmapResolution = 1;
+          g.cacheAsBitmapMultisample = MSAA_QUALITY.MEDIUM;
           g.cacheAsBitmap = true;
         }
       });
