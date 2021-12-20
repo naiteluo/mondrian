@@ -6,14 +6,19 @@ import {
 } from "./plugin/brush-plugin";
 import { Mondrian } from "./mondrian";
 import { Controller, GUI } from "lil-gui";
+import axios from "axios";
 
 const AUTO_START = true;
+const TEST_SERVER_HOST = `//${window.location.hostname}:3000`;
 
 class App {
   $div: HTMLElement;
   mondrian!: Mondrian;
   gui: GUI;
   guiAutoCtrl: Controller;
+
+  msg = "welcome.";
+  msgCtrl: Controller;
 
   brushConfig: BrushPluginState = defaultBrushOptions;
 
@@ -74,8 +79,10 @@ class App {
     commandFolder.add(this, "onClear").name("Clear");
 
     const testFolder = this.gui.addFolder("Test");
+    this.msgCtrl = testFolder.add(this, "msg").name("Message:");
     this.guiAutoCtrl = testFolder.add(this, "onAuto").name("Start Auto Draw");
     testFolder.add(this, "onClearServerCache").name("Clear Server Cache");
+    testFolder.add(this, "onSaveServerCache").name("Save Server Cache");
   }
 
   initialMondrian() {
@@ -211,6 +218,28 @@ class App {
 
   onClearServerCache() {
     this.mondrian.dm.client.forceClear();
+  }
+
+  async onSaveServerCache() {
+    try {
+      const { success } = (await axios.get(`${TEST_SERVER_HOST}/saveCache`))
+        .data;
+      if (success) {
+        this.logMsg("cache saved.");
+      }
+    } catch (err) {
+      this.logMsg("cache fails to save.", true);
+    }
+  }
+
+  logMsg(str, isError = false) {
+    this.msg = str;
+    this.msgCtrl.updateDisplay();
+    if (isError) {
+      console.error(str);
+    } else {
+      console.log(str);
+    }
   }
 }
 
