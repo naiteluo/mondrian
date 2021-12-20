@@ -124,8 +124,8 @@ class App {
   private autoStepLength = 80;
   private autoStepIndex = 0;
   private autoStepCountPerTick = 20;
-  private viewWidth = 0;
-  private viewHeight = 0;
+  private screenWidth = 0;
+  private screenHeight = 0;
   private lt = 0;
 
   private step = (nt) => {
@@ -186,14 +186,16 @@ class App {
     this.lastPoint.y +=
       Math.random() * this.autoStepLength * 2 - this.autoStepLength;
     this.lastPoint.x =
-      this.lastPoint.x < 0 ? this.viewWidth / 2 : this.lastPoint.x;
+      this.lastPoint.x < 0 ? this.screenWidth / 2 : this.lastPoint.x;
     this.lastPoint.y =
-      this.lastPoint.y < 0 ? this.viewHeight / 2 : this.lastPoint.y;
+      this.lastPoint.y < 0 ? this.screenHeight / 2 : this.lastPoint.y;
     this.lastPoint.x =
-      this.lastPoint.x > this.viewWidth ? this.viewWidth / 2 : this.lastPoint.x;
+      this.lastPoint.x > this.screenWidth
+        ? this.screenWidth / 2
+        : this.lastPoint.x;
     this.lastPoint.y =
-      this.lastPoint.y > this.viewHeight
-        ? this.viewHeight / 2
+      this.lastPoint.y > this.screenHeight
+        ? this.screenHeight / 2
         : this.lastPoint.y;
   }
 
@@ -207,9 +209,9 @@ class App {
     }
     this.guiAutoCtrl.name("Stop Auto Draw");
     // update view size
-    this.viewWidth = this.mondrian.pixiApp.view.width;
-    this.viewHeight = this.mondrian.pixiApp.view.height;
-    this.lastPoint = { x: this.viewWidth / 2, y: this.viewHeight / 2 };
+    this.screenWidth = this.mondrian.pixiApp.screen.width;
+    this.screenHeight = this.mondrian.pixiApp.screen.height;
+    this.lastPoint = { x: this.screenWidth / 2, y: this.screenHeight / 2 };
     this.isAutoOn = true;
     // stop real mouse events watching
     this.mondrian.interaction.stopPixiEventWatch();
