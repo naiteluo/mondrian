@@ -50,6 +50,7 @@ export class MondrianRenderer {
       width: this.app.screen.width,
       height: this.app.screen.height,
     });
+    console.log(this.app.screen.width, this.app.screen.height);
     this.fixedSprite = new Sprite(this.fixedTexture);
 
     this.rootLayer.addChild(
