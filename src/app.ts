@@ -43,6 +43,15 @@ class App {
 
     this.initialLilGUI();
     this.initialMondrian();
+    try {
+      this.logMsg(
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        `WebGL ${this.mondrian.pixiApp.renderer.context.webGLVersion}`
+      );
+    } catch (err) {
+      console.log("webgl version dump fails.");
+    }
   }
 
   initialLilGUI() {

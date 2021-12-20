@@ -8,6 +8,7 @@ import { MondrianRenderer } from "./renderer/renderer";
 import { MondrianDataManager } from "./data-manager";
 
 import "web-streams-polyfill/es6";
+import { ENV, settings } from "pixi.js";
 
 export interface IMondrianParams {
   container: HTMLElement;
@@ -53,6 +54,13 @@ export class Mondrian {
   }
 
   private initializePIXIApplication() {
+    /**
+     * in mobile pixi fallback to webgl1 even webview support webgl2
+     * https://bugs.chromium.org/p/chromium/issues/detail?id=934823
+     * https://github.com/pixijs/pixijs/issues/7899
+     */
+    // todo add version detect to set webgl1 as prefer_env before chrome 75
+    settings.PREFER_ENV = ENV.WEBGL2;
     //Create a Pixi Application
     this.app = new Application({
       antialias: true,
