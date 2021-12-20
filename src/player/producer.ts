@@ -1,4 +1,4 @@
-import { Application, Container, InteractionEvent } from "pixi.js";
+import { Application, Container } from "pixi.js";
 import {
   IMondrianInteractor,
   IMondrianMockInteractionEvent,
@@ -34,14 +34,16 @@ export class MondrianProducer
 
   onStateChange(state: IMondrianPlayerState) {
     this.dataManager.push([
-      { playerID: this.id, type: MondrianDataType.SET_STATE, data: { ...state } },
+      {
+        playerID: this.id,
+        type: MondrianDataType.SET_STATE,
+        data: { ...state },
+      },
     ]);
   }
 
   onDragStart(event: IMondrianMockInteractionEvent): void {
-    const { x, y } = event.mock
-      ? { x: event.mockX, y: event.mockY }
-      : event.data.getLocalPosition(this.stage);
+    const { x, y } = this.getXyFromEvent(event);
     this.dataManager.push([
       {
         playerID: this.id,
@@ -51,9 +53,7 @@ export class MondrianProducer
     ]);
   }
   onDragMove(event: IMondrianMockInteractionEvent): void {
-    const { x, y } = event.mock
-      ? { x: event.mockX, y: event.mockY }
-      : event.data.getLocalPosition(this.stage);
+    const { x, y } = this.getXyFromEvent(event);
     this.dataManager.push([
       {
         playerID: this.id,
@@ -63,9 +63,7 @@ export class MondrianProducer
     ]);
   }
   onDragEnd(event: IMondrianMockInteractionEvent): void {
-    const { x, y } = event.mock
-      ? { x: event.mockX, y: event.mockY }
-      : event.data.getLocalPosition(this.stage);
+    const { x, y } = this.getXyFromEvent(event);
     this.dataManager.push([
       {
         playerID: this.id,
@@ -92,6 +90,29 @@ export class MondrianProducer
       },
     ]);
   }
-  onClick(event: any): void {}
-  onInput(event: any): void {}
+  onClick(event: any): void {
+    console.log("implement it");
+  }
+  onInput(event: any): void {
+    console.log("implement it");
+  }
+
+  // todo move this coord operation together for flexibility
+  // todo event point can reuse
+  private getXyFromEvent(event: IMondrianMockInteractionEvent) {
+    return this.xyToCenter(
+      event.mock
+        ? { x: event.mockX, y: event.mockY }
+        : event.data.getLocalPosition(this.stage)
+    );
+  }
+
+  // todo optimize
+  private xyToCenter({ x, y }) {
+    const { width, height } = this.application.screen;
+    return {
+      x: x - width / 2,
+      y: y - height / 2,
+    };
+  }
 }

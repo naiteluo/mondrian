@@ -3,12 +3,13 @@ import { IMondrianData } from "./data";
 
 type IoDataListener = (datas: IMondrianData[], isRecover?: boolean) => void;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const IoEmptyListener = (datas: IMondrianData[]) => {
-  console.log("empty", datas);
+  console.warn("Haven't set any ws listener!!");
 };
 
 // const hostname = '161.117.225.178'
-const hostname = window.location.hostname
+const hostname = window.location.hostname;
 
 // todo refactor
 export class IoClient {

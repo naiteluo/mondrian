@@ -21,7 +21,7 @@ interface IMondrianCommonData {
   playerID?: string;
 }
 
-interface IMondrianInteractData extends IMondrianCommonData {
+export interface IMondrianInteractData extends IMondrianCommonData {
   type: MondrianDataType.INTERACT;
   data: {
     subType: MondrianInteractType;
@@ -30,14 +30,14 @@ interface IMondrianInteractData extends IMondrianCommonData {
   };
 }
 
-interface IMondrianStateData extends IMondrianCommonData {
+export interface IMondrianStateData extends IMondrianCommonData {
   type: MondrianDataType.SET_STATE;
   data: {
     [key: string]: any;
   };
 }
 
-interface IMondrianActionData extends IMondrianCommonData {
+export interface IMondrianActionData extends IMondrianCommonData {
   type: MondrianDataType.COMMAND;
   data: {
     subType: MondrianActionType;

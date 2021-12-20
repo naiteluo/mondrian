@@ -7,6 +7,8 @@ import { MondrianUtils } from "./common/utils";
 import { MondrianRenderer } from "./renderer/renderer";
 import { MondrianDataManager } from "./data-manager";
 
+import 'web-streams-polyfill/es6'
+
 export interface IMondrianParams {
   container: HTMLElement;
   isProducer: boolean;
@@ -79,7 +81,7 @@ export class Mondrian {
   }
 
   addConsumer(id: string) {
-    const consumer = new MondrianConsumer(id, this.renderer);
+    const consumer = new MondrianConsumer(id, this.renderer, this.app);
     this.consumers.set(id, consumer);
     this.dataManager.registerConsumer(id, consumer);
   }
@@ -109,19 +111,19 @@ export class Mondrian {
     this.$panel.id = "debug-panel";
     this.$panel.style.width = "100px;";
     this.$panel.style.height = "100px;";
-    this.$panel.style.zIndex = "9";
-    this.$panel.style.position = "absolute";
-    this.$panel.style.top = "10px";
-    this.$panel.style.left = "10px";
+    this.$panel.style.zIndex = "2";
+    this.$panel.style.position = "fixed";
+    this.$panel.style.top = "0px";
+    this.$panel.style.left = "15px";
     this.$panel.style.backgroundColor = "#000";
-    this.$panel.style.height = "30px";
-    this.$panel.style.padding = "2px 5px";
+    this.$panel.style.padding = "0px 10px";
+    this.$panel.style.height = "35.5px";
     this.$panel.style.color = "#13c039";
     this.$panel.style.display = "flex";
-    this.$panel.style.opacity = "0.6";
+    this.$panel.style.opacity = "0.8";
     this.$panel.style.alignItems = "center";
     this.$panel.style.fontFamily = "monospace";
-    this.$panel.innerHTML = "debug";
+    this.$panel.innerHTML = "debug panel";
 
     document.body.appendChild(this.$panel);
   }

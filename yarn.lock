@@ -7244,6 +7244,11 @@ wbuf@^1.1.0, wbuf@^1.7.3:
   dependencies:
     minimalistic-assert "^1.0.0"
 
+web-streams-polyfill@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.npmmirror.com/web-streams-polyfill/download/web-streams-polyfill-3.2.0.tgz?cache=0&sync_timestamp=1636211225188&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fweb-streams-polyfill%2Fdownload%2Fweb-streams-polyfill-3.2.0.tgz#a6b74026b38e4885869fb5c589e90b95ccfc7965"
+  integrity sha1-prdAJrOOSIWGn7XFiekLlcz8eWU=
+
 webidl-conversions@^3.0.0:
   version "3.0.1"
   resolved "https://registry.nlark.com/webidl-conversions/download/webidl-conversions-3.0.1.tgz#24534275e2a7bc6be7bc86611cc16ae0a5654871"
