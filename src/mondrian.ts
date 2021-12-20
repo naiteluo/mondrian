@@ -7,11 +7,12 @@ import { MondrianUtils } from "./common/utils";
 import { MondrianRenderer } from "./renderer/renderer";
 import { MondrianDataManager } from "./data-manager";
 
-import 'web-streams-polyfill/es6'
+import "web-streams-polyfill/es6";
 
 export interface IMondrianParams {
   container: HTMLElement;
   isProducer: boolean;
+  resolution: number;
 }
 
 export class Mondrian {
@@ -57,7 +58,7 @@ export class Mondrian {
       antialias: true,
       backgroundAlpha: 0,
       autoDensity: true,
-      resolution: 1,
+      resolution: this.params.resolution,
       autoStart: true,
     });
     //Add the canvas that Pixi automatically created for you to the HTML document

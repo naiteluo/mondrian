@@ -1,4 +1,4 @@
-import { Container, Graphics, ILineStyleOptions } from "pixi.js";
+import { Container, Graphics, ILineStyleOptions, MSAA_QUALITY } from "pixi.js";
 import { BrushPluginState } from "plugin/brush-plugin";
 
 export interface MondrianGraphicsHandlerOptions {
@@ -13,7 +13,7 @@ export interface MondrianGraphicsHandlerOptions {
 export class MondrianGraphicsHandler {
   static DefaultOptions: MondrianGraphicsHandlerOptions = {
     canCacheAsBitmap: true,
-    enableDiscrete: true,
+    enableDiscrete: false,
     lineStyle: {},
   };
 
@@ -64,8 +64,8 @@ export class MondrianGraphicsHandler {
     if (this.options.canCacheAsBitmap) {
       this._gs.forEach((g) => {
         if (!g.cacheAsBitmap) {
-          g.cacheAsBitmapResolution = 1;
-          g.cacheAsBitmapMultisample = 4;
+          // g.cacheAsBitmapResolution = 1;
+          g.cacheAsBitmapMultisample = MSAA_QUALITY.NONE;
           g.cacheAsBitmap = true;
         }
       });

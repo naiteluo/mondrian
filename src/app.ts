@@ -7,6 +7,7 @@ import {
 import { Mondrian } from "./mondrian";
 import { Controller, GUI } from "lil-gui";
 import axios from "axios";
+import { getResolution, setResolution } from "./app-helper";
 
 const AUTO_START = true;
 const TEST_SERVER_HOST = `//${window.location.hostname}:3000`;
@@ -21,6 +22,8 @@ class App {
   msgCtrl: Controller;
 
   brushConfig: BrushPluginState = defaultBrushOptions;
+
+  resolution = getResolution();
 
   constructor() {
     // reset css
@@ -44,6 +47,25 @@ class App {
 
   initialLilGUI() {
     this.gui = new GUI();
+
+    const testFolder = this.gui.addFolder("Test");
+    this.msgCtrl = testFolder.add(this, "msg").name("Message:");
+    this.guiAutoCtrl = testFolder.add(this, "onAuto").name("Start Auto Draw");
+    testFolder.add(this, "onClearServerCache").name("Clear Server Cache");
+    testFolder.add(this, "onSaveServerCache").name("Save Server Cache");
+    testFolder
+      .add(this, "resolution", 1, 3, 1)
+      .listen()
+      .name("resolution")
+      .onFinishChange(() => {
+        setResolution(this.resolution);
+        window.location.reload();
+      });
+
+    const commandFolder = this.gui.addFolder("Command").close();
+    commandFolder.add(this, "onUndo").name("Undo");
+    commandFolder.add(this, "onRedo").name("Redo");
+    commandFolder.add(this, "onClear").name("Clear");
 
     const brushFolder = this.gui.addFolder("Brush").close();
     brushFolder
@@ -71,18 +93,6 @@ class App {
     brushFolder
       .addColor(this.brushConfig, "color")
       .onChange(this._onBrushStateChange);
-
-    const commandFolder = this.gui.addFolder("Command");
-    commandFolder.open();
-    commandFolder.add(this, "onUndo").name("Undo");
-    commandFolder.add(this, "onRedo").name("Redo");
-    commandFolder.add(this, "onClear").name("Clear");
-
-    const testFolder = this.gui.addFolder("Test");
-    this.msgCtrl = testFolder.add(this, "msg").name("Message:");
-    this.guiAutoCtrl = testFolder.add(this, "onAuto").name("Start Auto Draw");
-    testFolder.add(this, "onClearServerCache").name("Clear Server Cache");
-    testFolder.add(this, "onSaveServerCache").name("Save Server Cache");
   }
 
   initialMondrian() {
@@ -90,6 +100,7 @@ class App {
     this.mondrian = new Mondrian({
       container: this.$div,
       isProducer: true,
+      resolution: this.resolution,
     });
 
     this.mondrian.interaction.emit("player:state:change", {
