@@ -1,4 +1,5 @@
 import { Application, Container } from "pixi.js";
+import { MondrianShared } from "../shared";
 import {
   IMondrianInteractor,
   IMondrianMockInteractionEvent,
@@ -16,16 +17,17 @@ export class MondrianProducer
   extends MondrianPlayer
   implements IMondrianInteractor
 {
-  private stage: Container;
+  private get stage() {
+    return this.shared.pixiApp.stage;
+  }
 
   constructor(
     id: string,
-    private application: Application,
-    private dataManager: MondrianDataManager
+    private dataManager: MondrianDataManager,
+    private shared: MondrianShared
   ) {
     super();
     this.id = id;
-    this.stage = application.stage;
   }
 
   consume(datas: IMondrianData[]) {
@@ -109,7 +111,7 @@ export class MondrianProducer
 
   // todo optimize
   private xyToCenter({ x, y }) {
-    const { width, height } = this.application.screen;
+    const { width, height } = this.shared.pixiApp.screen;
     return {
       x: x - width / 2,
       y: y - height / 2,

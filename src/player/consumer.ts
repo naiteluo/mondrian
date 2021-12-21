@@ -11,7 +11,7 @@ import { MondrianPluginManager } from "../plugin/plugin-manager";
 import { PencilBrushPlugin } from "../plugin/pencil-plugin";
 import { CursorPlugin } from "../plugin/cursor-plugin";
 import { HistoryPlugin } from "../plugin/history-plugin";
-import { Application } from "pixi.js";
+import { MondrianShared } from "../shared";
 
 export class MondrianConsumer extends MondrianPlayer {
   private pluginManager: MondrianPluginManager;
@@ -19,7 +19,7 @@ export class MondrianConsumer extends MondrianPlayer {
   constructor(
     id: string,
     private renderer: MondrianRenderer,
-    private application: Application
+    private shared: MondrianShared
   ) {
     super();
     this.id = id;
@@ -77,7 +77,7 @@ export class MondrianConsumer extends MondrianPlayer {
   // todo move this coord operation together for flexibility
   // warning:  override the origin data
   private dataXyToLeftTop(data: IMondrianInteractData) {
-    const { width, height } = this.application.screen;
+    const { width, height } = this.shared.pixiApp.screen;
     data.data.x = width / 2 + data.data.x;
     data.data.y = height / 2 + data.data.y;
   }

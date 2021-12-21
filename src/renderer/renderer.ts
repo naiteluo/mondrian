@@ -2,6 +2,7 @@ import { Application } from "@pixi/app";
 import { Container, DisplayObject } from "@pixi/display";
 import { BaseTextureCache } from "@pixi/utils";
 import { RenderTexture, Sprite, Texture, UPDATE_PRIORITY } from "pixi.js";
+import { MondrianShared } from "../shared";
 import {
   MondrianGraphicsHandler,
   MondrianGraphicsHandlerOptions,
@@ -37,7 +38,15 @@ export class MondrianRenderer {
 
   private trash: Trash[] = [];
 
-  constructor(private app: Application, private $panel: HTMLDivElement) {
+  private get pixiApp() {
+    return this.shared.pixiApp;
+  }
+
+  private get $panel() {
+    return this.shared.$panel;
+  }
+
+  constructor(private shared: MondrianShared) {
     this.rootLayer = new Container();
     this.uiLayer = new Container();
     this.dynamicLayer = new Container();
@@ -47,10 +56,9 @@ export class MondrianRenderer {
     // draw static layer to this fixedTexture, and reuse this texture,
     // instead of creating new texture again an again.
     this.fixedTexture = RenderTexture.create({
-      width: this.app.screen.width,
-      height: this.app.screen.height,
+      width: this.pixiApp.screen.width,
+      height: this.pixiApp.screen.height,
     });
-    console.log(this.app.screen.width, this.app.screen.height);
     this.fixedSprite = new Sprite(this.fixedTexture);
 
     this.rootLayer.addChild(
@@ -59,17 +67,17 @@ export class MondrianRenderer {
       this.dynamicLayer,
       this.uiLayer
     );
-    this.app.stage.addChild(this.rootLayer);
+    this.pixiApp.stage.addChild(this.rootLayer);
 
-    this.app.ticker.minFPS = 60;
+    this.pixiApp.ticker.minFPS = 60;
     /**
      * add main loop ticker
      */
-    this.app.ticker.add(this.main);
+    this.pixiApp.ticker.add(this.main);
     /**
      * add gc ticker
      */
-    this.app.ticker.add(this.gc, undefined, UPDATE_PRIORITY.LOW);
+    this.pixiApp.ticker.add(this.gc, undefined, UPDATE_PRIORITY.LOW);
     // show perf info
     this.initialPerfTool();
   }
@@ -78,7 +86,7 @@ export class MondrianRenderer {
     /**
      * add perf ticker
      */
-    this.app.ticker.add(this.perf, undefined, UPDATE_PRIORITY.LOW);
+    this.pixiApp.ticker.add(this.perf, undefined, UPDATE_PRIORITY.LOW);
   }
 
   /**
@@ -187,7 +195,7 @@ export class MondrianRenderer {
     this.lastMainDt = 0;
     if (this.dynamicCache.length <= this.dynamicLevel) return;
     this.shiftGrapicsHandlersToStatic();
-    this.app.renderer.render(this.staticLayer, {
+    this.pixiApp.renderer.render(this.staticLayer, {
       renderTexture: this.fixedTexture,
       clear: false,
     });

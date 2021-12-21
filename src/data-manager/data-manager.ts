@@ -1,5 +1,5 @@
 import { Mondrian } from "mondrian";
-import { IMondrianPlayer } from "../player";
+import { IMondrianPlayer, MondrianPlayerManager } from "../player";
 import { IMondrianData } from "./data";
 import {
   MondrianLocalDownStreamSource,
@@ -27,11 +27,12 @@ export class MondrianDataManager {
   private reader: ReadableStreamDefaultReader;
   private writer: WritableStreamDefaultWriter;
 
-  private consumers: Map<string, IMondrianPlayer> = new Map();
-  private $panel: HTMLElement;
+  private get consumers() {
+    return this.playerManager.consumers;
+  }
 
-  constructor(private mondrian: Mondrian) {
-    this.$panel = document.getElementById("debug-panel");
+  constructor(private playerManager: MondrianPlayerManager) {
+    // todo change start time
     this.client.start();
   }
 
@@ -42,7 +43,7 @@ export class MondrianDataManager {
 
   async startRead() {
     this.reader = this.downStream.getReader();
-
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       const { done, value } = await this.reader.read();
       if (done) break;
@@ -62,38 +63,16 @@ export class MondrianDataManager {
     datas.forEach((v) => {
       if (v.playerID) {
         if (!this.consumers.has(v.playerID)) {
-          this.mondrian.addConsumer(v.playerID);
+          this.playerManager.createConsumer(v.playerID);
         }
         this.consumers.get(v.playerID).consume([v]);
       } else {
         console.error("!!!");
       }
     });
-    // this.consumers.forEach((player) => {
-    //   player.consume(datas);
-    // });
   }
-
-  tmp: IMondrianData[] = [];
 
   async push(datas: IMondrianData[]) {
     await this.writer.write(datas);
-
-    // datas.map((d) => {
-    //   this.dispatch(d);
-    // });
-  }
-
-  registerConsumer(id: string, consumer: IMondrianPlayer) {
-    this.consumers.set(id, consumer);
-  }
-
-  saveTmp() {
-    localStorage.setItem("test", JSON.stringify(this.tmp));
-  }
-
-  consumeTmp() {
-    const datas: IMondrianData[] = JSON.parse(localStorage.getItem("test"));
-    this.dispatch(datas);
   }
 }

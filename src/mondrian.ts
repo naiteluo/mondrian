@@ -1,14 +1,19 @@
 import "pixi.js";
 
 import { Application } from "@pixi/app";
-import { EventProxier } from "./event-proxier";
-import { MondrianConsumer, MondrianProducer } from "./player";
+import { MondrianEventProxier } from "./event-proxier";
+import {
+  MondrianConsumer,
+  MondrianPlayerManager,
+  MondrianProducer,
+} from "./player";
 import { MondrianUtils } from "./common/utils";
 import { MondrianRenderer } from "./renderer/renderer";
 import { MondrianDataManager } from "./data-manager";
 
 import "web-streams-polyfill/es6";
 import { ENV, settings } from "pixi.js";
+import { MondrianShared } from "./shared";
 
 export interface IMondrianParams {
   container: HTMLElement;
@@ -17,36 +22,62 @@ export interface IMondrianParams {
 }
 
 export class Mondrian {
-  private ID = `${+new Date()}-${Math.round(Math.random() * 100)}`;
+  /**
+   * self's props
+   */
+  private _ID = `${+new Date()}-${Math.round(Math.random() * 100)}`;
 
-  private app: Application;
+  get ID() {
+    return this._ID;
+  }
+
+  /**
+   * DOM container ref
+   */
   private $container: HTMLElement;
   private $canvas: HTMLCanvasElement;
-  private $panel: HTMLDivElement;
+  private _$panel: HTMLDivElement;
 
-  private eventProxier: EventProxier;
+  /**
+   * pixi's instances
+   */
+  private app: Application;
 
-  private producer: MondrianProducer;
+  /**
+   * modules
+   */
+  private shared: MondrianShared;
   private renderer: MondrianRenderer;
-
-  private consumers: Map<string, MondrianConsumer> = new Map();
-
+  private playerManager: MondrianPlayerManager;
+  private eventProxier: MondrianEventProxier;
   private dataManager: MondrianDataManager;
 
   constructor(private params: IMondrianParams) {
+    // bind to given dom container
     this.$container = params.container;
+    // setup dom related staffs
     this.initializeContainer();
+    // setup debug panel
     this.initialzieDebugPanel();
+    // init pixi
+    // todo not start immediately
     this.initializePIXIApplication();
-    this.resizeEventHandler();
 
-    this.dataManager = new MondrianDataManager(this);
-    this.initializeMondrianRenderer();
-
+    this.shared = new MondrianShared(this);
+    this.playerManager = new MondrianPlayerManager(this.shared);
+    this.renderer = new MondrianRenderer(this.shared);
+    this.dataManager = new MondrianDataManager(this.playerManager);
+    this.eventProxier = new MondrianEventProxier(
+      this.playerManager,
+      this.shared
+    );
+    this.playerManager.injectDataManager(this.dataManager);
+    this.playerManager.injectRenderer(this.renderer);
     if (params.isProducer) {
-      this.initializeProducer();
+      this.playerManager.createProducer();
     }
-    this.initializeConsumer();
+    this.playerManager.createConsumer();
+
     this.dataManager.start();
 
     // todo remove debug
@@ -61,7 +92,7 @@ export class Mondrian {
      */
     // todo add version detect to set webgl1 as prefer_env before chrome 75
     settings.PREFER_ENV = ENV.WEBGL2;
-    //Create a Pixi Application
+    // Create a Pixi Application
     this.app = new Application({
       antialias: true,
       backgroundAlpha: 0,
@@ -69,30 +100,14 @@ export class Mondrian {
       resolution: this.params.resolution,
       autoStart: true,
     });
-    //Add the canvas that Pixi automatically created for you to the HTML document
+    // Add the canvas that Pixi automatically created for you to the HTML document
     this.$canvas = this.app.view;
-
     this.$container.appendChild(this.$canvas);
-
     window.addEventListener("resize", this.resizeEventHandler);
-
     // todo turn off if there is no producer
     this.app.stage.interactive = true;
-  }
-
-  private initializeProducer() {
-    this.producer = new MondrianProducer(this.ID, this.app, this.dataManager);
-    this.eventProxier = new EventProxier(this.app, [this.producer]);
-  }
-
-  private initializeConsumer() {
-    this.addConsumer(this.ID);
-  }
-
-  addConsumer(id: string) {
-    const consumer = new MondrianConsumer(id, this.renderer, this.app);
-    this.consumers.set(id, consumer);
-    this.dataManager.registerConsumer(id, consumer);
+    // resize immediately to fit full container
+    this.resizeEventHandler();
   }
 
   private initializeContainer() {
@@ -102,21 +117,8 @@ export class Mondrian {
     this.$container.style.cursor = "none";
   }
 
-  private resizeEventHandler = () => {
-    const wh = MondrianUtils.getScreenWH();
-    this.$container.style.width = `${wh.w}px`;
-    this.$container.style.height = `${wh.h}px`;
-    this.$canvas.style.width = `${wh.w}px`;
-    this.$canvas.style.height = `${wh.h}px`;
-    this.app.renderer.resize(wh.w, wh.h);
-  };
-
-  private initializeMondrianRenderer() {
-    this.renderer = new MondrianRenderer(this.app, this.$panel);
-  }
-
-  initialzieDebugPanel() {
-    this.$panel = document.createElement("div");
+  private initialzieDebugPanel() {
+    this._$panel = document.createElement("div");
     this.$panel.id = "debug-panel";
     this.$panel.style.width = "100px;";
     this.$panel.style.height = "100px;";
@@ -133,12 +135,20 @@ export class Mondrian {
     this.$panel.style.alignItems = "center";
     this.$panel.style.fontFamily = "monospace";
     this.$panel.innerHTML = "debug panel";
-
     document.body.appendChild(this.$panel);
   }
 
+  private resizeEventHandler = () => {
+    const wh = MondrianUtils.getScreenWH();
+    this.$container.style.width = `${wh.w}px`;
+    this.$container.style.height = `${wh.h}px`;
+    this.$canvas.style.width = `${wh.w}px`;
+    this.$canvas.style.height = `${wh.h}px`;
+    this.app.renderer.resize(wh.w, wh.h);
+  };
+
   get player() {
-    return this.producer;
+    return this.playerManager.producer;
   }
 
   get interaction() {
@@ -152,5 +162,9 @@ export class Mondrian {
 
   get pixiApp() {
     return this.app;
+  }
+
+  get $panel() {
+    return this._$panel;
   }
 }

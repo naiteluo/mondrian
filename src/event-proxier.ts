@@ -8,20 +8,28 @@ import {
 } from "./common/interactor";
 import { MondrianEventEmitter } from "./common/event-emitter";
 import { IMondrianPlayerState } from "./player/player";
+import { MondrianShared } from "./shared";
+import { MondrianPlayerManager } from "./player";
+import { IMondrianStateData } from "data-manager";
 
-export class EventProxier extends MondrianEventEmitter {
-  private stage: Container;
-  private interaction: IRendererPlugins;
+export class MondrianEventProxier extends MondrianEventEmitter {
+  private get interaction() {
+    return this.shared.pixiApp.renderer.plugins.interaction;
+  }
+
+  private get interactor() {
+    return this.playerManager.producer;
+  }
+
+  private get stage() {
+    return this.shared.pixiApp.stage;
+  }
 
   constructor(
-    private application: Application,
-    private interactors: IMondrianInteractor[]
+    private playerManager: MondrianPlayerManager,
+    private shared: MondrianShared
   ) {
     super();
-    this.stage = application.stage;
-    this.stage.interactive = true;
-    this.interaction = application.renderer.plugins.interaction;
-
     this.startPixiEventWatch();
 
     this.on("player:interaction:pointerdown", this.onDragStart);
@@ -33,79 +41,47 @@ export class EventProxier extends MondrianEventEmitter {
     this.on("player:action:redo", this.onRedo);
   }
 
-  addInteractor(target: IMondrianInteractor) {
-    if (this.interactors.indexOf(target)) {
-      this.interactors.push(target);
-    }
-  }
-
-  removeInteractor(target: IMondrianInteractor) {
-    const i = this.interactors.indexOf(target);
-    if (i !== -1) {
-      this.interactors.splice(i, 1);
-    }
-  }
-
   public startPixiEventWatch() {
-    this.stopPixiEventWatch();
+    this.stage.interactive = true;
     this.interaction.on("pointerdown", this.onDragStart);
     this.interaction.on("pointermove", this.onDragMove);
     this.interaction.on("pointerup", this.onDragEnd);
   }
 
   public stopPixiEventWatch() {
+    this.stage.interactive = false;
     this.interaction.off("pointerdown", this.onDragStart);
     this.interaction.off("pointermove", this.onDragMove);
     this.interaction.off("pointerup", this.onDragEnd);
   }
 
   private onStateChange = (state: IMondrianPlayerState) => {
-    this.interactors.forEach((t) => {
-      t.onStateChange(state);
-    });
+    this.interactor.onStateChange(state);
   };
 
-  private onUndo = (event: any) => {
-    this.interactors.forEach((interactor) => {
-      interactor.onUndo(event);
-    });
+  private onUndo = (event: IMondrianStateData) => {
+    this.interactor.onUndo(event);
   };
 
-  private onRedo = (event: any) => {
-    this.interactors.forEach((interactor) => {
-      interactor.onRedo(event);
-    });
+  private onRedo = (event: IMondrianStateData) => {
+    this.interactor.onRedo(event);
   };
 
   private onDragStart = (event: IMondrianMockInteractionEvent) => {
-    this.interactors.forEach((interactor) => {
-      interactor.onDragStart(event);
-    });
+    this.interactor.onDragStart(event);
   };
 
   private onDragMove = (event: IMondrianMockInteractionEvent) => {
-    this.interactors.forEach((interactor) => {
-      interactor.onDragMove(event);
-    });
+    this.interactor.onDragMove(event);
   };
   private onDragEnd = (event: IMondrianMockInteractionEvent) => {
-    this.interactors.forEach((interactor) => {
-      interactor.onDragEnd(event);
-    });
+    this.interactor.onDragEnd(event);
   };
 
   destroy() {
-    this.interaction.off("pointerdown", this.onDragStart);
-    this.interaction.off("pointermove", this.onDragMove);
-    this.interaction.off("pointerup", this.onDragEnd);
-
-    this.stage.interactive = false;
+    this.stopPixiEventWatch();
     this.off("player:state:change", this.onStateChange);
     this.off("play:action:undo", this.onUndo);
     this.off("play:action:redo", this.onRedo);
-
-    this.interaction = undefined;
-    this.application = undefined;
-    this.interactors = undefined;
   }
 }
