@@ -70,6 +70,9 @@ class App {
         setResolution(this.resolution);
         window.location.reload();
       });
+    testFolder
+      .add(this, "autoStepTimeSpan", 10, 1000, 20)
+      .name("time per step (ms)");
     this.guiAutoCtrl = testFolder.add(this, "onAuto").name("Start Auto Draw");
     testFolder.add(this, "cacheName").name("Cache File Name");
     testFolder.add(this, "onSwitchServerCache").name("Swith Cache");
@@ -109,6 +112,12 @@ class App {
       .onChange(this._onBrushStateChange);
   }
 
+  initialBrush() {
+    this.mondrian.interaction.emit("player:state:change", {
+      selectedBrush: this.brushConfig,
+    });
+  }
+
   initialMondrian() {
     // create instance
     this.mondrian = new Mondrian({
@@ -118,9 +127,7 @@ class App {
       autoStart: false,
     });
 
-    this.mondrian.interaction.emit("player:state:change", {
-      selectedBrush: this.brushConfig,
-    });
+    this.initialBrush();
   }
 
   private _onBrushStateChange = (evt) => {
@@ -147,6 +154,7 @@ class App {
 
   onStart() {
     this.mondrian.start();
+    this.initialBrush();
   }
 
   private isAutoOn = false;
@@ -154,13 +162,15 @@ class App {
   private autoStepLength = 80;
   private autoStepIndex = 0;
   private autoStepCountPerTick = 20;
+  private autoStepTimeSpan = 100;
   private screenWidth = 0;
   private screenHeight = 0;
+
   private lt = 0;
 
   private step = (nt) => {
     if (this.isAutoOn) {
-      if (nt - this.lt > 100) {
+      if (nt - this.lt > this.autoStepTimeSpan) {
         this.lt = nt;
         switch (this.autoStepIndex) {
           case 0:
