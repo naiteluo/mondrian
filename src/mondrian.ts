@@ -14,22 +14,20 @@ import { MondrianDataManager } from "./data-manager";
 import "web-streams-polyfill/es6";
 import { ENV, settings } from "pixi.js";
 import { MondrianShared } from "./shared";
+import { MondrianModuleBase } from "./common/module-base";
 
-export interface IMondrianParams {
+export interface IMondrianSettings {
   container: HTMLElement;
-  isProducer: boolean;
-  resolution: number;
+  isProducer?: boolean;
+  resolution?: number;
+  autoStart?: boolean;
 }
 
-export class Mondrian {
+export class Mondrian extends MondrianModuleBase {
   /**
    * self's props
    */
   private _ID = `${+new Date()}-${Math.round(Math.random() * 100)}`;
-
-  get ID() {
-    return this._ID;
-  }
 
   /**
    * DOM container ref
@@ -52,9 +50,11 @@ export class Mondrian {
   private eventProxier: MondrianEventProxier;
   private dataManager: MondrianDataManager;
 
-  constructor(private params: IMondrianParams) {
+  // todo better settings handling
+  constructor(private _settings: IMondrianSettings) {
+    super();
     // bind to given dom container
-    this.$container = params.container;
+    this.$container = _settings.container;
     // setup dom related staffs
     this.initializeContainer();
     // setup debug panel
@@ -63,7 +63,20 @@ export class Mondrian {
     // todo not start immediately
     this.initializePIXIApplication();
 
+    /**
+     * ** warning **
+     *
+     * only Shared module has direct access to Mondrian instance
+     * to keep dependency clear,
+     * other inner module can't directly access Mondrian!!
+     *
+     * other inner module can indirectly access Mondrian instance
+     * through injected Shared module instance.
+     */
     this.shared = new MondrianShared(this);
+    /**
+     * initialize inner modules and inject dependencies
+     */
     this.playerManager = new MondrianPlayerManager(this.shared);
     this.renderer = new MondrianRenderer(this.shared);
     this.dataManager = new MondrianDataManager(this.playerManager);
@@ -73,17 +86,28 @@ export class Mondrian {
     );
     this.playerManager.injectDataManager(this.dataManager);
     this.playerManager.injectRenderer(this.renderer);
-    if (params.isProducer) {
-      this.playerManager.createProducer();
+
+    if (this.settings.autoStart) {
+      this.start();
     }
-    this.playerManager.createConsumer();
-
-    this.dataManager.start();
-
-    // todo remove debug
-    (window as any).mo = this;
   }
 
+  start() {
+    super.start();
+    /**
+     * create players' instances
+     */
+    this.renderer.start();
+    this.playerManager.start();
+    this.dataManager.start();
+    this.eventProxier.start();
+  }
+
+  private setCursorVisible(flag: boolean) {
+    this.$container.style.cursor = flag ? "pointer" : "none";
+  }
+
+  // todo init pixi app in renderer
   private initializePIXIApplication() {
     /**
      * in mobile pixi fallback to webgl1 even webview support webgl2
@@ -97,8 +121,8 @@ export class Mondrian {
       antialias: true,
       backgroundAlpha: 0,
       autoDensity: true,
-      resolution: this.params.resolution,
-      autoStart: true,
+      resolution: this.settings.resolution,
+      autoStart: false,
     });
     // Add the canvas that Pixi automatically created for you to the HTML document
     this.$canvas = this.app.view;
@@ -114,7 +138,6 @@ export class Mondrian {
     this.$container.style.position = "absolute";
     this.$container.style.zIndex = "0";
     this.$container.style.margin = "0px 0px";
-    this.$container.style.cursor = "none";
   }
 
   private initialzieDebugPanel() {
@@ -147,6 +170,10 @@ export class Mondrian {
     this.app.renderer.resize(wh.w, wh.h);
   };
 
+  get ID() {
+    return this._ID;
+  }
+
   get player() {
     return this.playerManager.producer;
   }
@@ -166,5 +193,9 @@ export class Mondrian {
 
   get $panel() {
     return this._$panel;
+  }
+
+  get settings() {
+    return this._settings;
   }
 }

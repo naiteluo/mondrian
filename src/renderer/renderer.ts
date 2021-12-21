@@ -1,6 +1,7 @@
 import { Application } from "@pixi/app";
 import { Container, DisplayObject } from "@pixi/display";
 import { BaseTextureCache } from "@pixi/utils";
+import { MondrianModuleBase } from "../common/module-base";
 import { RenderTexture, Sprite, Texture, UPDATE_PRIORITY } from "pixi.js";
 import { MondrianShared } from "../shared";
 import {
@@ -17,7 +18,7 @@ type Trash =
   | { type: TrashType.DisplayObject; target: DisplayObject }
   | { type: TrashType.Texture; target: Texture };
 
-export class MondrianRenderer {
+export class MondrianRenderer extends MondrianModuleBase {
   private rootLayer: Container;
   // todo unsafe
   // high update freqency element like cursor or performces ui
@@ -47,6 +48,7 @@ export class MondrianRenderer {
   }
 
   constructor(private shared: MondrianShared) {
+    super();
     this.rootLayer = new Container();
     this.uiLayer = new Container();
     this.dynamicLayer = new Container();
@@ -80,6 +82,15 @@ export class MondrianRenderer {
     this.pixiApp.ticker.add(this.gc, undefined, UPDATE_PRIORITY.LOW);
     // show perf info
     this.initialPerfTool();
+  }
+
+  start() {
+    this.pixiApp.start();
+    super.start();
+  }
+
+  stop() {
+    super.stop();
   }
 
   private initialPerfTool() {

@@ -2,7 +2,7 @@
 
 Yet another drawing board. Piet Mondrian, one of the greatest abstract style artists of the 20th century.
 
-Background
+## Background
 
 We had make more than one broken drawing board, having problems like:
 
@@ -13,7 +13,7 @@ We had make more than one broken drawing board, having problems like:
   - Brush or plugin unsupported.
 - Low performance in extreme circumstance.
 
-Goals
+## Goals
 
 To have a maintainable and flexible drawing board, here are our design goals:
 
@@ -24,10 +24,14 @@ To have a maintainable and flexible drawing board, here are our design goals:
 - Maintainable, easy to learn, easy to code, easy to debug.
 - Brush/Plugin extendable.
 
-Development
+## Development
 
 ```
 yarn
 yarn dev
 yarn build
 ```
+
+## TODOs
+
+- transform display objects to new center after resize

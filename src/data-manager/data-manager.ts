@@ -1,16 +1,13 @@
-import { Mondrian } from "mondrian";
-import { IMondrianPlayer, MondrianPlayerManager } from "../player";
+import { MondrianModuleBase } from "../common/module-base";
+import { MondrianPlayerManager } from "../player";
 import { IMondrianData } from "./data";
-import {
-  MondrianLocalDownStreamSource,
-  MondrianWsDownStreamSource,
-} from "./down-stream";
-import { MondrianLocalUpStreamSink, MondrianWsUpStreamSink } from "./up-stream";
+import { MondrianWsDownStreamSource } from "./down-stream";
+import { MondrianWsUpStreamSink } from "./up-stream";
 import { IoClient } from "./ws-client";
 
 export * from "./data";
 
-export class MondrianDataManager {
+export class MondrianDataManager extends MondrianModuleBase {
   buffer: IMondrianData[] = [];
 
   client: IoClient = new IoClient();
@@ -32,13 +29,18 @@ export class MondrianDataManager {
   }
 
   constructor(private playerManager: MondrianPlayerManager) {
-    // todo change start time
-    this.client.start();
+    super();
   }
 
   start() {
+    super.start();
+    this.client.start();
     this.startRead();
     this.startWrite();
+  }
+
+  stop() {
+    super.stop();
   }
 
   async startRead() {

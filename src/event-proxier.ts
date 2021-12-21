@@ -30,15 +30,16 @@ export class MondrianEventProxier extends MondrianEventEmitter {
     private shared: MondrianShared
   ) {
     super();
+  }
+
+  public start() {
+    this.startSelfEventWatch();
     this.startPixiEventWatch();
+  }
 
-    this.on("player:interaction:pointerdown", this.onDragStart);
-    this.on("player:interaction:pointermove", this.onDragMove);
-    this.on("player:interaction:pointerup", this.onDragEnd);
-
-    this.on("player:state:change", this.onStateChange);
-    this.on("player:action:undo", this.onUndo);
-    this.on("player:action:redo", this.onRedo);
+  public stop() {
+    this.stopSelfEventWatch();
+    this.stopPixiEventWatch();
   }
 
   public startPixiEventWatch() {
@@ -53,6 +54,29 @@ export class MondrianEventProxier extends MondrianEventEmitter {
     this.interaction.off("pointerdown", this.onDragStart);
     this.interaction.off("pointermove", this.onDragMove);
     this.interaction.off("pointerup", this.onDragEnd);
+  }
+
+  public startSelfEventWatch() {
+    // mostly emitted by mock or code manually
+    this.on("player:interaction:pointerdown", this.onDragStart);
+    this.on("player:interaction:pointermove", this.onDragMove);
+    this.on("player:interaction:pointerup", this.onDragEnd);
+    this.on("player:state:change", this.onStateChange);
+    this.on("player:action:undo", this.onUndo);
+    this.on("player:action:redo", this.onRedo);
+  }
+
+  public stopSelfEventWatch() {
+    this.off("player:interaction:pointerdown", this.onDragStart);
+    this.off("player:interaction:pointermove", this.onDragMove);
+    this.off("player:interaction:pointerup", this.onDragEnd);
+    this.off("player:state:change", this.onStateChange);
+    this.off("play:action:undo", this.onUndo);
+    this.off("play:action:redo", this.onRedo);
+  }
+
+  public destroy() {
+    this.stop();
   }
 
   private onStateChange = (state: IMondrianPlayerState) => {
@@ -77,11 +101,4 @@ export class MondrianEventProxier extends MondrianEventEmitter {
   private onDragEnd = (event: IMondrianMockInteractionEvent) => {
     this.interactor.onDragEnd(event);
   };
-
-  destroy() {
-    this.stopPixiEventWatch();
-    this.off("player:state:change", this.onStateChange);
-    this.off("play:action:undo", this.onUndo);
-    this.off("play:action:redo", this.onRedo);
-  }
 }

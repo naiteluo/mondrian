@@ -1,7 +1,11 @@
+import { MondrianModuleBase } from "./common/module-base";
 import { Mondrian } from "mondrian";
 
-export class MondrianShared {
-  constructor(private mondrian: Mondrian) {}
+export class MondrianShared extends MondrianModuleBase {
+  constructor(private mondrian: Mondrian) {
+    super();
+    this.start();
+  }
   get MID() {
     return this.mondrian.ID;
   }
@@ -11,5 +15,9 @@ export class MondrianShared {
 
   get $panel() {
     return this.mondrian.$panel;
+  }
+
+  get settings() {
+    return this.mondrian.settings;
   }
 }

@@ -18,8 +18,10 @@ class App {
   gui: GUI;
   guiAutoCtrl: Controller;
 
-  input = "welcome.";
-  inputCtrl: Controller;
+  msg = "welcome.";
+  msgCtrl: Controller;
+
+  cacheName = "temp";
 
   brushConfig: BrushPluginState = defaultBrushOptions;
 
@@ -56,12 +58,10 @@ class App {
 
   initialLilGUI() {
     this.gui = new GUI();
+    this.gui.add(this, "onStart").name("Start");
 
     const testFolder = this.gui.addFolder("Test");
-    this.inputCtrl = testFolder.add(this, "input").name("Message:");
-    this.guiAutoCtrl = testFolder.add(this, "onAuto").name("Start Auto Draw");
-    testFolder.add(this, "onClearServerCache").name("Clear Server Cache");
-    testFolder.add(this, "onSaveServerCache").name("Save Server Cache");
+    this.msgCtrl = testFolder.add(this, "msg").name("Message:");
     testFolder
       .add(this, "resolution", 1, 3, 1)
       .listen()
@@ -70,6 +70,11 @@ class App {
         setResolution(this.resolution);
         window.location.reload();
       });
+    this.guiAutoCtrl = testFolder.add(this, "onAuto").name("Start Auto Draw");
+    testFolder.add(this, "cacheName").name("Cache File Name");
+    testFolder.add(this, "onSwitchServerCache").name("Swith Cache");
+    testFolder.add(this, "onSaveServerCache").name("Save Cache");
+    testFolder.add(this, "onClearCurrentCache").name("Clear Current Cache");
 
     const commandFolder = this.gui.addFolder("Command").close();
     commandFolder.add(this, "onUndo").name("Undo");
@@ -110,6 +115,7 @@ class App {
       container: this.$div,
       isProducer: true,
       resolution: this.resolution,
+      autoStart: false,
     });
 
     this.mondrian.interaction.emit("player:state:change", {
@@ -137,6 +143,10 @@ class App {
 
   onClear() {
     this.mondrian.interaction.emit("player:action:clear");
+  }
+
+  onStart() {
+    this.mondrian.start();
   }
 
   private isAutoOn = false;
@@ -238,19 +248,46 @@ class App {
     requestAnimationFrame(this.step);
   }
 
-  onClearServerCache() {
+  onClearCurrentCache() {
     this.mondrian.dm.client.forceClear();
+    window.location.reload();
+  }
+
+  async onSwitchServerCache() {
+    try {
+      const { success, msg } = (
+        await axios.get(`${TEST_SERVER_HOST}/switchCache`, {
+          params: {
+            mark: this.cacheName,
+          },
+        })
+      ).data;
+      if (!success) {
+        this.logMsg("cache fails to switch.", true);
+        alert(msg);
+      }
+      if (success) {
+        this.logMsg("cache swtiched.");
+        window.location.reload();
+      }
+    } catch (err) {
+      this.logMsg("cache fails to save.", true);
+    }
   }
 
   async onSaveServerCache() {
     try {
-      const { success } = (
+      const { success, msg } = (
         await axios.get(`${TEST_SERVER_HOST}/saveCache`, {
           params: {
-            mark: this.input,
+            mark: this.cacheName,
           },
         })
       ).data;
+      if (!success) {
+        this.logMsg("cache fails to save.", true);
+        alert(msg);
+      }
       if (success) {
         this.logMsg("cache saved.");
       }
@@ -260,8 +297,8 @@ class App {
   }
 
   logMsg(str, isError = false) {
-    this.input = str;
-    this.inputCtrl.updateDisplay();
+    this.msg = str;
+    this.msgCtrl.updateDisplay();
     if (isError) {
       console.error(str);
     } else {
