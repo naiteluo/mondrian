@@ -18,8 +18,8 @@ class App {
   gui: GUI;
   guiAutoCtrl: Controller;
 
-  msg = "welcome.";
-  msgCtrl: Controller;
+  input = "welcome.";
+  inputCtrl: Controller;
 
   brushConfig: BrushPluginState = defaultBrushOptions;
 
@@ -58,7 +58,7 @@ class App {
     this.gui = new GUI();
 
     const testFolder = this.gui.addFolder("Test");
-    this.msgCtrl = testFolder.add(this, "msg").name("Message:");
+    this.inputCtrl = testFolder.add(this, "input").name("Message:");
     this.guiAutoCtrl = testFolder.add(this, "onAuto").name("Start Auto Draw");
     testFolder.add(this, "onClearServerCache").name("Clear Server Cache");
     testFolder.add(this, "onSaveServerCache").name("Save Server Cache");
@@ -244,8 +244,13 @@ class App {
 
   async onSaveServerCache() {
     try {
-      const { success } = (await axios.get(`${TEST_SERVER_HOST}/saveCache`))
-        .data;
+      const { success } = (
+        await axios.get(`${TEST_SERVER_HOST}/saveCache`, {
+          params: {
+            mark: this.input,
+          },
+        })
+      ).data;
       if (success) {
         this.logMsg("cache saved.");
       }
@@ -255,8 +260,8 @@ class App {
   }
 
   logMsg(str, isError = false) {
-    this.msg = str;
-    this.msgCtrl.updateDisplay();
+    this.input = str;
+    this.inputCtrl.updateDisplay();
     if (isError) {
       console.error(str);
     } else {
