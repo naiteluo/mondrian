@@ -266,7 +266,7 @@ class App {
   async onSwitchServerCache() {
     try {
       const { success, msg } = (
-        await axios.get(`${TEST_SERVER_HOST}/switchCache`, {
+        await axios.get(`${TEST_SERVER_HOST}/cache/switchCache`, {
           params: {
             mark: this.cacheName,
           },
@@ -288,7 +288,7 @@ class App {
   async onSaveServerCache() {
     try {
       const { success, msg } = (
-        await axios.get(`${TEST_SERVER_HOST}/saveCache`, {
+        await axios.get(`${TEST_SERVER_HOST}/cache/saveCache`, {
           params: {
             mark: this.cacheName,
           },
