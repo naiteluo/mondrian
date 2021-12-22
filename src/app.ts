@@ -7,7 +7,14 @@ import {
 import { Mondrian } from "./mondrian";
 import { Controller, GUI } from "lil-gui";
 import axios from "axios";
-import { getResolution, setResolution } from "./app-helper";
+import {
+  getAutoStart,
+  getChunkLimit,
+  getResolution,
+  setAutoStart,
+  setChunkLimit,
+  setResolution,
+} from "./app-helper";
 
 const AUTO_START = true;
 const TEST_SERVER_HOST = `//${window.location.hostname}:3000`;
@@ -26,6 +33,8 @@ class App {
   brushConfig: BrushPluginState = defaultBrushOptions;
 
   resolution = getResolution();
+  chunkLimit = getChunkLimit() || 2000;
+  autoStart = getAutoStart();
 
   constructor() {
     // reset css
@@ -68,6 +77,22 @@ class App {
       .name("resolution")
       .onFinishChange(() => {
         setResolution(this.resolution);
+        window.location.reload();
+      });
+    testFolder
+      .add(this, "chunkLimit", [NaN, 100, 1000, 2000, 5000, 10000, 50000])
+      .listen()
+      .name("chunkLimit")
+      .onFinishChange(() => {
+        setChunkLimit(this.chunkLimit);
+        window.location.reload();
+      });
+    testFolder
+      .add(this, "autoStart", [NaN, 100, 1000, 2000, 5000, 10000, 50000])
+      .listen()
+      .name("autoStart")
+      .onFinishChange(() => {
+        setAutoStart(this.autoStart);
         window.location.reload();
       });
     testFolder
@@ -124,7 +149,8 @@ class App {
       container: this.$div,
       isProducer: true,
       resolution: this.resolution,
-      autoStart: false,
+      autoStart: this.autoStart,
+      chunkLimit: this.chunkLimit,
     });
 
     this.initialBrush();

@@ -2,11 +2,7 @@ import "pixi.js";
 
 import { Application } from "@pixi/app";
 import { MondrianEventProxier } from "./event-proxier";
-import {
-  MondrianConsumer,
-  MondrianPlayerManager,
-  MondrianProducer,
-} from "./player";
+import { MondrianPlayerManager } from "./player";
 import { MondrianUtils } from "./common/utils";
 import { MondrianRenderer } from "./renderer/renderer";
 import { MondrianDataManager } from "./data-manager";
@@ -21,6 +17,7 @@ export interface IMondrianSettings {
   isProducer?: boolean;
   resolution?: number;
   autoStart?: boolean;
+  chunkLimit?: number;
 }
 
 export class Mondrian extends MondrianModuleBase {
@@ -53,6 +50,13 @@ export class Mondrian extends MondrianModuleBase {
   // todo better settings handling
   constructor(private _settings: IMondrianSettings) {
     super();
+
+    // preprocess settings
+
+    if (!_settings.chunkLimit) {
+      this._settings.chunkLimit = 2000;
+    }
+
     // bind to given dom container
     this.$container = _settings.container;
     // setup dom related staffs
@@ -79,7 +83,7 @@ export class Mondrian extends MondrianModuleBase {
      */
     this.playerManager = new MondrianPlayerManager(this.shared);
     this.renderer = new MondrianRenderer(this.shared);
-    this.dataManager = new MondrianDataManager(this.playerManager);
+    this.dataManager = new MondrianDataManager(this.playerManager, this.shared);
     this.eventProxier = new MondrianEventProxier(
       this.playerManager,
       this.shared

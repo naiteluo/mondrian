@@ -1,3 +1,4 @@
+import { MondrianShared } from "../shared";
 import { MondrianModuleBase } from "../common/module-base";
 import { MondrianPlayerManager } from "../player";
 import { IMondrianData } from "./data";
@@ -17,7 +18,7 @@ export class MondrianDataManager extends MondrianModuleBase {
     // new LocalUpStreamSink(this.buffer)
   );
   private downStream = new ReadableStream<IMondrianData>(
-    new MondrianWsDownStreamSource(this.buffer, this.client)
+    new MondrianWsDownStreamSource(this.buffer, this.client, this.shared)
     // new LocalDownStreamSource(this.buffer)
   );
 
@@ -28,7 +29,10 @@ export class MondrianDataManager extends MondrianModuleBase {
     return this.playerManager.consumers;
   }
 
-  constructor(private playerManager: MondrianPlayerManager) {
+  constructor(
+    private playerManager: MondrianPlayerManager,
+    private shared: MondrianShared
+  ) {
     super();
   }
 
