@@ -1,11 +1,4 @@
-import { Application } from "@pixi/app";
-import { IRendererPlugins } from "@pixi/core";
-import { Container } from "@pixi/display";
-import { InteractionEvent } from "@pixi/interaction";
-import {
-  IMondrianInteractor,
-  IMondrianMockInteractionEvent,
-} from "./common/interactor";
+import { IMondrianMockInteractionEvent } from "./common/interactor";
 import { MondrianEventEmitter } from "./common/event-emitter";
 import { IMondrianPlayerState } from "./player/player";
 import { MondrianShared } from "./shared";

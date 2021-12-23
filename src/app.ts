@@ -14,9 +14,8 @@ import {
   setAutoStart,
   setChunkLimit,
   setResolution,
-} from "./app-helper";
+} from "./app/app-helper";
 
-const AUTO_START = true;
 const TEST_SERVER_HOST = `//${window.location.hostname}:3000`;
 
 class App {
@@ -88,7 +87,7 @@ class App {
         window.location.reload();
       });
     testFolder
-      .add(this, "autoStart", [NaN, 100, 1000, 2000, 5000, 10000, 50000])
+      .add(this, "autoStart", [true, false])
       .listen()
       .name("autoStart")
       .onFinishChange(() => {
