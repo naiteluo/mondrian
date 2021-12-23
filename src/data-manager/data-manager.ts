@@ -11,16 +11,10 @@ export * from "./data";
 export class MondrianDataManager extends MondrianModuleBase {
   buffer: IMondrianData[] = [];
 
-  client: IoClient = new IoClient();
+  client: IoClient;
 
-  private upStream = new WritableStream(
-    new MondrianWsUpStreamSink(this.buffer, this.client)
-    // new LocalUpStreamSink(this.buffer)
-  );
-  private downStream = new ReadableStream<IMondrianData>(
-    new MondrianWsDownStreamSource(this.buffer, this.client, this.shared)
-    // new LocalDownStreamSource(this.buffer)
-  );
+  private upStream: WritableStream;
+  private downStream: ReadableStream<IMondrianData>;
 
   private reader: ReadableStreamDefaultReader;
   private writer: WritableStreamDefaultWriter;
@@ -38,6 +32,17 @@ export class MondrianDataManager extends MondrianModuleBase {
 
   async start() {
     super.start();
+    this.client = new IoClient({
+      channel: this.shared.settings.channel,
+    });
+    this.upStream = new WritableStream(
+      new MondrianWsUpStreamSink(this.buffer, this.client)
+      // new LocalUpStreamSink(this.buffer)
+    );
+    this.downStream = new ReadableStream<IMondrianData>(
+      new MondrianWsDownStreamSource(this.buffer, this.client, this.shared)
+      // new LocalDownStreamSource(this.buffer)
+    );
     return new Promise((resolve) => {
       this.client.start();
       this.client.onRecovered((success) => {

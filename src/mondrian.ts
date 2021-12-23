@@ -17,6 +17,7 @@ export interface IMondrianSettings {
   resolution?: number;
   autoStart?: boolean;
   chunkLimit?: number;
+  channel?: string;
 }
 
 export class Mondrian extends MondrianModuleBase {

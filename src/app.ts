@@ -9,9 +9,11 @@ import { Controller, GUI } from "lil-gui";
 import axios from "axios";
 import {
   getAutoStart,
+  getChannel,
   getChunkLimit,
   getResolution,
   setAutoStart,
+  setChannel,
   setChunkLimit,
   setResolution,
 } from "./app/app-helper";
@@ -27,7 +29,7 @@ class App {
   msg = "welcome.";
   msgCtrl: Controller;
 
-  cacheName = "temp";
+  channel = getChannel();
 
   brushConfig: BrushPluginState = defaultBrushOptions;
 
@@ -71,9 +73,9 @@ class App {
     this.gui = new GUI();
     this.gui.add(this, "onStart").name("Start");
 
-    const testFolder = this.gui.addFolder("Test");
-    this.msgCtrl = testFolder.add(this, "msg").name("Message:");
-    testFolder
+    const settingsFolder = this.gui.addFolder("Settings");
+    this.msgCtrl = settingsFolder.add(this, "msg").name("Message:");
+    settingsFolder
       .add(this, "resolution", 1, 3, 1)
       .listen()
       .name("resolution")
@@ -81,7 +83,7 @@ class App {
         setResolution(this.resolution);
         window.location.reload();
       });
-    testFolder
+    settingsFolder
       .add(this, "chunkLimit", [NaN, 100, 1000, 2000, 5000, 10000, 50000])
       .listen()
       .name("chunkLimit")
@@ -89,7 +91,7 @@ class App {
         setChunkLimit(this.chunkLimit);
         window.location.reload();
       });
-    testFolder
+    settingsFolder
       .add(this, "autoStart", [true, false])
       .listen()
       .name("autoStart")
@@ -97,14 +99,16 @@ class App {
         setAutoStart(this.autoStart);
         window.location.reload();
       });
-    testFolder
+    settingsFolder
       .add(this, "autoStepTimeSpan", 10, 1000, 20)
       .name("time per step (ms)");
-    this.guiAutoCtrl = testFolder.add(this, "onAuto").name("Start Auto Draw");
-    testFolder.add(this, "cacheName").name("Cache File Name");
-    testFolder.add(this, "onSwitchServerCache").name("Swith Cache");
-    testFolder.add(this, "onSaveServerCache").name("Save Cache");
-    testFolder.add(this, "onClearCurrentCache").name("Clear Current Cache");
+    this.guiAutoCtrl = settingsFolder
+      .add(this, "onAuto")
+      .name("Start Auto Draw");
+    settingsFolder.add(this, "channel").name("Channel Name");
+    settingsFolder.add(this, "onSwitchChannel").name("Swith Channel");
+    settingsFolder.add(this, "onClearChannelCache").name("Clear Channel Cache");
+    settingsFolder.add(this, "onResetChannel").name("Reset Channel");
 
     const commandFolder = this.gui.addFolder("Command").close();
     commandFolder.add(this, "onUndo").name("Undo");
@@ -153,6 +157,7 @@ class App {
       resolution: this.resolution,
       autoStart: this.autoStart,
       chunkLimit: this.chunkLimit,
+      channel: this.channel,
     });
 
     this.initialBrush();
@@ -286,49 +291,20 @@ class App {
     requestAnimationFrame(this.step);
   }
 
-  onClearCurrentCache() {
+  onClearChannelCache() {
     this.mondrian.dm.client.forceClear();
     window.location.reload();
   }
 
-  async onSwitchServerCache() {
-    try {
-      const { success, msg } = (
-        await axios.get(`${TEST_SERVER_HOST}/cache/switchCache`, {
-          params: {
-            mark: this.cacheName,
-          },
-        })
-      ).data;
-      if (!success) {
-        this.logMsg("cache fails to switch.", true);
-        alert(msg);
-      }
-      if (success) {
-        this.logMsg("cache swtiched.");
-        window.location.reload();
-      }
-    } catch (err) {
-      this.logMsg("cache fails to save.", true);
-    }
+  onResetChannel() {
+    setChannel("guest");
+    window.location.reload();
   }
 
-  async onSaveServerCache() {
+  async onSwitchChannel() {
     try {
-      const { success, msg } = (
-        await axios.get(`${TEST_SERVER_HOST}/cache/saveCache`, {
-          params: {
-            mark: this.cacheName,
-          },
-        })
-      ).data;
-      if (!success) {
-        this.logMsg("cache fails to save.", true);
-        alert(msg);
-      }
-      if (success) {
-        this.logMsg("cache saved.");
-      }
+      setChannel(this.channel);
+      window.location.reload();
     } catch (err) {
       this.logMsg("cache fails to save.", true);
     }

@@ -17,6 +17,10 @@ const IoEmptyRecoveredListener = () => {
 // const hostname = '161.117.225.178'
 const hostname = window.location.hostname;
 
+export interface IoClientSettings {
+  channel: string;
+}
+
 // todo refactor
 export class IoClient {
   private socket: Socket;
@@ -27,9 +31,13 @@ export class IoClient {
    */
   private _tempBuffer: IMondrianData[] = [];
   private _recovered = false;
-  constructor() {
+  constructor(private settings: IoClientSettings) {
+    this.settings.channel = this.settings.channel || "guest";
     this.socket = io(`ws://${hostname}:3000`, {
       autoConnect: false,
+      query: {
+        channel: this.settings.channel,
+      },
     });
     this.socket.on("r", (datas: IMondrianData[]) => {
       let last: IMondrianData | undefined;
