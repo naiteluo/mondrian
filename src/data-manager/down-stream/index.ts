@@ -50,7 +50,7 @@ export class MondrianWsDownStreamSource implements UnderlyingSource {
     return this.shared.settings.chunkLimit;
   }
 
-  // todo controll down stream data dispatch freqency
+  // todo dynamicly controll down stream data dispatch freqency
   start(controller: ReadableStreamDefaultController) {
     const step = (stamp) => {
       if (this.lastTimeStamp === undefined || stamp - this.lastTimeStamp > 30) {
