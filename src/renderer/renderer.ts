@@ -113,7 +113,6 @@ export class MondrianRenderer extends MondrianModuleBase {
     super.stop();
   }
 
-  // todo init pixi app in renderer
   private initializePIXIApplication() {
     /**
      * in mobile pixi fallback to webgl1 even webview support webgl2
