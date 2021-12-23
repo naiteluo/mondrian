@@ -135,6 +135,7 @@ export class MondrianRenderer extends MondrianModuleBase {
   }
 
   resize() {
+    // todo resize should handle static sprite resizing too
     const wh = MondrianUtils.getScreenWH();
     this.app.view.style.width = `${wh.w}px`;
     this.app.view.style.height = `${wh.h}px`;

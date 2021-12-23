@@ -22,7 +22,7 @@ export const getChunkLimit = () => {
   return NaN;
 };
 
-const __localAutoStartKey = "__mo_config_chunk_limit";
+const __localAutoStartKey = "__mo_config_auto_start";
 export const setAutoStart = (r: boolean) => {
   localStorage.setItem(__localAutoStartKey, JSON.stringify(r));
 };

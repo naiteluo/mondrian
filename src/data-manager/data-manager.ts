@@ -36,11 +36,16 @@ export class MondrianDataManager extends MondrianModuleBase {
     super();
   }
 
-  start() {
+  async start() {
     super.start();
-    this.client.start();
-    this.startRead();
-    this.startWrite();
+    return new Promise((resolve) => {
+      this.client.start();
+      this.client.onRecovered((success) => {
+        resolve(success);
+      });
+      this.startRead();
+      this.startWrite();
+    });
   }
 
   stop() {
@@ -63,6 +68,7 @@ export class MondrianDataManager extends MondrianModuleBase {
   }
 
   private dLast = +new Date();
+  private delayTime = 300;
 
   dispatch(datas: IMondrianData[]) {
     // dispatch messages to every activated consumer
@@ -75,10 +81,17 @@ export class MondrianDataManager extends MondrianModuleBase {
       } else {
         console.error("!!!");
       }
+      if (v.extra?.last) {
+        setTimeout(() => {
+          this.emit(MondrianDataManager.EVENT_RECOVER_CONSUMED);
+        }, this.delayTime);
+      }
     });
   }
 
   async push(datas: IMondrianData[]) {
     await this.writer.write(datas);
   }
+
+  static EVENT_RECOVER_CONSUMED = "recover:consumed";
 }

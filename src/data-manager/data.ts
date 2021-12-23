@@ -14,11 +14,15 @@ export const enum MondrianActionType {
   UNDO = "ud",
   REDO = "rd",
   CLEAR = "cl",
+  SYSTEM = "sy",
 }
 
 interface IMondrianCommonData {
   seq?: number;
   playerID?: string;
+  extra?: {
+    last: boolean;
+  };
 }
 
 export interface IMondrianInteractData extends IMondrianCommonData {

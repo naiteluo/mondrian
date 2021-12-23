@@ -1,7 +1,10 @@
-export class MondrianModuleBase {
+import { MondrianEventEmitter } from "./event-emitter";
+
+export class MondrianModuleBase extends MondrianEventEmitter {
   private _initialized = false;
   private _running = false;
   constructor() {
+    super();
     this._initialized = true;
   }
   start() {

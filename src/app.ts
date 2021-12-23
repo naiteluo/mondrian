@@ -53,6 +53,9 @@ class App {
 
     this.initialLilGUI();
     this.initialMondrian();
+    this.mondrian.on(Mondrian.EVNET_RECOVER_RECEIVED, ({ size }) => {
+      this.logMsg(`data size: ${size}`);
+    });
     try {
       this.logMsg(
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment

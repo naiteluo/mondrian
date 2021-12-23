@@ -9,6 +9,7 @@ import "web-streams-polyfill/es6";
 import { MondrianShared } from "./shared";
 import { MondrianModuleBase } from "./common/module-base";
 import { MondrianContainerManager } from "./container-manager";
+import { MondrianLoading } from "./common/loading";
 
 export interface IMondrianSettings {
   container: HTMLElement;
@@ -29,6 +30,7 @@ export class Mondrian extends MondrianModuleBase {
    */
   private shared: MondrianShared;
   private containerManager: MondrianContainerManager;
+  private loading: MondrianLoading;
   private renderer: MondrianRenderer;
   private playerManager: MondrianPlayerManager;
   private eventProxier: MondrianEventProxier;
@@ -59,6 +61,7 @@ export class Mondrian extends MondrianModuleBase {
      * initialize inner modules and inject dependencies
      */
     this.containerManager = new MondrianContainerManager(this.shared);
+    this.loading = new MondrianLoading(this.containerManager, this.shared);
     this.playerManager = new MondrianPlayerManager(this.shared);
     this.renderer = new MondrianRenderer(this.containerManager, this.shared);
     this.dataManager = new MondrianDataManager(this.playerManager, this.shared);
@@ -74,19 +77,39 @@ export class Mondrian extends MondrianModuleBase {
     if (this.settings.autoStart) {
       this.start();
     }
+
+    // todo debug only
+    (window as any).mo = this;
   }
 
-  start() {
+  async start() {
     super.start();
     /**
      * create players' instances
      */
+    this.loading.show();
     this.containerManager.start();
     this.eventProxier.resize();
     this.renderer.start();
     this.eventProxier.start();
     this.playerManager.start();
-    this.dataManager.start();
+    this.dataManager.once(MondrianDataManager.EVENT_RECOVER_CONSUMED, () => {
+      this.loading.hide();
+      this.emit(Mondrian.EVENT_RECOVER_CONSUMED);
+    });
+    const { success, size } = (await this.dataManager.start()) as {
+      success: boolean;
+      size: number;
+    };
+    if (success) {
+      console.log(`Start success, recovered data size: ${size}`);
+      this.emit(Mondrian.EVNET_RECOVER_RECEIVED, {
+        size,
+      });
+    } else {
+      throw new Error("Start fails.");
+    }
+    return true;
   }
 
   get ID() {
@@ -112,4 +135,7 @@ export class Mondrian extends MondrianModuleBase {
   get __debugPixiApp() {
     return this.renderer.pixiApp;
   }
+
+  static EVENT_RECOVER_CONSUMED = "recover:consumed";
+  static EVNET_RECOVER_RECEIVED = "recover:received";
 }
