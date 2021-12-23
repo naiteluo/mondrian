@@ -12,18 +12,20 @@ import {
   MondrianActionType,
 } from "../data-manager";
 import { MondrianPlayer, IMondrianPlayerState } from "./player";
+import { MondrianRenderer } from "../renderer/renderer";
 
 export class MondrianProducer
   extends MondrianPlayer
   implements IMondrianInteractor
 {
   private get stage() {
-    return this.shared.pixiApp.stage;
+    return this.renderer.pixiApp.stage;
   }
 
   constructor(
     id: string,
     private dataManager: MondrianDataManager,
+    private renderer: MondrianRenderer,
     private shared: MondrianShared
   ) {
     super();
@@ -111,7 +113,7 @@ export class MondrianProducer
 
   // todo optimize
   private xyToCenter({ x, y }) {
-    const { width, height } = this.shared.pixiApp.screen;
+    const { width, height } = this.renderer.pixiApp.screen;
     return {
       x: x - width / 2,
       y: y - height / 2,

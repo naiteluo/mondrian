@@ -40,7 +40,9 @@ export class MondrianGraphicsHandler {
     }
   }
 
-  start() {}
+  start() {
+    // nothing
+  }
 
   get gs() {
     return this._gs;

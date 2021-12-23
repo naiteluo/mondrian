@@ -4,10 +4,12 @@ import { IMondrianPlayerState } from "./player/player";
 import { MondrianShared } from "./shared";
 import { MondrianPlayerManager } from "./player";
 import { IMondrianStateData } from "data-manager";
+import { MondrianRenderer } from "./renderer/renderer";
+import { MondrianContainerManager } from "./container-manager";
 
 export class MondrianEventProxier extends MondrianEventEmitter {
   private get interaction() {
-    return this.shared.pixiApp.renderer.plugins.interaction;
+    return this.renderer.pixiApp.renderer.plugins.interaction;
   }
 
   private get interactor() {
@@ -15,11 +17,13 @@ export class MondrianEventProxier extends MondrianEventEmitter {
   }
 
   private get stage() {
-    return this.shared.pixiApp.stage;
+    return this.renderer.pixiApp.stage;
   }
 
   constructor(
     private playerManager: MondrianPlayerManager,
+    private renderer: MondrianRenderer,
+    private containerManager: MondrianContainerManager,
     private shared: MondrianShared
   ) {
     super();
@@ -28,6 +32,7 @@ export class MondrianEventProxier extends MondrianEventEmitter {
   public start() {
     this.startSelfEventWatch();
     this.startPixiEventWatch();
+    window.addEventListener("resize", this.resizeEventHandler);
   }
 
   public stop() {
@@ -94,4 +99,13 @@ export class MondrianEventProxier extends MondrianEventEmitter {
   private onDragEnd = (event: IMondrianMockInteractionEvent) => {
     this.interactor.onDragEnd(event);
   };
+
+  private resizeEventHandler = () => {
+    this.containerManager.resize();
+    this.renderer.resize();
+  };
+
+  public resize() {
+    this.resizeEventHandler();
+  }
 }

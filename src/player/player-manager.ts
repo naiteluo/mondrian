@@ -55,6 +55,7 @@ export class MondrianPlayerManager extends MondrianModuleBase {
     this._producer = new MondrianProducer(
       this.shared.MID,
       this.dataManager,
+      this.renderer,
       this.shared
     );
   }

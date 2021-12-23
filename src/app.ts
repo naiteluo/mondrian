@@ -274,8 +274,8 @@ class App {
     }
     this.guiAutoCtrl.name("Stop Auto Draw");
     // update view size
-    this.screenWidth = this.mondrian.pixiApp.screen.width;
-    this.screenHeight = this.mondrian.pixiApp.screen.height;
+    this.screenWidth = this.mondrian.__debugPixiApp.screen.width;
+    this.screenHeight = this.mondrian.__debugPixiApp.screen.height;
     this.lastPoint = { x: this.screenWidth / 2, y: this.screenHeight / 2 };
     this.isAutoOn = true;
     // stop real mouse events watching

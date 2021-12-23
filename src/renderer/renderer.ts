@@ -2,12 +2,21 @@ import { Application } from "@pixi/app";
 import { Container, DisplayObject } from "@pixi/display";
 import { BaseTextureCache } from "@pixi/utils";
 import { MondrianModuleBase } from "../common/module-base";
-import { RenderTexture, Sprite, Texture, UPDATE_PRIORITY } from "pixi.js";
+import {
+  ENV,
+  RenderTexture,
+  settings,
+  Sprite,
+  Texture,
+  UPDATE_PRIORITY,
+} from "pixi.js";
 import { MondrianShared } from "../shared";
 import {
   MondrianGraphicsHandler,
   MondrianGraphicsHandlerOptions,
 } from "./grapichs-handler";
+import { MondrianContainerManager } from "../container-manager";
+import { MondrianUtils } from "../common/utils";
 
 const enum TrashType {
   DisplayObject,
@@ -19,6 +28,13 @@ type Trash =
   | { type: TrashType.Texture; target: Texture };
 
 export class MondrianRenderer extends MondrianModuleBase {
+  private $canvas: HTMLCanvasElement;
+
+  /**
+   * pixi's instances
+   */
+  private app: Application;
+
   private rootLayer: Container;
   // todo unsafe
   // high update freqency element like cursor or performces ui
@@ -39,16 +55,24 @@ export class MondrianRenderer extends MondrianModuleBase {
 
   private trash: Trash[] = [];
 
-  private get pixiApp() {
-    return this.shared.pixiApp;
+  get pixiApp() {
+    return this.app;
   }
 
   private get $panel() {
-    return this.shared.$panel;
+    return this.containerManager.$panel;
   }
 
-  constructor(private shared: MondrianShared) {
+  constructor(
+    private containerManager: MondrianContainerManager,
+    private shared: MondrianShared
+  ) {
     super();
+    this.initializePIXIApplication();
+  }
+
+  start() {
+    super.start();
     this.rootLayer = new Container();
     this.uiLayer = new Container();
     this.dynamicLayer = new Container();
@@ -82,15 +106,40 @@ export class MondrianRenderer extends MondrianModuleBase {
     this.pixiApp.ticker.add(this.gc, undefined, UPDATE_PRIORITY.LOW);
     // show perf info
     this.initialPerfTool();
-  }
-
-  start() {
     this.pixiApp.start();
-    super.start();
   }
 
   stop() {
     super.stop();
+  }
+
+  // todo init pixi app in renderer
+  private initializePIXIApplication() {
+    /**
+     * in mobile pixi fallback to webgl1 even webview support webgl2
+     * https://bugs.chromium.org/p/chromium/issues/detail?id=934823
+     * https://github.com/pixijs/pixijs/issues/7899
+     */
+    // todo add version detect to set webgl1 as prefer_env before chrome 75
+    settings.PREFER_ENV = ENV.WEBGL2;
+    // Create a Pixi Application
+    this.app = new Application({
+      antialias: true,
+      backgroundAlpha: 0,
+      autoDensity: true,
+      resolution: this.shared.settings.resolution,
+      autoStart: false,
+    });
+    // Add the canvas that Pixi automatically created for you to the HTML document
+    this.$canvas = this.app.view;
+    this.containerManager.$container.appendChild(this.$canvas);
+  }
+
+  resize() {
+    const wh = MondrianUtils.getScreenWH();
+    this.app.view.style.width = `${wh.w}px`;
+    this.app.view.style.height = `${wh.h}px`;
+    this.app.renderer.resize(wh.w, wh.h);
   }
 
   private initialPerfTool() {
