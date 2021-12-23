@@ -1,5 +1,6 @@
 import { Container, Graphics, ILineStyleOptions, MSAA_QUALITY } from "pixi.js";
 import { BrushPluginState } from "plugin/brush-plugin";
+import { MondrianRenderer } from "./renderer";
 
 export interface MondrianGraphicsHandlerOptions {
   canCacheAsBitmap?: boolean;
@@ -25,6 +26,7 @@ export class MondrianGraphicsHandler {
   private options: MondrianGraphicsHandlerOptions;
 
   constructor(
+    private renderer: MondrianRenderer,
     private layer: Container,
     options?: MondrianGraphicsHandlerOptions
   ) {
@@ -72,6 +74,7 @@ export class MondrianGraphicsHandler {
       });
     }
     this._finished = true;
+    this.renderer.exchangeBufferingCache(this);
   }
 
   attach() {
@@ -82,6 +85,7 @@ export class MondrianGraphicsHandler {
 
   detach() {
     if (!this._finished) {
+      console.trace();
       throw new Error("Detaching unfinished handler is forbidden.");
     }
     return this._gs.map((g) => {

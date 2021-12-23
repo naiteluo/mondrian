@@ -49,6 +49,14 @@ export class MondrianRenderer extends MondrianModuleBase {
   private fixedSprite: Sprite;
 
   private dynamicLevel = 20;
+  // two level dynamic cache:
+  // 1. dynamicBufferingCache
+  //    for unfinished grahpic handlers
+  //    handler will move to dynamicCache when finished or timeout
+  private dynamicBufferingCache: MondrianGraphicsHandler[] = [];
+  // 2. dynamicCache
+  //    for finished graphic hanler
+  //    history command can only manipulate dynamicCache
   private dynamicCache: MondrianGraphicsHandler[] = [];
 
   private dynamicCacheIndex = -1;
@@ -157,12 +165,8 @@ export class MondrianRenderer extends MondrianModuleBase {
     while (this.dynamicCache.length > this.dynamicLevel) {
       const handler = this.dynamicCache.shift();
       this.dynamicCacheIndex--;
-      // todo handler which is unfinished might also be shifted. Causing some unexpected behavior like unfinisded line.
-      // todo these situation will be easily re-produce if dynamicLevel is set a small value like 2.
-      // todo now just simple force stop the handler.
-      handler.stop();
-      const gs = handler.detach();
-      gs.forEach((g) => {
+      handler.detach();
+      handler.gs.forEach((g) => {
         this.staticLayer.addChild(g);
       });
       handler.destroy();
@@ -183,14 +187,35 @@ export class MondrianRenderer extends MondrianModuleBase {
     this.checkAndCleanDiscardableDynamicCache();
 
     // create handler and add to cache
-    const handler = new MondrianGraphicsHandler(this.dynamicLayer, options);
-    this.dynamicCache.push(handler);
+    const handler = new MondrianGraphicsHandler(
+      this,
+      this.dynamicLayer,
+      options
+    );
+    this.dynamicBufferingCache.push(handler);
     handler.start();
 
-    // move indicator
-    this.dynamicCacheIndex += 1;
-
     return handler;
+  }
+
+  exchangeBufferingCache(handler: MondrianGraphicsHandler) {
+    const idx = this.dynamicBufferingCache.indexOf(handler);
+    if (idx !== -1) {
+      // todo do we really need to double check it?
+      // check and discard leading cache
+      this.shiftGrapicsHandlersToStatic();
+      const removed = this.dynamicBufferingCache.splice(idx, 1);
+      this.dynamicCache.push(...removed);
+      // move indicator
+      this.dynamicCacheIndex += 1;
+    } else {
+      console.trace();
+      throw new Error("Unexpected dangling handler");
+    }
+  }
+
+  stopGraphicsHandler(handler: MondrianGraphicsHandler) {
+    handler.stop();
   }
 
   /**
@@ -206,7 +231,6 @@ export class MondrianRenderer extends MondrianModuleBase {
         countOfTails
       );
       toBeDelete.map((h) => {
-        h.stop();
         h.detach();
         h.gs.forEach((g) => {
           this.markGc({ type: TrashType.DisplayObject, target: g });
@@ -234,10 +258,6 @@ export class MondrianRenderer extends MondrianModuleBase {
     } else {
       console.warn("can't backward dynamic cache anymore");
     }
-  }
-
-  stopGraphicsHandler(handler: MondrianGraphicsHandler) {
-    handler.stop();
   }
 
   private lastMainDt = 0;
@@ -318,9 +338,12 @@ export class MondrianRenderer extends MondrianModuleBase {
           (element.realWidth * element.realHeight * 4) / 1024 / 1024;
       }
     }
-    const tmpGraphicsCount = this.dynamicCache.reduce((prev, v) => {
+    let tmpGraphicsCount = this.dynamicCache.reduce((prev, v) => {
       return prev + v.gs.length;
     }, 0);
+    tmpGraphicsCount = this.dynamicBufferingCache.reduce((prev, v) => {
+      return prev + v.gs.length;
+    }, tmpGraphicsCount);
     if (tmpMemSize !== this.textureMem) {
       this.$panel.innerHTML = `
         <div style="display:block">tx mem: ${this.textureMem.toFixed(
@@ -345,8 +368,8 @@ export class MondrianRenderer extends MondrianModuleBase {
       }
     });
     if (this.__debug_unfinishedHandlerCount > 1) {
-      console.warn(
-        `unfinished graphic (${this.__debug_unfinishedHandlerCount}) handle!!!!`
+      console.error(
+        `unfinished graphic in dynamicCache is fatal, counts: (${this.__debug_unfinishedHandlerCount}) unfinished handle!!!!`
       );
     }
   }
