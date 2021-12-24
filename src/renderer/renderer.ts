@@ -260,19 +260,12 @@ export class MondrianRenderer extends MondrianModuleBase {
     }
   }
 
-  private lastMainDt = 0;
-
   /**
    * main loop
    * normal prioriry
    * @returns
    */
   private main = (dt) => {
-    if (this.lastMainDt < 30) {
-      this.lastMainDt += dt;
-      return;
-    }
-    this.lastMainDt = 0;
     if (this.dynamicCache.length <= this.dynamicLevel) return;
     this.shiftGrapicsHandlersToStatic();
     this.pixiApp.renderer.render(this.staticLayer, {
@@ -345,13 +338,13 @@ export class MondrianRenderer extends MondrianModuleBase {
       return prev + v.gs.length;
     }, tmpGraphicsCount);
     if (tmpMemSize !== this.textureMem) {
+      this.textureMem = tmpMemSize;
       this.$panel.innerHTML = `
         <div style="display:block">tx mem: ${this.textureMem.toFixed(
           2
         )} MB | </div> 
         <div> g count: ${tmpGraphicsCount}</div>
       `;
-      this.textureMem = tmpMemSize;
     }
 
     this.__debug_checkUnfinishedHandler();
