@@ -40,11 +40,7 @@ export const setChannel = (r: string) => {
   if (r === undefined) {
     r = DEFAULT_CHANNEL_NAME;
   }
-  if (r.length === 0) {
-    alert("invalid channel name!");
-    throw new Error("invalid channel name!");
-  }
-  localStorage.setItem(__localChannelKey, r);
+  localStorage.setItem(__localChannelKey, r.trim());
 };
 export const getChannel = () => {
   const r = localStorage.getItem(__localChannelKey);
