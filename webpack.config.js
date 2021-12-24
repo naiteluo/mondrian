@@ -6,7 +6,7 @@ module.exports = {
   entry: "./src/app.ts",
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "app.js",
+    filename: "[name].[contenthash].js",
   },
 
   module: {
