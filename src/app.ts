@@ -54,7 +54,9 @@ class App {
   }
 
   initialLilGUI() {
-    this.gui = new GUI();
+    this.gui = new GUI({
+      title: "Mondrian",
+    });
     this.gui.add(this, "onStart").name("Start");
 
     const settingsFolder = this.gui.addFolder("Settings");

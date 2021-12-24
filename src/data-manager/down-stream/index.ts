@@ -81,7 +81,6 @@ export class MondrianWsDownStreamSource implements UnderlyingSource {
         } else {
           this.dynamicChunkLimit = 80;
         }
-        console.log("chunk limit", this.dynamicChunkLimit);
 
         const tmp = this.sharedBuffer.buffer.splice(
           0,
