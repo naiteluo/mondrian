@@ -19,7 +19,7 @@ export const getChunkLimit = () => {
   if (r) {
     return +r;
   }
-  return NaN;
+  return 2000;
 };
 
 const __localAutoStartKey = "__mo_config_auto_start";

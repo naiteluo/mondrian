@@ -6,19 +6,7 @@ import {
 } from "./plugin/brush-plugin";
 import { Mondrian } from "./mondrian";
 import { Controller, GUI } from "lil-gui";
-import axios from "axios";
-import {
-  getAutoStart,
-  getChannel,
-  getChunkLimit,
-  getResolution,
-  setAutoStart,
-  setChannel,
-  setChunkLimit,
-  setResolution,
-} from "./app/app-helper";
-
-const TEST_SERVER_HOST = `//${window.location.hostname}:3000`;
+import { appSettings } from "./app/app-settings";
 
 class App {
   $div: HTMLElement;
@@ -29,13 +17,9 @@ class App {
   msg = "welcome.";
   msgCtrl: Controller;
 
-  channel = getChannel();
+  appSettings = appSettings;
 
   brushConfig: BrushPluginState = defaultBrushOptions;
-
-  resolution = getResolution();
-  chunkLimit = getChunkLimit() || 2000;
-  autoStart = getAutoStart();
 
   constructor() {
     // reset css
@@ -76,27 +60,28 @@ class App {
     const settingsFolder = this.gui.addFolder("Settings");
     this.msgCtrl = settingsFolder.add(this, "msg").name("Message:");
     settingsFolder
-      .add(this, "resolution", 1, 3, 1)
+      .add(this.appSettings.mondrianSettings, "resolution", 1, 3, 1)
       .listen()
       .name("resolution")
       .onFinishChange(() => {
-        setResolution(this.resolution);
         window.location.reload();
       });
     settingsFolder
-      .add(this, "chunkLimit", [NaN, 100, 1000, 2000, 5000, 10000, 50000])
+      .add(
+        this.appSettings.mondrianSettings,
+        "chunkLimit",
+        [100, 500, 1000, 2000, 5000, 10000, 50000]
+      )
       .listen()
       .name("chunkLimit")
       .onFinishChange(() => {
-        setChunkLimit(this.chunkLimit);
         window.location.reload();
       });
     settingsFolder
-      .add(this, "autoStart", [true, false])
+      .add(this.appSettings.mondrianSettings, "autoStart", [true, false])
       .listen()
       .name("autoStart")
       .onFinishChange(() => {
-        setAutoStart(this.autoStart);
         window.location.reload();
       });
     settingsFolder
@@ -105,7 +90,9 @@ class App {
     this.guiAutoCtrl = settingsFolder
       .add(this, "onAuto")
       .name("Start Auto Draw");
-    settingsFolder.add(this, "channel").name("Channel Name");
+    settingsFolder
+      .add(this.appSettings.mondrianSettings, "channel")
+      .name("Channel Name");
     settingsFolder.add(this, "onSwitchChannel").name("Swith Channel");
     settingsFolder.add(this, "onClearChannelCache").name("Clear Channel Cache");
     settingsFolder.add(this, "onResetChannel").name("Reset Channel");
@@ -153,11 +140,7 @@ class App {
     // create instance
     this.mondrian = new Mondrian({
       container: this.$div,
-      isProducer: true,
-      resolution: this.resolution,
-      autoStart: this.autoStart,
-      chunkLimit: this.chunkLimit,
-      channel: this.channel,
+      ...this.appSettings.mondrianSettings,
     });
 
     this.initialBrush();
@@ -297,13 +280,12 @@ class App {
   }
 
   onResetChannel() {
-    setChannel("guest");
+    this.appSettings.mondrianSettings.channel = "guest";
     window.location.reload();
   }
 
   async onSwitchChannel() {
     try {
-      setChannel(this.channel);
       window.location.reload();
     } catch (err) {
       this.logMsg("cache fails to save.", true);

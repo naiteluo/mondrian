@@ -1,11 +1,11 @@
 import "pixi.js";
+import "web-streams-polyfill/es6";
 
 import { MondrianEventProxier } from "./event-proxier";
 import { MondrianPlayerManager } from "./player";
 import { MondrianRenderer } from "./renderer/renderer";
 import { MondrianDataManager } from "./data-manager";
 
-import "web-streams-polyfill/es6";
 import { MondrianShared } from "./shared";
 import { MondrianModuleBase } from "./common/module-base";
 import { MondrianContainerManager } from "./container-manager";
