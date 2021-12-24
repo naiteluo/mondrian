@@ -44,5 +44,5 @@ export const getChannel = () => {
   if (r) {
     return r;
   }
-  return DEFAULT_CHANNEL_NAME;
+  return '';
 };
