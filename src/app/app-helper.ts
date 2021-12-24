@@ -37,9 +37,6 @@ export const getAutoStart = () => {
 const __localChannelKey = "__mo_config_channel";
 const DEFAULT_CHANNEL_NAME = "guest";
 export const setChannel = (r: string) => {
-  if (r === undefined) {
-    r = DEFAULT_CHANNEL_NAME;
-  }
   localStorage.setItem(__localChannelKey, r.trim());
 };
 export const getChannel = () => {
