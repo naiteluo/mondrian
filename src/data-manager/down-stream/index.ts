@@ -42,7 +42,7 @@ export class MondrianWsDownStreamSource implements UnderlyingSource {
     private shared: MondrianShared
   ) {
     this.client.on((datas) => {
-      this.buffer.push(...datas);
+      this.buffer = this.buffer.concat(datas);
     });
   }
 
