@@ -89,6 +89,7 @@ export class Mondrian extends MondrianModuleBase {
      * create players' instances
      */
     this.loading.show();
+    this.loading.setText("Fetching data...");
     this.containerManager.start();
     this.eventProxier.resize();
     this.renderer.start();
@@ -102,6 +103,7 @@ export class Mondrian extends MondrianModuleBase {
       success: boolean;
       size: number;
     };
+    this.loading.setText(`${size} Data received. Processing...`);
     if (success) {
       console.log(`Start success, recovered data size: ${size}`);
       this.emit(Mondrian.EVNET_RECOVER_RECEIVED, {

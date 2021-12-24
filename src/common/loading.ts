@@ -86,7 +86,7 @@ export class MondrianLoading {
             <div></div>
             <div></div>
         </div>
-        <span>Loading...</span>
+        <span id="${this.wrapClassName}-message">Network...</span>
         `;
     this.$dom.classList.add(this.wrapClassName);
     // this.$dom.style.display = "none";
@@ -98,5 +98,10 @@ export class MondrianLoading {
 
   hide() {
     this.$dom.classList.remove("show");
+  }
+
+  setText(message: string) {
+    document.getElementById(`${this.wrapClassName}-message`).innerText =
+      message;
   }
 }
