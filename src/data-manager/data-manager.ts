@@ -5,11 +5,12 @@ import { IMondrianData } from "./data";
 import { MondrianWsDownStreamSource } from "./down-stream";
 import { MondrianWsUpStreamSink } from "./up-stream";
 import { IoClient } from "./ws-client";
+import { MondrianSharedBuffer } from "./shared-buffer";
 
 export * from "./data";
 
 export class MondrianDataManager extends MondrianModuleBase {
-  buffer: IMondrianData[] = [];
+  sharedBuffer: MondrianSharedBuffer = new MondrianSharedBuffer();
 
   client: IoClient;
 
@@ -36,11 +37,15 @@ export class MondrianDataManager extends MondrianModuleBase {
       channel: this.shared.settings.channel,
     });
     this.upStream = new WritableStream(
-      new MondrianWsUpStreamSink(this.buffer, this.client)
+      new MondrianWsUpStreamSink(this.sharedBuffer, this.client)
       // new LocalUpStreamSink(this.buffer)
     );
     this.downStream = new ReadableStream<IMondrianData>(
-      new MondrianWsDownStreamSource(this.buffer, this.client, this.shared)
+      new MondrianWsDownStreamSource(
+        this.sharedBuffer,
+        this.client,
+        this.shared
+      )
       // new LocalDownStreamSource(this.buffer)
     );
     return new Promise((resolve) => {
