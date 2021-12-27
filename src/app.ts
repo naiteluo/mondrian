@@ -80,6 +80,13 @@ class App {
         window.location.reload();
       });
     settingsFolder
+      .add(this.appSettings.mondrianSettings, "isProducer", [true, false])
+      .listen()
+      .name("isProducer")
+      .onFinishChange(() => {
+        window.location.reload();
+      });
+    settingsFolder
       .add(this.appSettings.mondrianSettings, "autoStart", [true, false])
       .listen()
       .name("autoStart")

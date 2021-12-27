@@ -13,7 +13,15 @@ export class MondrianEventProxier extends MondrianEventEmitter {
   }
 
   private get interactor() {
-    return this.playerManager.producer;
+    try {
+      return this.playerManager.producer;
+    } catch (error) {
+      if (this.shared.settings.isProducer) {
+        throw error;
+      } else {
+        return null;
+      }
+    }
   }
 
   private get stage() {
@@ -78,25 +86,43 @@ export class MondrianEventProxier extends MondrianEventEmitter {
   }
 
   private onStateChange = (state: IMondrianPlayerState) => {
+    if (!this.interactor) {
+      return;
+    }
     this.interactor.onStateChange(state);
   };
 
   private onUndo = (event: IMondrianStateData) => {
+    if (!this.interactor) {
+      return;
+    }
     this.interactor.onUndo(event);
   };
 
   private onRedo = (event: IMondrianStateData) => {
+    if (!this.interactor) {
+      return;
+    }
     this.interactor.onRedo(event);
   };
 
   private onDragStart = (event: IMondrianMockInteractionEvent) => {
+    if (!this.interactor) {
+      return;
+    }
     this.interactor.onDragStart(event);
   };
 
   private onDragMove = (event: IMondrianMockInteractionEvent) => {
+    if (!this.interactor) {
+      return;
+    }
     this.interactor.onDragMove(event);
   };
   private onDragEnd = (event: IMondrianMockInteractionEvent) => {
+    if (!this.interactor) {
+      return;
+    }
     this.interactor.onDragEnd(event);
   };
 

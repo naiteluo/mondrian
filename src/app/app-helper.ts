@@ -44,5 +44,17 @@ export const getChannel = () => {
   if (r) {
     return r;
   }
-  return '';
+  return "";
+};
+
+const __localIsProducerKey = "__mo_config_is_producer";
+export const setIsProducer = (r: boolean) => {
+  localStorage.setItem(__localIsProducerKey, JSON.stringify(r));
+};
+export const getIsProducer = () => {
+  const r = localStorage.getItem(__localIsProducerKey);
+  if (r) {
+    return JSON.parse(r);
+  }
+  return true;
 };
