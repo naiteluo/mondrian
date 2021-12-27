@@ -4,6 +4,7 @@ import { BaseTextureCache } from "@pixi/utils";
 import { MondrianModuleBase } from "../common/module-base";
 import {
   ENV,
+  MSAA_QUALITY,
   RenderTexture,
   settings,
   Sprite,
@@ -268,10 +269,18 @@ export class MondrianRenderer extends MondrianModuleBase {
   private main = (dt) => {
     if (this.dynamicCache.length <= this.dynamicLevel) return;
     this.shiftGrapicsHandlersToStatic();
+    this.fixedTexture.framebuffer.multisample = MSAA_QUALITY.MEDIUM;
     this.pixiApp.renderer.render(this.staticLayer, {
       renderTexture: this.fixedTexture,
       clear: false,
     });
+
+    // mannualy trigger framebuffer blit() to solve below issue
+    // https://github.com/pixijs/pixijs/pull/7633/commits/4fed9efb876b4d505fd862ba2e822b72b55f8240
+    // todo might have better solution
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    this.pixiApp.renderer.framebuffer.blit();
 
     this.staticLayer.removeChildren().forEach((v) => {
       v.visible = false;
