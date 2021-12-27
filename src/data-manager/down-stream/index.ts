@@ -67,34 +67,39 @@ export class MondrianWsDownStreamSource implements UnderlyingSource {
   // todo dynamicly controll down stream data dispatch freqency
   start(controller: ReadableStreamDefaultController) {
     const step = (stamp) => {
-      if (this.sharedBuffer.buffer.length > 0) {
-        if (this.lastTimeStamp !== undefined) {
-          this.tmpDeltaTime = stamp - this.lastTimeStamp;
+      this.tickerId = requestAnimationFrame(step);
+
+      if (!this.lastTimeStamp) {
+        this.lastTimeStamp = stamp;
+      }
+
+      const elapsed = stamp - this.lastTimeStamp;
+
+      if (elapsed > 16) {
+        this.lastTimeStamp = stamp - (elapsed % 16);
+
+        if (this.sharedBuffer.buffer.length > 0) {
           if (
-            this.tmpDeltaTime > 33 &&
+            elapsed > 60 &&
             this.dynamicChunkLimit > this.DynamicChunkLimitMinimun
           ) {
             this.dynamicChunkLimit -= 20;
           } else {
             this.dynamicChunkLimit += 20;
           }
-        } else {
-          this.dynamicChunkLimit = 80;
-        }
 
-        const tmp = this.sharedBuffer.buffer.splice(
-          0,
-          this.sharedBuffer.buffer.length > this.dynamicChunkLimit
-            ? this.dynamicChunkLimit
-            : this.sharedBuffer.buffer.length
-        );
-        if (tmp.length !== 0) {
-          controller.enqueue(tmp);
+          const tmp = this.sharedBuffer.buffer.splice(
+            0,
+            this.sharedBuffer.buffer.length > this.dynamicChunkLimit
+              ? this.dynamicChunkLimit
+              : this.sharedBuffer.buffer.length
+          );
+          if (tmp.length !== 0) {
+            controller.enqueue(tmp);
+            this.shared.log(`data dumped: ${tmp.length}`);
+          }
         }
-        this.lastTimeStamp = stamp;
       }
-
-      this.tickerId = requestAnimationFrame(step);
     };
     this.tickerId = requestAnimationFrame(step);
   }

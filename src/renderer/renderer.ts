@@ -9,6 +9,7 @@ import {
   settings,
   Sprite,
   Texture,
+  Ticker,
   UPDATE_PRIORITY,
 } from "pixi.js";
 import { MondrianShared } from "../shared";
@@ -23,6 +24,18 @@ const enum TrashType {
   DisplayObject,
   Texture,
 }
+
+/**
+ * default dynamic level for history stack
+ */
+const DefaultDynamicLevel = 20;
+/**
+ * default dynamic level for high capacity mode
+ * will disable graphics' cacheasbitmap and mass
+ * shift dynamic cache to static layer and take snapshot in
+ * low freqency
+ */
+const HighCapactityDefaultDynamicLevel = 40;
 
 type Trash =
   | { type: TrashType.DisplayObject; target: DisplayObject }
@@ -49,7 +62,22 @@ export class MondrianRenderer extends MondrianModuleBase {
   // sprite that hold snapshot
   private fixedSprite: Sprite;
 
-  private dynamicLevel = 20;
+  private _isHighCapacity = false;
+
+  get isHighCapactity() {
+    return this._isHighCapacity;
+  }
+
+  set isHighCapactity(v: boolean) {
+    this._isHighCapacity = v;
+    this.dynamicLevel = v
+      ? HighCapactityDefaultDynamicLevel
+      : DefaultDynamicLevel;
+    // todo the last 20 handler's grahpic is not cached as bitmap,
+    // todo can trigger here
+  }
+
+  private dynamicLevel = DefaultDynamicLevel;
   // two level dynamic cache:
   // 1. dynamicBufferingCache
   //    for unfinished grahpic handlers
@@ -72,6 +100,8 @@ export class MondrianRenderer extends MondrianModuleBase {
     return this.containerManager.$panel;
   }
 
+  _tmpTicker: Ticker = new Ticker();
+
   constructor(
     private containerManager: MondrianContainerManager,
     private shared: MondrianShared
@@ -93,6 +123,7 @@ export class MondrianRenderer extends MondrianModuleBase {
     this.fixedTexture = RenderTexture.create({
       width: this.pixiApp.screen.width,
       height: this.pixiApp.screen.height,
+      multisample: MSAA_QUALITY.MEDIUM,
     });
     this.fixedSprite = new Sprite(this.fixedTexture);
 
@@ -116,6 +147,12 @@ export class MondrianRenderer extends MondrianModuleBase {
     // show perf info
     this.initialPerfTool();
     this.pixiApp.start();
+    // set large dynamic level to prevent take snapshot in high frequency
+    this.isHighCapactity = true;
+
+    // this._tmpTicker.add(this.main);
+    // this._tmpTicker.add(this.gc);
+    // this._tmpTicker.start();
   }
 
   stop() {
@@ -156,6 +193,9 @@ export class MondrianRenderer extends MondrianModuleBase {
      * add perf ticker
      */
     this.pixiApp.ticker.add(this.perf, undefined, UPDATE_PRIORITY.LOW);
+    // todo delete
+    // expose base texture cache for debug
+    (window as any).BaseTextureCache = BaseTextureCache;
   }
 
   /**
@@ -163,7 +203,13 @@ export class MondrianRenderer extends MondrianModuleBase {
    *
    */
   private shiftGrapicsHandlersToStatic() {
-    while (this.dynamicCache.length > this.dynamicLevel) {
+    // determine whether trigger cache shift
+    // console.log(this.dynamicCache.length, this.dynamicLevel);
+    if (this.dynamicCache.length <= this.dynamicLevel) {
+      return;
+    }
+    // keep size just right as DefaultDynamicLevel
+    while (this.dynamicCache.length > DefaultDynamicLevel) {
       const handler = this.dynamicCache.shift();
       this.dynamicCacheIndex--;
       handler.detach();
@@ -182,29 +228,41 @@ export class MondrianRenderer extends MondrianModuleBase {
     // discard handlers if reaching dynamic level,
 
     // 1. check and discard leading cache
-    this.shiftGrapicsHandlersToStatic();
+    if (!this.isHighCapactity) {
+      this.shiftGrapicsHandlersToStatic();
+    }
 
     // 2. check and discard tail of cache
     this.checkAndCleanDiscardableDynamicCache();
 
+    const handlerOptions = { ...options };
+
+    // disable canCacheAsBitmap in high capacity mode
+    if (this.isHighCapactity) {
+      handlerOptions.canCacheAsBitmap = false;
+    }
+
     // create handler and add to cache
-    const handler = new MondrianGraphicsHandler(
-      this,
-      this.dynamicLayer,
-      options
-    );
+    const handler = new MondrianGraphicsHandler(this, this.dynamicLayer, {
+      ...handlerOptions,
+    });
     this.dynamicBufferingCache.push(handler);
     handler.start();
 
     return handler;
   }
 
+  public __debug_grahpic_draw = 0;
+
   exchangeBufferingCache(handler: MondrianGraphicsHandler) {
+    this.__debug_grahpic_draw++;
     const idx = this.dynamicBufferingCache.indexOf(handler);
     if (idx !== -1) {
       // todo do we really need to double check it?
       // check and discard leading cache
-      this.shiftGrapicsHandlersToStatic();
+      if (!this.isHighCapactity) {
+        this.shiftGrapicsHandlersToStatic();
+      }
       const removed = this.dynamicBufferingCache.splice(idx, 1);
       this.dynamicCache.push(...removed);
       // move indicator
@@ -261,26 +319,55 @@ export class MondrianRenderer extends MondrianModuleBase {
     }
   }
 
+  lastMainDt = 0;
+
   /**
    * main loop
    * normal prioriry
    * @returns
    */
   private main = (dt) => {
-    if (this.dynamicCache.length <= this.dynamicLevel) return;
+    if (this.dynamicCache.length <= this.dynamicLevel) {
+      this.lastMainDt += dt;
+      return;
+    }
+
+    if (this.isHighCapactity) {
+      if (this.lastMainDt > 16) {
+        this.dynamicLevel =
+          this.dynamicLevel - 2 < DefaultDynamicLevel
+            ? DefaultDynamicLevel
+            : this.dynamicLevel - 2;
+      } else {
+        this.dynamicLevel += 2;
+      }
+
+      // console.log("dynamicLevel", this.dynamicLevel);
+    }
+
+    this.lastMainDt = 0;
+
     this.shiftGrapicsHandlersToStatic();
-    this.fixedTexture.framebuffer.multisample = MSAA_QUALITY.MEDIUM;
+
+    if (this.isHighCapactity) {
+      this.shared.log(
+        `drawing ${this.staticLayer.children.length} grahpics to texture`
+      );
+    }
+
     this.pixiApp.renderer.render(this.staticLayer, {
       renderTexture: this.fixedTexture,
       clear: false,
     });
 
-    // mannualy trigger framebuffer blit() to solve below issue
-    // https://github.com/pixijs/pixijs/pull/7633/commits/4fed9efb876b4d505fd862ba2e822b72b55f8240
-    // todo might have better solution
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    this.pixiApp.renderer.framebuffer.blit();
+    if (this.fixedTexture.multisample > 0) {
+      // mannualy trigger framebuffer blit() to solve below issue
+      // https://github.com/pixijs/pixijs/pull/7633/commits/4fed9efb876b4d505fd862ba2e822b72b55f8240
+      // todo might have better solution
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      this.pixiApp.renderer.framebuffer.blit();
+    }
 
     this.staticLayer.removeChildren().forEach((v) => {
       v.visible = false;
@@ -324,6 +411,7 @@ export class MondrianRenderer extends MondrianModuleBase {
 
   lastPerfDt = 0;
   textureMem = 0;
+  graphicsCount = 0;
 
   private perf = (dt) => {
     if (this.lastPerfDt < 100) {
@@ -340,14 +428,25 @@ export class MondrianRenderer extends MondrianModuleBase {
           (element.realWidth * element.realHeight * 4) / 1024 / 1024;
       }
     }
+    tmpMemSize +=
+      (this.fixedTexture.baseTexture.realWidth *
+        this.fixedTexture.baseTexture.realHeight *
+        4 *
+        4) /
+      1024 /
+      1024;
     let tmpGraphicsCount = this.dynamicCache.reduce((prev, v) => {
       return prev + v.gs.length;
     }, 0);
     tmpGraphicsCount = this.dynamicBufferingCache.reduce((prev, v) => {
       return prev + v.gs.length;
     }, tmpGraphicsCount);
-    if (tmpMemSize !== this.textureMem) {
+    if (
+      tmpMemSize !== this.textureMem ||
+      tmpGraphicsCount !== this.graphicsCount
+    ) {
       this.textureMem = tmpMemSize;
+      this.graphicsCount = tmpGraphicsCount;
       this.$panel.innerHTML = `
         <div style="display:block">tx mem: ${this.textureMem.toFixed(
           2
@@ -355,7 +454,6 @@ export class MondrianRenderer extends MondrianModuleBase {
         <div> g count: ${tmpGraphicsCount}</div>
       `;
     }
-
     this.__debug_checkUnfinishedHandler();
   };
 

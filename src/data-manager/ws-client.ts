@@ -14,8 +14,8 @@ const IoEmptyRecoveredListener = () => {
   console.warn("Haven't set any ws recovered handler!!");
 };
 
-const hostname = '161.117.225.178'
-// const hostname = window.location.hostname;
+// const hostname = '161.117.225.178'
+const hostname = window.location.hostname;
 
 export interface IoClientSettings {
   channel: string;

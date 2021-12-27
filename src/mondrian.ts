@@ -97,6 +97,10 @@ export class Mondrian extends MondrianModuleBase {
     this.playerManager.start();
     this.dataManager.once(MondrianDataManager.EVENT_RECOVER_CONSUMED, () => {
       this.loading.hide();
+      // recover in renderer's high capacity mode
+      // reset to nomal capacity mode after the recover proccedure finished.
+      this.renderer.isHighCapactity = false;
+
       this.emit(Mondrian.EVENT_RECOVER_CONSUMED);
     });
     const { success, size } = (await this.dataManager.start()) as {
@@ -137,6 +141,10 @@ export class Mondrian extends MondrianModuleBase {
 
   get __debugPixiApp() {
     return this.renderer.pixiApp;
+  }
+
+  get __debugShared() {
+    return this.shared;
   }
 
   static EVENT_RECOVER_CONSUMED = "recover:consumed";

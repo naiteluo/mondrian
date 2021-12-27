@@ -41,6 +41,7 @@ class App {
     this.initialMondrian();
     this.mondrian.on(Mondrian.EVNET_RECOVER_RECEIVED, ({ size }) => {
       this.logMsg(`data size: ${size}`);
+      this.initialBrush();
     });
     try {
       this.logMsg(
@@ -151,8 +152,6 @@ class App {
       container: this.$div,
       ...this.appSettings.mondrianSettings,
     });
-
-    this.initialBrush();
   }
 
   private _onBrushStateChange = (evt) => {
@@ -179,7 +178,6 @@ class App {
 
   onStart() {
     this.mondrian.start();
-    this.initialBrush();
   }
 
   private isAutoOn = false;

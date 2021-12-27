@@ -12,4 +12,18 @@ export class MondrianShared extends MondrianModuleBase {
   get settings() {
     return this.mondrian.settings;
   }
+
+  public debug = false;
+
+  /**
+   * for debug
+   */
+  logs: string[] = [];
+
+  log(msg: string) {
+    if (!this.debug) {
+      return;
+    }
+    this.logs.push(msg);
+  }
 }

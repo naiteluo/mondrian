@@ -35,3 +35,4 @@ yarn build
 ## TODOs
 
 - transform display objects to new center after resize
+- pay attention to blur issue
