@@ -1,20 +1,28 @@
 import { MondrianRenderer } from "../renderer/renderer";
 import { CursorPlugin } from "./cursor-plugin";
+import { EraserBrushPlugin } from "./eraser-plugin";
 import { HistoryPlugin } from "./history-plugin";
 import { PencilBrushPlugin, PencilBrushPluginPID } from "./pencil-plugin";
 import { IMondrianPlugin, IPluginConfig, MondrianPlugin } from "./plugin";
 
-interface PluginConstructor {
+interface IMondrianPluginConstructor {
   new (...args: any[]): MondrianPlugin;
 }
 
-export interface IPluginRegisterConfig {
+export interface IMondrianPluginRegisterConfig {
   pid: symbol;
   matcher: (ptype: string) => boolean;
-  c: PluginConstructor;
+  c: IMondrianPluginConstructor;
 }
 
-const PluginList: IPluginRegisterConfig[] = [
+const PluginList: IMondrianPluginRegisterConfig[] = [
+  {
+    pid: EraserBrushPlugin.PID,
+    matcher: () => {
+      return true;
+    },
+    c: EraserBrushPlugin,
+  },
   {
     pid: PencilBrushPlugin.PID,
     matcher: () => {
@@ -45,7 +53,7 @@ export class MondrianPluginManager {
 
   private _instancesList: MondrianPlugin[] = [];
 
-  private findPluginConfig(type: symbol): IPluginRegisterConfig {
+  private findPluginConfig(type: symbol): IMondrianPluginRegisterConfig {
     const config = PluginList.find((v) => {
       return v.pid === type;
     });

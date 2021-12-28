@@ -14,11 +14,21 @@ export interface MondrianGraphicsHandlerOptions {
 export class MondrianGraphicsHandler {
   static DefaultOptions: MondrianGraphicsHandlerOptions = {
     canCacheAsBitmap: true,
+    /**
+     * todo dig into this issue
+     *
+     * combine discrete grahpics as a handler has to cover so many
+     * situation, like copy full attrs set to old grahpic when new
+     * grahpics are automatically created. so disbale this.
+     *
+     *
+     */
     enableDiscrete: false,
     lineStyle: {},
   };
 
   private _gs: Graphics[] = [];
+
   private _g?: Graphics;
 
   private _finished = false;
@@ -33,6 +43,13 @@ export class MondrianGraphicsHandler {
     this.options = {
       ...MondrianGraphicsHandler.DefaultOptions,
       ...(options || {}),
+    };
+  }
+
+  config(options: Partial<MondrianGraphicsHandlerOptions>) {
+    this.options = {
+      ...this.options,
+      ...options,
     };
   }
 

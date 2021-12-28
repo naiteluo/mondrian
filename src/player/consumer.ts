@@ -12,6 +12,9 @@ import { PencilBrushPlugin } from "../plugin/pencil-plugin";
 import { CursorPlugin } from "../plugin/cursor-plugin";
 import { HistoryPlugin } from "../plugin/history-plugin";
 import { MondrianShared } from "../shared";
+import { EraserBrushPlugin } from "../plugin/eraser-plugin";
+import { IMondrianPlayerState } from ".";
+import { BrushType } from "../plugin/brush-plugin";
 
 export class MondrianConsumer extends MondrianPlayer {
   private pluginManager: MondrianPluginManager;
@@ -30,13 +33,40 @@ export class MondrianConsumer extends MondrianPlayer {
 
   consume(datas: IMondrianData[]) {
     datas.forEach((data) => {
+      // todo: need refactor, plugin load and datas dispatch logic here is confusing.
+
+      if (data.type === MondrianDataType.COMMAND) {
+        const subType = data.data.subType;
+        this.pluginManager.interateInstances((plugin) => {
+          switch (subType) {
+            case MondrianActionType.UNDO:
+              plugin.reactUndo(undefined);
+              break;
+            case MondrianActionType.REDO:
+              plugin.reactRedo(undefined);
+              break;
+            default:
+              break;
+          }
+        });
+      }
+
       if (data.type === MondrianDataType.SET_STATE) {
-        this.pluginManager.loadPlugin(PencilBrushPlugin.PID);
+        this.__delete_this_method_later_removeAllBrushPlugin();
+        const brushType = (data.data as IMondrianPlayerState).selectedBrush
+          .__brushType;
+        if (brushType === BrushType.Normal) {
+          this.pluginManager.loadPlugin(PencilBrushPlugin.PID);
+        }
+        if (brushType === BrushType.Eraser) {
+          this.pluginManager.loadPlugin(EraserBrushPlugin.PID);
+        }
         this.pluginManager.interateInstances((plugin) => {
           plugin.reactStateChange(data);
         });
         return;
       }
+
       if (data.type === MondrianDataType.INTERACT) {
         const subType = data.data.subType;
         this.dataXyToLeftTop(data);
@@ -55,21 +85,7 @@ export class MondrianConsumer extends MondrianPlayer {
               break;
           }
         });
-      }
-      if (data.type === MondrianDataType.COMMAND) {
-        const subType = data.data.subType;
-        this.pluginManager.interateInstances((plugin) => {
-          switch (subType) {
-            case MondrianActionType.UNDO:
-              plugin.reactUndo(undefined);
-              break;
-            case MondrianActionType.REDO:
-              plugin.reactRedo(undefined);
-              break;
-            default:
-              break;
-          }
-        });
+        return;
       }
     });
   }
@@ -80,5 +96,10 @@ export class MondrianConsumer extends MondrianPlayer {
     const { width, height } = this.renderer.pixiApp.screen;
     data.data.x = width / 2 + data.data.x;
     data.data.y = height / 2 + data.data.y;
+  }
+
+  private __delete_this_method_later_removeAllBrushPlugin() {
+    this.pluginManager.unloadPlugin(PencilBrushPlugin.PID);
+    this.pluginManager.unloadPlugin(EraserBrushPlugin.PID);
   }
 }

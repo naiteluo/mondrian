@@ -10,11 +10,15 @@ import { appSettings } from "./app/app-settings";
 
 class App {
   $div: HTMLElement;
+
   mondrian!: Mondrian;
+
   gui: GUI;
+
   guiAutoCtrl: Controller;
 
   msg = "welcome.";
+
   msgCtrl: Controller;
 
   appSettings = appSettings;
@@ -124,7 +128,7 @@ class App {
       .add(this.brushConfig, "__brushType", [
         BrushType.Normal,
         BrushType.Eraser,
-        // BrushType.Highlighter,
+        BrushType.Highlighter,
       ])
       .name("BrushType")
       .onChange(this._onBrushStateChange);
@@ -188,12 +192,19 @@ class App {
   }
 
   private isAutoOn = false;
+
   private lastPoint = { x: 0, y: 0 };
+
   private autoStepLength = 80;
+
   private autoStepIndex = 0;
+
   private autoStepCountPerTick = 20;
+
   private autoStepTimeSpan = 100;
+
   private screenWidth = 0;
+
   private screenHeight = 0;
 
   private lt = 0;

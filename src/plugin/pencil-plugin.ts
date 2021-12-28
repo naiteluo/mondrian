@@ -9,15 +9,20 @@ export const PencilBrushPluginPID = Symbol("pencil-plugin");
 
 export class PencilBrushPlugin extends BrushPlugin {
   PID = PencilBrushPluginPID;
+
   static PID = PencilBrushPluginPID;
 
   private isDrawing = false;
-  private startPos: IPointData;
-  private currentPos: IPointData;
-  private pointCache = [];
-  private handler: MondrianGraphicsHandler;
 
-  private state: IMondrianPlayerState;
+  private startPos: IPointData;
+
+  private currentPos: IPointData;
+
+  private pointCache = [];
+
+  protected handler: MondrianGraphicsHandler;
+
+  protected state: IMondrianPlayerState;
 
   reactDragStart(data: IMondrianData): void {
     const p = { x: data.data.x, y: data.data.y };
