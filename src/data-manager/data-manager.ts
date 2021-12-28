@@ -6,6 +6,7 @@ import { MondrianWsDownStreamSource } from "./down-stream";
 import { MondrianWsUpStreamSink } from "./up-stream";
 import { IoClient } from "./ws-client";
 import { MondrianSharedBuffer } from "./shared-buffer";
+import { MondrianRenderer } from "../renderer/renderer";
 
 export * from "./data";
 
@@ -26,6 +27,7 @@ export class MondrianDataManager extends MondrianModuleBase {
 
   constructor(
     private playerManager: MondrianPlayerManager,
+    private renderer: MondrianRenderer,
     private shared: MondrianShared
   ) {
     super();
@@ -44,6 +46,7 @@ export class MondrianDataManager extends MondrianModuleBase {
       new MondrianWsDownStreamSource(
         this.sharedBuffer,
         this.client,
+        this.renderer,
         this.shared
       )
       // new LocalDownStreamSource(this.buffer)

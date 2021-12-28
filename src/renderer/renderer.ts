@@ -96,11 +96,13 @@ export class MondrianRenderer extends MondrianModuleBase {
     return this.app;
   }
 
+  get ticker() {
+    return this.app.ticker;
+  }
+
   private get $panel() {
     return this.containerManager.$panel;
   }
-
-  _tmpTicker: Ticker = new Ticker();
 
   constructor(
     private containerManager: MondrianContainerManager,
@@ -124,6 +126,7 @@ export class MondrianRenderer extends MondrianModuleBase {
       width: this.pixiApp.screen.width,
       height: this.pixiApp.screen.height,
       multisample: MSAA_QUALITY.MEDIUM,
+      resolution: this.shared.settings.resolution,
     });
     this.fixedSprite = new Sprite(this.fixedTexture);
 
@@ -135,7 +138,8 @@ export class MondrianRenderer extends MondrianModuleBase {
     );
     this.pixiApp.stage.addChild(this.rootLayer);
 
-    this.pixiApp.ticker.minFPS = 60;
+    this.pixiApp.ticker.minFPS = 30;
+    this.pixiApp.ticker.maxFPS = 60;
     /**
      * add main loop ticker
      */
@@ -146,13 +150,10 @@ export class MondrianRenderer extends MondrianModuleBase {
     this.pixiApp.ticker.add(this.gc, undefined, UPDATE_PRIORITY.LOW);
     // show perf info
     this.initialPerfTool();
-    this.pixiApp.start();
     // set large dynamic level to prevent take snapshot in high frequency
     this.isHighCapactity = true;
 
-    // this._tmpTicker.add(this.main);
-    // this._tmpTicker.add(this.gc);
-    // this._tmpTicker.start();
+    this.pixiApp.start();
   }
 
   stop() {
@@ -330,19 +331,6 @@ export class MondrianRenderer extends MondrianModuleBase {
     if (this.dynamicCache.length <= this.dynamicLevel) {
       this.lastMainDt += dt;
       return;
-    }
-
-    if (this.isHighCapactity) {
-      if (this.lastMainDt > 16) {
-        this.dynamicLevel =
-          this.dynamicLevel - 2 < DefaultDynamicLevel
-            ? DefaultDynamicLevel
-            : this.dynamicLevel - 2;
-      } else {
-        this.dynamicLevel += 2;
-      }
-
-      // console.log("dynamicLevel", this.dynamicLevel);
     }
 
     this.lastMainDt = 0;

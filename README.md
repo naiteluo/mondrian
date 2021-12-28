@@ -36,3 +36,4 @@ yarn build
 
 - transform display objects to new center after resize
 - pay attention to blur issue
+- handle unfinished handler in dynamicBufferingCache

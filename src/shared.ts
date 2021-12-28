@@ -13,7 +13,7 @@ export class MondrianShared extends MondrianModuleBase {
     return this.mondrian.settings;
   }
 
-  public debug = false;
+  public debug = true;
 
   /**
    * for debug

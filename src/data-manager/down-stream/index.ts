@@ -1,48 +1,16 @@
-import { IMondrianData } from "../data-manager";
 import { MondrianSharedBuffer } from "../shared-buffer";
 import { IoClient } from "../ws-client";
 import { MondrianShared } from "../../shared";
-
-export class MondrianLocalDownStreamSource implements UnderlyingSource {
-  tickerId;
-  startTimeStamp;
-  lastTimeStamp;
-
-  constructor(
-    private sharedBuffer: MondrianSharedBuffer,
-    private shared: MondrianShared
-  ) {}
-
-  start(controller: ReadableStreamDefaultController) {
-    const step = (stamp) => {
-      if (this.lastTimeStamp === undefined || stamp - this.lastTimeStamp > 0) {
-        const tmp = this.sharedBuffer.buffer.splice(
-          0,
-          this.sharedBuffer.buffer.length
-        );
-        if (tmp.length !== 0) {
-          controller.enqueue(tmp);
-          this.lastTimeStamp = stamp;
-        }
-      }
-      this.tickerId = requestAnimationFrame(step);
-    };
-    this.tickerId = requestAnimationFrame(step);
-  }
-
-  cancel() {
-    cancelAnimationFrame(this.tickerId);
-  }
-}
+import { MondrianRenderer } from "../../renderer/renderer";
 
 export class MondrianWsDownStreamSource implements UnderlyingSource {
-  tickerId;
   startTimeStamp;
   lastTimeStamp;
 
   constructor(
     private sharedBuffer: MondrianSharedBuffer,
     private client: IoClient,
+    private renderer: MondrianRenderer,
     private shared: MondrianShared
   ) {
     this.client.on((datas) => {
@@ -54,57 +22,45 @@ export class MondrianWsDownStreamSource implements UnderlyingSource {
     return this.shared.settings.chunkLimit;
   }
 
-  private get dynamicChunkLimitMode() {
-    return true;
-  }
-
-  private DynamicChunkLimitMinimun = 100;
-
   private dynamicChunkLimit = 500;
 
-  private tmpDeltaTime = 0;
+  /**
+   * justify chunk limit size base on ticker's deltaTime（deltaFrame）
+   * @param dt
+   */
+  private justifyChunkLimit(dt: number) {
+    // if more than 2 frame had been skip
+    // divide chunk limit size to slow the pipe down
+    if (dt > 2) {
+      this.dynamicChunkLimit = Math.round(this.dynamicChunkLimit / dt);
+    } else {
+      // raise 50% chunk size to speed up the consuming
+      this.dynamicChunkLimit = Math.round(this.dynamicChunkLimit * (3 / 2));
+    }
+  }
 
-  // todo dynamicly controll down stream data dispatch freqency
+  private step: (dt: number) => void;
+
   start(controller: ReadableStreamDefaultController) {
-    const step = (stamp) => {
-      this.tickerId = requestAnimationFrame(step);
-
-      if (!this.lastTimeStamp) {
-        this.lastTimeStamp = stamp;
-      }
-
-      const elapsed = stamp - this.lastTimeStamp;
-
-      if (elapsed > 16) {
-        this.lastTimeStamp = stamp - (elapsed % 16);
-
-        if (this.sharedBuffer.buffer.length > 0) {
-          if (
-            elapsed > 60 &&
-            this.dynamicChunkLimit > this.DynamicChunkLimitMinimun
-          ) {
-            this.dynamicChunkLimit -= 20;
-          } else {
-            this.dynamicChunkLimit += 20;
-          }
-
-          const tmp = this.sharedBuffer.buffer.splice(
-            0,
-            this.sharedBuffer.buffer.length > this.dynamicChunkLimit
-              ? this.dynamicChunkLimit
-              : this.sharedBuffer.buffer.length
-          );
-          if (tmp.length !== 0) {
-            controller.enqueue(tmp);
-            this.shared.log(`data dumped: ${tmp.length}`);
-          }
+    this.step = (dt: number) => {
+      if (this.sharedBuffer.buffer.length > 0) {
+        this.justifyChunkLimit(dt);
+        const tmp = this.sharedBuffer.buffer.splice(
+          0,
+          this.sharedBuffer.buffer.length > this.dynamicChunkLimit
+            ? this.dynamicChunkLimit
+            : this.sharedBuffer.buffer.length
+        );
+        if (tmp.length !== 0) {
+          controller.enqueue(tmp);
+          this.shared.log(`data dumped: ${tmp.length}`);
         }
       }
     };
-    this.tickerId = requestAnimationFrame(step);
+    this.renderer.ticker.add(this.step);
   }
 
   cancel() {
-    cancelAnimationFrame(this.tickerId);
+    this.renderer.ticker.remove(this.step);
   }
 }

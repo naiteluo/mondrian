@@ -65,7 +65,11 @@ export class Mondrian extends MondrianModuleBase {
     this.loading = new MondrianLoading(this.containerManager, this.shared);
     this.playerManager = new MondrianPlayerManager(this.shared);
     this.renderer = new MondrianRenderer(this.containerManager, this.shared);
-    this.dataManager = new MondrianDataManager(this.playerManager, this.shared);
+    this.dataManager = new MondrianDataManager(
+      this.playerManager,
+      this.renderer,
+      this.shared
+    );
     this.eventProxier = new MondrianEventProxier(
       this.playerManager,
       this.renderer,
