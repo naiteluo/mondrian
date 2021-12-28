@@ -80,8 +80,9 @@ export class MondrianDataManager extends MondrianModuleBase {
     this.writer = this.upStream.getWriter();
   }
 
-  private dLast = +new Date();
   private delayTime = 300;
+
+  private lastCount = 0;
 
   dispatch(datas: IMondrianData[]) {
     // dispatch messages to every activated consumer
@@ -95,9 +96,13 @@ export class MondrianDataManager extends MondrianModuleBase {
         console.error("!!!");
       }
       if (v.extra?.last) {
+        this.lastCount++;
         setTimeout(() => {
           this.emit(MondrianDataManager.EVENT_RECOVER_CONSUMED);
         }, this.delayTime);
+      }
+      if (this.lastCount > 1) {
+        throw new Error("Double last error!!!");
       }
     });
   }
