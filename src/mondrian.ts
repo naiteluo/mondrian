@@ -10,15 +10,7 @@ import { MondrianShared } from "./shared";
 import { MondrianModuleBase } from "./common/module-base";
 import { MondrianContainerManager } from "./container-manager";
 import { MondrianLoading } from "./common/loading";
-
-export interface IMondrianSettings {
-  container: HTMLElement;
-  isProducer?: boolean;
-  resolution?: number;
-  autoStart?: boolean;
-  chunkLimit?: number;
-  channel?: string;
-}
+import { DefaultMondrianSettings, IMondrianSettings } from "./mondian-settings";
 
 export class Mondrian extends MondrianModuleBase {
   /**
@@ -40,6 +32,7 @@ export class Mondrian extends MondrianModuleBase {
   // todo better settings handling
   constructor(private _settings: IMondrianSettings) {
     super();
+    this._settings = { ...DefaultMondrianSettings, ...this._settings };
 
     // preprocess settings
 

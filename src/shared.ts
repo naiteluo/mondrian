@@ -13,15 +13,13 @@ export class MondrianShared extends MondrianModuleBase {
     return this.mondrian.settings;
   }
 
-  public debug = true;
-
   /**
    * for debug
    */
   logs: string[] = [];
 
   log(msg: string) {
-    if (!this.debug) {
+    if (!this.settings.debug) {
       return;
     }
     this.logs.push(msg);

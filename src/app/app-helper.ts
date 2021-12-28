@@ -58,3 +58,15 @@ export const getIsProducer = () => {
   }
   return true;
 };
+
+const __localDebugKey = "__mo_config_debug";
+export const setDebug = (r: boolean) => {
+  localStorage.setItem(__localDebugKey, JSON.stringify(r));
+};
+export const getDebug = () => {
+  const r = localStorage.getItem(__localDebugKey);
+  if (r) {
+    return JSON.parse(r);
+  }
+  return false;
+};

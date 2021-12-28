@@ -95,6 +95,13 @@ class App {
         window.location.reload();
       });
     settingsFolder
+      .add(this.appSettings.mondrianSettings, "debug", [true, false])
+      .listen()
+      .name("debug")
+      .onFinishChange(() => {
+        window.location.reload();
+      });
+    settingsFolder
       .add(this, "autoStepTimeSpan", 10, 1000, 20)
       .name("time per step (ms)");
     this.guiAutoCtrl = settingsFolder

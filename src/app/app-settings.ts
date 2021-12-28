@@ -1,13 +1,15 @@
-import { IMondrianSettings } from "mondrian";
+import { IMondrianSettings } from "../mondian-settings";
 import {
   getAutoStart,
   getChannel,
   getChunkLimit,
+  getDebug,
   getIsProducer,
   getResolution,
   setAutoStart,
   setChannel,
   setChunkLimit,
+  setDebug,
   setIsProducer,
   setResolution,
 } from "./app-helper";
@@ -47,6 +49,13 @@ const mondrianSettings: Partial<IMondrianSettings> = {
   },
   set channel(v) {
     setChannel(v);
+  },
+
+  get debug() {
+    return getDebug();
+  },
+  set debug(v) {
+    setDebug(v);
   },
 };
 
