@@ -151,7 +151,7 @@ export class MondrianRenderer extends MondrianModuleBase {
     // show perf info
     this.initialPerfTool();
     // set large dynamic level to prevent take snapshot in high frequency
-    this.isHighCapactity = true;
+    this.isHighCapactity = false;
 
     this.pixiApp.start();
   }

@@ -37,3 +37,4 @@ yarn build
 - transform display objects to new center after resize
 - pay attention to blur issue
 - handle unfinished handler in dynamicBufferingCache
+- if recover data and new data dump in the same time, pipe seem to be block.
