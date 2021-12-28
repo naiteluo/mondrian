@@ -319,22 +319,18 @@ export class MondrianRenderer extends MondrianModuleBase {
     }
   }
 
-  lastMainDt = 0;
-
   /**
    * main loop
    * normal prioriry
    * @returns
    */
   private main = (dt) => {
-    if (this.dynamicCache.length <= this.dynamicLevel) {
-      this.lastMainDt += dt;
+    this.shiftGrapicsHandlersToStatic();
+
+    // nothing in static layer, no need to update texture
+    if (this.staticLayer.children.length === 0) {
       return;
     }
-
-    this.lastMainDt = 0;
-
-    this.shiftGrapicsHandlersToStatic();
 
     this.shared.log(
       `drawing ${this.staticLayer.children.length} grahpics to texture`
