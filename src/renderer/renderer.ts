@@ -337,11 +337,9 @@ export class MondrianRenderer extends MondrianModuleBase {
 
     this.shiftGrapicsHandlersToStatic();
 
-    if (this.isHighCapactity) {
-      this.shared.log(
-        `drawing ${this.staticLayer.children.length} grahpics to texture`
-      );
-    }
+    this.shared.log(
+      `drawing ${this.staticLayer.children.length} grahpics to texture`
+    );
 
     this.pixiApp.renderer.render(this.staticLayer, {
       renderTexture: this.fixedTexture,

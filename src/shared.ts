@@ -23,6 +23,8 @@ export class MondrianShared extends MondrianModuleBase {
 
   // todo if debug functionanlities become complicated, remove from here
 
+  private __debug_log_on_console = false;
+
   /**
    * for debug
    */
@@ -31,6 +33,9 @@ export class MondrianShared extends MondrianModuleBase {
   log(msg: string) {
     if (!this.settings.debug) {
       return;
+    }
+    if (this.__debug_log_on_console) {
+      console.log(msg);
     }
     this.logs.push(msg);
   }
