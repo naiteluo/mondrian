@@ -14,7 +14,7 @@ export interface MondrianGraphicsHandlerOptions {
 export class MondrianGraphicsHandler {
   static DefaultOptions: MondrianGraphicsHandlerOptions = {
     canCacheAsBitmap: true,
-    enableDiscrete: true,
+    enableDiscrete: false,
     lineStyle: {},
   };
 

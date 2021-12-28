@@ -9,7 +9,6 @@ import {
   settings,
   Sprite,
   Texture,
-  Ticker,
   UPDATE_PRIORITY,
 } from "pixi.js";
 import { MondrianShared } from "../shared";
@@ -368,9 +367,11 @@ export class MondrianRenderer extends MondrianModuleBase {
    * low priority
    */
   private gc = () => {
-    this.dynamicCache.forEach((v) => {
-      v.refresh();
-    });
+    // todo disable discrete handler
+    // todo we are having idempotent issue, stop this feature temporarily
+    // this.dynamicCache.forEach((v) => {
+    //   v.refresh();
+    // });
     this.trash.forEach((r) => {
       switch (r.type) {
         case TrashType.DisplayObject:
