@@ -11,6 +11,7 @@ import { MondrianModuleBase } from "./common/module-base";
 import { MondrianContainerManager } from "./container-manager";
 import { MondrianLoading } from "./common/loading";
 import { DefaultMondrianSettings, IMondrianSettings } from "./mondian-settings";
+import { PERF_LOAD, PERF_PROCESS } from "./common/constants";
 
 export class Mondrian extends MondrianModuleBase {
   /**
@@ -82,6 +83,7 @@ export class Mondrian extends MondrianModuleBase {
 
   async start() {
     super.start();
+    this.shared.time(PERF_LOAD);
     /**
      * create players' instances
      */
@@ -99,11 +101,15 @@ export class Mondrian extends MondrianModuleBase {
       this.renderer.isHighCapactity = false;
 
       this.emit(Mondrian.EVENT_RECOVER_CONSUMED);
+      this.shared.time(PERF_PROCESS);
+      this.shared.printTimes();
     });
     const { success, size } = (await this.dataManager.start()) as {
       success: boolean;
       size: number;
     };
+    this.shared.time(PERF_LOAD);
+    this.shared.time(PERF_PROCESS);
     this.loading.setText(`${size} Data received. Processing...`);
     if (success) {
       console.log(`Start success, recovered data size: ${size}`);

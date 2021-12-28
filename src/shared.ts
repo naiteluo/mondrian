@@ -1,6 +1,14 @@
 import { MondrianModuleBase } from "./common/module-base";
 import { Mondrian } from "mondrian";
 
+interface IMondrianDebugTimePair {
+  s?: number;
+  e?: number;
+  valid: boolean;
+  deltaMs?: number;
+  msg?: string;
+}
+
 export class MondrianShared extends MondrianModuleBase {
   constructor(private mondrian: Mondrian) {
     super();
@@ -13,6 +21,8 @@ export class MondrianShared extends MondrianModuleBase {
     return this.mondrian.settings;
   }
 
+  // todo if debug functionanlities become complicated, remove from here
+
   /**
    * for debug
    */
@@ -23,5 +33,38 @@ export class MondrianShared extends MondrianModuleBase {
       return;
     }
     this.logs.push(msg);
+  }
+
+  times: Map<string, IMondrianDebugTimePair> = new Map();
+
+  /**
+   * save time mark pairs for debugging.
+   * @param mark
+   */
+  time(mark: string) {
+    let pair: IMondrianDebugTimePair = this.times.get(mark);
+    if (!pair) {
+      pair = { valid: false };
+      this.times.set(mark, pair);
+    }
+    if (pair.s === undefined) {
+      pair.s = performance.now();
+      return;
+    }
+    if (pair.e === undefined) {
+      pair.e = performance.now();
+      pair.deltaMs = pair.e - pair.s;
+      pair.valid = true;
+      return;
+    }
+    pair.valid = false;
+    pair.msg = "MissMatchTimePair";
+  }
+
+  printTimes() {
+    console.log("Times Logs: ");
+    this.times.forEach((pair, key) => {
+      console.log(key, pair.deltaMs);
+    });
   }
 }
