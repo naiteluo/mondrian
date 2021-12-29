@@ -4,6 +4,7 @@ import { MondrianPlugin } from "./plugin";
 
 import { ILineStyleOptions, LINE_CAP, LINE_JOIN } from "@pixi/graphics";
 import { IMondrianPlayerState } from "../player";
+import { filters } from "pixi.js";
 
 export const enum BrushName {
   PENCIL = "Pencil",
@@ -35,6 +36,10 @@ export const defaultBrushOptions: BrushPluginState = {
 };
 
 export class BrushPlugin extends MondrianPlugin {
+  protected sharedAlphaFilter = new filters.AlphaFilter(0.4);
+
+  protected sharedFXAAFilter = new filters.FXAAFilter();
+
   private brushState;
 
   reactDragStart(data: IMondrianData): void {}

@@ -1,6 +1,7 @@
 import { MondrianRenderer } from "../renderer/renderer";
 import { CursorPlugin } from "./cursor-plugin";
 import { EraserBrushPlugin } from "./eraser-plugin";
+import { HighlighterBrushPlugin } from "./highlighter-plugin";
 import { HistoryPlugin } from "./history-plugin";
 import { PencilBrushPlugin, PencilBrushPluginPID } from "./pencil-plugin";
 import { IMondrianPlugin, IPluginConfig, MondrianPlugin } from "./plugin";
@@ -16,6 +17,13 @@ export interface IMondrianPluginRegisterConfig {
 }
 
 const PluginList: IMondrianPluginRegisterConfig[] = [
+  {
+    pid: HighlighterBrushPlugin.PID,
+    matcher: () => {
+      return true;
+    },
+    c: HighlighterBrushPlugin,
+  },
   {
     pid: EraserBrushPlugin.PID,
     matcher: () => {

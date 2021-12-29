@@ -15,6 +15,7 @@ import { MondrianShared } from "../shared";
 import { EraserBrushPlugin } from "../plugin/eraser-plugin";
 import { IMondrianPlayerState } from ".";
 import { BrushType } from "../plugin/brush-plugin";
+import { HighlighterBrushPlugin } from "../plugin/highlighter-plugin";
 
 export class MondrianConsumer extends MondrianPlayer {
   private pluginManager: MondrianPluginManager;
@@ -61,6 +62,9 @@ export class MondrianConsumer extends MondrianPlayer {
         if (brushType === BrushType.Eraser) {
           this.pluginManager.loadPlugin(EraserBrushPlugin.PID);
         }
+        if (brushType === BrushType.Highlighter) {
+          this.pluginManager.loadPlugin(HighlighterBrushPlugin.PID);
+        }
         this.pluginManager.interateInstances((plugin) => {
           plugin.reactStateChange(data);
         });
@@ -101,5 +105,6 @@ export class MondrianConsumer extends MondrianPlayer {
   private __delete_this_method_later_removeAllBrushPlugin() {
     this.pluginManager.unloadPlugin(PencilBrushPlugin.PID);
     this.pluginManager.unloadPlugin(EraserBrushPlugin.PID);
+    this.pluginManager.unloadPlugin(HighlighterBrushPlugin.PID);
   }
 }
