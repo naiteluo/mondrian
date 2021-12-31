@@ -8,11 +8,12 @@
     "esModuleInterop": true,
     // Loaders needs this to use the more strict mini-signal types
     "paths": {
+      "*": ["./src/*/"],
       "mini-signals": [
         "./node_modules/resource-loader/typings/mini-signals.d.ts"
       ]
     },
-    "baseUrl": "./src"
+    "baseUrl": "./"
   },
-  "exclude": ["node_modules", "**/dist/**", "cypress"]
+  "exclude": ["node_modules", "**/dist/**"]
 }

@@ -4,13 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack serve --host 0.0.0.0 --config \"./webpack.config.js\" --progress --hot --inline --mode=development",
+    "test": "playwright test",
+    "test:debug": "playwright test --debug",
+    "test:record": "playwright codegen http://localhost:8080",
+    "dev": "webpack serve --config \"./webpack.config.js\" --progress --hot --inline --mode=development",
     "build": "rimraf ./dist && webpack --config \"./webpack.config.js\"  --mode=production"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@playwright/test": "^1.17.1",
     "@typescript-eslint/eslint-plugin": "^5.7.0",
     "@typescript-eslint/parser": "^5.7.0",
     "copy-webpack-plugin": "^9.0.1",
