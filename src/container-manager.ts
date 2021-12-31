@@ -28,6 +28,7 @@ export class MondrianContainerManager extends MondrianModuleBase {
   }
 
   private initializeContainer() {
+    this.$container.classList.add("mondrian-container");
     this.$container.style.position = "absolute";
     this.$container.style.zIndex = "0";
     this.$container.style.margin = "0px 0px";

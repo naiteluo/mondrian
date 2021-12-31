@@ -3,13 +3,18 @@ import { MondrianShared } from "../shared";
 
 export class MondrianLoading {
   private styleCreated = false;
-  private wrapClassName;
+
+  private wrapClassName = "mondrian-loading";
+
+  private wrapClassNameWithMid;
+
   private $dom: HTMLDivElement;
+
   constructor(
     private containerManager: MondrianContainerManager,
     private shared: MondrianShared
   ) {
-    this.wrapClassName = `mondrian-loading-${shared.MID}`;
+    this.wrapClassNameWithMid = `${this.wrapClassName}-${shared.MID}`;
     this.insertStyle();
     this.createDom();
     this.containerManager.$container.appendChild(this.$dom);
@@ -19,7 +24,7 @@ export class MondrianLoading {
     if (this.styleCreated) return;
     this.styleCreated = true;
     const css = `
-    .${this.wrapClassName} {
+    .${this.wrapClassNameWithMid} {
         visibility: hidden;
         opacity: 0;
         transition:visibility 0.3s linear,opacity 0.3s linear;
@@ -35,28 +40,28 @@ export class MondrianLoading {
         color: #fff;
         flex-direction: column;
     }
-    .${this.wrapClassName}.show {
+    .${this.wrapClassNameWithMid}.show {
         visibility: visible;
         opacity: 1;
     }
-    .${this.wrapClassName} .lds-ripple {
+    .${this.wrapClassNameWithMid} .lds-ripple {
         display: inline-block;
         position: relative;
         margin-bottom: 30px;
         width: 80px;
         height: 80px;
     }
-    .${this.wrapClassName} .lds-ripple div {
+    .${this.wrapClassNameWithMid} .lds-ripple div {
         position: absolute;
         border: 4px solid #fff;
         opacity: 1;
         border-radius: 50%;
-        animation: ${this.wrapClassName}-lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+        animation: ${this.wrapClassNameWithMid}-lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
     }
-    .${this.wrapClassName} .lds-ripple div:nth-child(2) {
+    .${this.wrapClassNameWithMid} .lds-ripple div:nth-child(2) {
         animation-delay: -0.5s;
     }
-    @keyframes ${this.wrapClassName}-lds-ripple {
+    @keyframes ${this.wrapClassNameWithMid}-lds-ripple {
         0% {
             top: 36px;
             left: 36px;
@@ -86,9 +91,10 @@ export class MondrianLoading {
             <div></div>
             <div></div>
         </div>
-        <span id="${this.wrapClassName}-message">Network...</span>
+        <span id="${this.wrapClassNameWithMid}-message">Network...</span>
         `;
     this.$dom.classList.add(this.wrapClassName);
+    this.$dom.classList.add(this.wrapClassNameWithMid);
     // this.$dom.style.display = "none";
   }
 
@@ -101,7 +107,7 @@ export class MondrianLoading {
   }
 
   setText(message: string) {
-    document.getElementById(`${this.wrapClassName}-message`).innerText =
+    document.getElementById(`${this.wrapClassNameWithMid}-message`).innerText =
       message;
   }
 }
