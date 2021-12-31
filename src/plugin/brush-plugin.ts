@@ -1,9 +1,7 @@
-import { MondrianDataType, IMondrianData } from "../data-manager";
-import { Service } from "typedi";
+import { IMondrianData } from "../data-manager";
 import { MondrianPlugin } from "./plugin";
 
 import { ILineStyleOptions, LINE_CAP, LINE_JOIN } from "@pixi/graphics";
-import { IMondrianPlayerState } from "../player";
 import { filters } from "pixi.js";
 
 export const enum BrushName {
