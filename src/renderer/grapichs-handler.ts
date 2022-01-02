@@ -1,5 +1,5 @@
 import { Container, Graphics, ILineStyleOptions, MSAA_QUALITY } from "pixi.js";
-import { BrushPluginState } from "plugin/brush-plugin";
+import { BrushPluginState } from "../plugin/brush-plugin";
 import { MondrianRenderer } from "./renderer";
 
 export interface MondrianGraphicsHandlerOptions {

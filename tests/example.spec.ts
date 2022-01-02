@@ -1,4 +1,4 @@
-import { test, expect, JSHandle } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 
 const TEST_URL = "http://localhost:8080";
 

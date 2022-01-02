@@ -1,15 +1,17 @@
 import { MondrianDataManager } from "data-manager";
 import { MondrianRenderer } from "../renderer/renderer";
-import { MondrianShared } from "shared";
+import { MondrianShared } from "../shared";
 import { MondrianConsumer } from "./consumer";
 import { MondrianProducer } from "./producer";
 import { MondrianModuleBase } from "../common/module-base";
 
 export class MondrianPlayerManager extends MondrianModuleBase {
   private _producer: MondrianProducer;
+
   private _consumers: Map<string, MondrianConsumer> = new Map();
 
   private dataManager?: MondrianDataManager;
+
   private renderer?: MondrianRenderer;
 
   constructor(private shared: MondrianShared) {

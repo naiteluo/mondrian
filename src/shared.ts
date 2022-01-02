@@ -1,5 +1,5 @@
 import { MondrianModuleBase } from "./common/module-base";
-import { Mondrian } from "mondrian";
+import { Mondrian } from "./mondrian";
 
 interface IMondrianDebugTimePair {
   s?: number;
@@ -14,9 +14,11 @@ export class MondrianShared extends MondrianModuleBase {
     super();
     super.start();
   }
+
   get MID() {
     return this.mondrian.ID;
   }
+
   get settings() {
     return this.mondrian.settings;
   }

@@ -2,8 +2,8 @@ import { IPointData } from "@pixi/math";
 import { MondrianUtils } from "../common/utils";
 import { IMondrianData } from "../data-manager";
 import { IMondrianPlayerState } from "../player";
+import { MondrianGraphicsHandler } from "../renderer/grapichs-handler";
 import { BrushPlugin } from "./brush-plugin";
-import { MondrianGraphicsHandler } from "renderer/grapichs-handler";
 
 export const PencilBrushPluginPID = Symbol("pencil-plugin");
 
