@@ -27,7 +27,7 @@ export class MondrianGraphicsHandler {
     lineStyle: {},
   };
 
-  private _gs: Graphics[] = [];
+  private _c: Container;
 
   private _g?: Graphics;
 
@@ -63,8 +63,11 @@ export class MondrianGraphicsHandler {
     // nothing
   }
 
-  get gs() {
-    return this._gs;
+  get c() {
+    if (!this._c) {
+      this._c = new Container();
+    }
+    return this._c;
   }
 
   get g() {
@@ -75,15 +78,15 @@ export class MondrianGraphicsHandler {
       throw new Error("Accessing finished handler is forbidden.");
     }
     this._g = new Graphics();
-    this._gs.push(this._g);
-    this.layer.addChild(this._g);
+    this.c.addChild(this._g);
+    this.layer.addChild(this.c);
     this._g.lineStyle(this.options.lineStyle);
     return this._g;
   }
 
   stop() {
     if (this.options.canCacheAsBitmap) {
-      this._gs.forEach((g) => {
+      this.c.children.forEach((g) => {
         if (!g.cacheAsBitmap) {
           g.cacheAsBitmapMultisample = MSAA_QUALITY.MEDIUM;
           g.cacheAsBitmap = true;
@@ -95,9 +98,7 @@ export class MondrianGraphicsHandler {
   }
 
   attach() {
-    return this._gs.map((g) => {
-      return this.layer.addChild(g);
-    });
+    this.layer.addChild(this.c);
   }
 
   detach() {
@@ -105,23 +106,21 @@ export class MondrianGraphicsHandler {
       console.trace();
       throw new Error("Detaching unfinished handler is forbidden.");
     }
-    return this._gs.map((g) => {
-      return this.layer.removeChild(g);
-    });
+    return this.layer.removeChild(this.c);
   }
 
   destroy() {
-    this._gs = [];
     this._g = undefined;
     this.layer = undefined;
     this.options = undefined;
+    this._c = undefined;
   }
 
   get finished() {
     return this._finished;
   }
 
-  set lineStyle(style: BrushPluginState) {
+  set lineStyle(style: ILineStyleOptions) {
     this.options.lineStyle = { ...style };
     this.g.lineStyle(this.options.lineStyle);
   }

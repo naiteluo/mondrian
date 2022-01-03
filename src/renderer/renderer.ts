@@ -27,7 +27,7 @@ const enum TrashType {
 /**
  * default dynamic level for history stack
  */
-const DefaultDynamicLevel = 20;
+const DefaultDynamicLevel = 2;
 /**
  * default dynamic level for high capacity mode
  * will disable graphics' cacheasbitmap and mass
@@ -49,15 +49,20 @@ export class MondrianRenderer extends MondrianModuleBase {
   private app: Application;
 
   private rootLayer: Container;
+
   // todo unsafe
   // high update freqency element like cursor or performces ui
   public uiLayer: Container;
+
   // real contents of stage
   private dynamicLayer: Container;
+
   // cached static texture layer
   private staticLayer: Container;
+
   // rewritable texture for snapshot
   private fixedTexture: RenderTexture;
+
   // sprite that hold snapshot
   private fixedSprite: Sprite;
 
@@ -77,11 +82,13 @@ export class MondrianRenderer extends MondrianModuleBase {
   }
 
   private dynamicLevel = DefaultDynamicLevel;
+
   // two level dynamic cache:
   // 1. dynamicBufferingCache
   //    for unfinished grahpic handlers
   //    handler will move to dynamicCache when finished or timeout
   private dynamicBufferingCache: MondrianGraphicsHandler[] = [];
+
   // 2. dynamicCache
   //    for finished graphic hanler
   //    history command can only manipulate dynamicCache
@@ -213,9 +220,7 @@ export class MondrianRenderer extends MondrianModuleBase {
       const handler = this.dynamicCache.shift();
       this.dynamicCacheIndex--;
       handler.detach();
-      handler.gs.forEach((g) => {
-        this.staticLayer.addChild(g);
-      });
+      this.staticLayer.addChild(handler.c);
       handler.destroy();
 
       // Notices:
@@ -291,9 +296,7 @@ export class MondrianRenderer extends MondrianModuleBase {
       );
       toBeDelete.map((h) => {
         h.detach();
-        h.gs.forEach((g) => {
-          this.markGc({ type: TrashType.DisplayObject, target: g });
-        });
+        this.markGc({ type: TrashType.DisplayObject, target: h.c });
         h.destroy();
       });
     }
@@ -393,7 +396,9 @@ export class MondrianRenderer extends MondrianModuleBase {
   }
 
   lastPerfDt = 0;
+
   textureMem = 0;
+
   graphicsCount = 0;
 
   private perf = (dt) => {
@@ -419,10 +424,10 @@ export class MondrianRenderer extends MondrianModuleBase {
       1024 /
       1024;
     let tmpGraphicsCount = this.dynamicCache.reduce((prev, v) => {
-      return prev + v.gs.length;
+      return prev + v.c.children.length;
     }, 0);
     tmpGraphicsCount = this.dynamicBufferingCache.reduce((prev, v) => {
-      return prev + v.gs.length;
+      return prev + v.c.children.length;
     }, tmpGraphicsCount);
     if (
       tmpMemSize !== this.textureMem ||
