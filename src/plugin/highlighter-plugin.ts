@@ -1,4 +1,3 @@
-import { BLEND_MODES } from "pixi.js";
 import { IMondrianData } from "../data-manager";
 import { PencilBrushPlugin } from "./pencil-plugin";
 
@@ -15,6 +14,6 @@ export class HighlighterBrushPlugin extends PencilBrushPlugin {
       enableDiscrete: false,
       canCacheAsBitmap: true,
     });
-    this.handler.g.filters = [this.sharedAlphaFilter];
+    this.handler.c.filters = [this.sharedAlphaFilter];
   }
 }
