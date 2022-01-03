@@ -14,6 +14,7 @@ export interface IMondrianInteractor {
   onDragEnd(event: IMondrianMockInteractionEvent): void;
   onUndo(event: any): void;
   onRedo(event: any): void;
+  onClear(event: any): void;
   onClick(event: any): void;
   onInput(event: any): void;
 }

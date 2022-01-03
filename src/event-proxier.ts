@@ -69,6 +69,7 @@ export class MondrianEventProxier extends MondrianEventEmitter {
     this.on("state:change", this.onStateChange);
     this.on("command:undo", this.onUndo);
     this.on("command:redo", this.onRedo);
+    this.on("command:clear", this.onClear);
   }
 
   public stopSelfEventWatch() {
@@ -78,6 +79,7 @@ export class MondrianEventProxier extends MondrianEventEmitter {
     this.off("state:change", this.onStateChange);
     this.off("command:undo", this.onUndo);
     this.off("command:redo", this.onRedo);
+    this.off("command:clear", this.onClear);
   }
 
   public destroy() {
@@ -103,6 +105,13 @@ export class MondrianEventProxier extends MondrianEventEmitter {
       return;
     }
     this.interactor.onRedo(event);
+  };
+
+  private onClear = (event: IMondrianStateData) => {
+    if (!this.interactor) {
+      return;
+    }
+    this.interactor.onClear(event);
   };
 
   private onDragStart = (event: IMondrianMockInteractionEvent) => {

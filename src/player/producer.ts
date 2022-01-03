@@ -100,6 +100,16 @@ export class MondrianProducer
     ]);
   }
 
+  onClear(event: any): void {
+    this.dataManager.push([
+      {
+        playerID: this.id,
+        type: MondrianDataType.COMMAND,
+        data: { subType: MondrianActionType.CLEAR },
+      },
+    ]);
+  }
+
   onClick(event: any): void {
     console.log("implement it");
   }

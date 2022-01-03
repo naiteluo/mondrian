@@ -7,6 +7,7 @@ export interface IMondrianReactor {
   reactStateChange(data: IMondrianData): void;
   reactUndo(event: any): void;
   reactRedo(event: any): void;
+  reactClear(event: any): void;
   reactClick(event: any): void;
   reactInput(event: any): void;
 }

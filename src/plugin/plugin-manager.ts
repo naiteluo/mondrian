@@ -1,4 +1,5 @@
 import { MondrianRenderer } from "../renderer/renderer";
+import { ClearPlugin } from "./clear-plugin";
 import { CursorPlugin } from "./cursor-plugin";
 import { EraserBrushPlugin } from "./eraser-plugin";
 import { HighlighterBrushPlugin } from "./highlighter-plugin";
@@ -51,6 +52,13 @@ const PluginList: IMondrianPluginRegisterConfig[] = [
       return true;
     },
     c: HistoryPlugin,
+  },
+  {
+    pid: ClearPlugin.PID,
+    matcher: () => {
+      return true;
+    },
+    c: ClearPlugin,
   },
 ];
 

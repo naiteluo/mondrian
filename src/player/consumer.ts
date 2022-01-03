@@ -17,6 +17,7 @@ import { EraserBrushPlugin } from "../plugin/eraser-plugin";
 import { IMondrianPlayerState } from ".";
 import { BrushName } from "../plugin/brush-plugin";
 import { HighlighterBrushPlugin } from "../plugin/highlighter-plugin";
+import { ClearPlugin } from "../plugin/clear-plugin";
 
 export class MondrianConsumer extends MondrianPlayer {
   private pluginManager: MondrianPluginManager;
@@ -33,6 +34,7 @@ export class MondrianConsumer extends MondrianPlayer {
       this.pluginManager.loadPlugin(CursorPlugin.PID);
     }
     this.pluginManager.loadPlugin(HistoryPlugin.PID);
+    this.pluginManager.loadPlugin(ClearPlugin.PID);
   }
 
   consume(datas: IMondrianData[]) {
@@ -48,6 +50,9 @@ export class MondrianConsumer extends MondrianPlayer {
               break;
             case MondrianActionType.REDO:
               plugin.reactRedo(undefined);
+              break;
+            case MondrianActionType.CLEAR:
+              plugin.reactClear(undefined);
               break;
             default:
               break;
