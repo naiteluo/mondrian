@@ -99,6 +99,13 @@ class App {
         window.location.reload();
       });
     settingsFolder
+      .add(this.appSettings.mondrianSettings, "disableCursor", [true, false])
+      .listen()
+      .name("disableCursor")
+      .onFinishChange(() => {
+        window.location.reload();
+      });
+    settingsFolder
       .add(this.appSettings.mondrianSettings, "debug", [true, false])
       .listen()
       .name("debug")
@@ -131,7 +138,8 @@ class App {
         BrushType.Highlighter,
       ])
       .name("BrushType")
-      .onChange(this._onBrushStateChange);
+      .onChange(this._onBrushStateChange)
+      .$widget.setAttribute("data-test-id", "BrushType");
     brushFolder
       .add(this.brushConfig, "__brushName", [
         BrushName.PENCIL,
@@ -139,16 +147,20 @@ class App {
         BrushName.RECTANGLE,
       ])
       .name("BrushName")
-      .onChange(this._onBrushStateChange);
+      .onChange(this._onBrushStateChange)
+      .$widget.setAttribute("data-test-id", "BrushName");
     brushFolder
       .add(this.brushConfig, "width", 1, 50)
-      .onChange(this._onBrushStateChange);
+      .onChange(this._onBrushStateChange)
+      .$widget.setAttribute("data-test-id", "width");
     brushFolder
       .add(this.brushConfig, "alpha", 0, 1)
-      .onChange(this._onBrushStateChange);
+      .onChange(this._onBrushStateChange)
+      .$widget.setAttribute("data-test-id", "alpha");
     brushFolder
       .addColor(this.brushConfig, "color")
-      .onChange(this._onBrushStateChange);
+      .onChange(this._onBrushStateChange)
+      .$widget.setAttribute("data-test-id", "color");
   }
 
   initialBrush() {
@@ -326,6 +338,13 @@ class App {
       console.log(str);
     }
   }
+
+  hideUI() {
+    this.mondrian.togglePannel();
+    this.gui.$title.hidden = true;
+    this.gui.$children.hidden = true;
+  }
 }
 
-new App();
+// todo only for testing
+(window as any).moApp = new App();

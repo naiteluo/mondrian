@@ -5,6 +5,7 @@ export interface IMondrianSettings {
   autoStart?: boolean;
   chunkLimit?: number;
   channel?: string;
+  disableCursor?: boolean;
   debug?: boolean;
 }
 
@@ -15,5 +16,6 @@ export const DefaultMondrianSettings: IMondrianSettings = {
   autoStart: true,
   chunkLimit: 1000,
   channel: "guest",
+  disableCursor: false,
   debug: false,
 };

@@ -23,11 +23,17 @@ export class Mondrian extends MondrianModuleBase {
    * modules
    */
   private shared: MondrianShared;
+
   private containerManager: MondrianContainerManager;
+
   private loading: MondrianLoading;
+
   private renderer: MondrianRenderer;
+
   private playerManager: MondrianPlayerManager;
+
   private eventProxier: MondrianEventProxier;
+
   private dataManager: MondrianDataManager;
 
   // todo better settings handling
@@ -150,6 +156,11 @@ export class Mondrian extends MondrianModuleBase {
     return this.shared;
   }
 
+  public togglePannel() {
+    this.containerManager.togglePannel();
+  }
+
   static EVENT_RECOVER_CONSUMED = "recover:consumed";
+
   static EVNET_RECOVER_RECEIVED = "recover:received";
 }

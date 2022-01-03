@@ -4,12 +4,14 @@ import {
   getChannel,
   getChunkLimit,
   getDebug,
+  getDisableCursor,
   getIsProducer,
   getResolution,
   setAutoStart,
   setChannel,
   setChunkLimit,
   setDebug,
+  setDisableCursor,
   setIsProducer,
   setResolution,
 } from "./app-helper";
@@ -49,6 +51,13 @@ const mondrianSettings: Partial<IMondrianSettings> = {
   },
   set channel(v) {
     setChannel(v);
+  },
+
+  get disableCursor() {
+    return getDisableCursor();
+  },
+  set disableCursor(v) {
+    setDisableCursor(v);
   },
 
   get debug() {

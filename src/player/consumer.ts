@@ -28,7 +28,9 @@ export class MondrianConsumer extends MondrianPlayer {
     super();
     this.id = id;
     this.pluginManager = new MondrianPluginManager(this.renderer);
-    this.pluginManager.loadPlugin(CursorPlugin.PID);
+    if (!this.shared.settings.disableCursor) {
+      this.pluginManager.loadPlugin(CursorPlugin.PID);
+    }
     this.pluginManager.loadPlugin(HistoryPlugin.PID);
   }
 

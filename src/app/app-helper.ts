@@ -70,3 +70,15 @@ export const getDebug = () => {
   }
   return false;
 };
+
+const __localDisableCursorKey = "__mo_config_disable_cursor";
+export const setDisableCursor = (r: boolean) => {
+  localStorage.setItem(__localDisableCursorKey, JSON.stringify(r));
+};
+export const getDisableCursor = () => {
+  const r = localStorage.getItem(__localDisableCursorKey);
+  if (r) {
+    return JSON.parse(r);
+  }
+  return false;
+};
