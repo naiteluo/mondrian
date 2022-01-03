@@ -10,6 +10,7 @@ import {
   MondrianDataManager,
   MondrianInteractType,
   MondrianActionType,
+  IMondrianState,
 } from "../data-manager";
 import { MondrianPlayer, IMondrianPlayerState } from "./player";
 import { MondrianRenderer } from "../renderer/renderer";
@@ -36,12 +37,12 @@ export class MondrianProducer
     super.consume(datas);
   }
 
-  onStateChange(state: IMondrianPlayerState) {
+  onStateChange(states: IMondrianState) {
     this.dataManager.push([
       {
         playerID: this.id,
         type: MondrianDataType.SET_STATE,
-        data: { ...state },
+        data: { ...states },
       },
     ]);
   }
@@ -56,6 +57,7 @@ export class MondrianProducer
       },
     ]);
   }
+
   onDragMove(event: IMondrianMockInteractionEvent): void {
     const { x, y } = this.getXyFromEvent(event);
     this.dataManager.push([
@@ -66,6 +68,7 @@ export class MondrianProducer
       },
     ]);
   }
+
   onDragEnd(event: IMondrianMockInteractionEvent): void {
     const { x, y } = this.getXyFromEvent(event);
     this.dataManager.push([
@@ -76,6 +79,7 @@ export class MondrianProducer
       },
     ]);
   }
+
   onUndo(event: any): void {
     this.dataManager.push([
       {
@@ -85,6 +89,7 @@ export class MondrianProducer
       },
     ]);
   }
+
   onRedo(event: any): void {
     this.dataManager.push([
       {
@@ -94,9 +99,11 @@ export class MondrianProducer
       },
     ]);
   }
+
   onClick(event: any): void {
     console.log("implement it");
   }
+
   onInput(event: any): void {
     console.log("implement it");
   }

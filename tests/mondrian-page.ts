@@ -11,10 +11,23 @@ export class MondrianPage {
 
   readonly loading: Locator;
 
+  readonly brushName: Locator;
+
+  readonly brushWidth: Locator;
+
+  readonly brushColor: Locator;
+
   constructor(page: Page, readonly testInfo?: TestInfo) {
     this.page = page;
     this.container = page.locator(".mondrian-container");
     this.loading = page.locator(".mondrian-loading");
+    this.brushName = page.locator('[data-test-id="brushName"] select');
+    this.brushWidth = page.locator(
+      '[data-test-id="brushWidth"] input[type="number"]'
+    );
+    this.brushColor = page.locator(
+      '[data-test-id="brushColor"] input[type="text"]'
+    );
   }
 
   async init() {
@@ -88,7 +101,7 @@ export class MondrianPage {
       })
     ).toMatchSnapshot({
       name: `${testTitleFileName(this.testInfo.title)}.png`,
-      threshold: 0.01,
+      threshold: 0,
     });
   }
 }

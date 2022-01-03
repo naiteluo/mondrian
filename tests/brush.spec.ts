@@ -63,14 +63,8 @@ test.describe("brush", () => {
       }
     }
 
-    // Click text=Brush
-    await page.click("text=Brush");
-
-    // Select Eraser
-    await page.selectOption('[data-test-id="BrushType"] select', "Eraser");
-
-    // Fill [data-test-id="width"] input[type="number"]
-    await page.fill('[data-test-id="width"] input[type="number"]', "10");
+    await page.selectOption('[data-test-id="brushName"] select', "Eraser");
+    await page.fill('[data-test-id="brushWidth"] input[type="number"]', "10");
 
     for (let i = 0; i < basicLineData.length; i++) {
       const lineData = basicLineData[i];
@@ -97,17 +91,9 @@ test.describe("brush", () => {
     const mp = new MondrianPage(page, testInfo);
     await mp.init();
 
-    // Click text=Brush
-    await page.click("text=Brush");
-
-    // Select Highlighter
-    await page.selectOption('[data-test-id="BrushType"] select', "Highlighter");
-
-    // Fill [data-test-id="width"] input[type="number"]
-    await page.fill('[data-test-id="width"] input[type="number"]', "20");
-
-    // Fill [data-test-id="color"] input[type="text"]
-    await page.fill('[data-test-id="color"] input[type="text"]', "eeff00");
+    await page.selectOption('[data-test-id="brushName"] select', "Highlighter");
+    await page.fill('[data-test-id="brushWidth"] input[type="number"]', "20");
+    await page.fill('[data-test-id="brushColor"] input[type="text"]', "eeff00");
 
     for (let i = 0; i < basicLineData.length; i++) {
       const lineData = basicLineData[i];
@@ -122,6 +108,63 @@ test.describe("brush", () => {
         }
       }
     }
+    await mp.hideUI();
+    await mp.screenshotAndCompare();
+  });
+
+  test("lines blend", async ({ page }, testInfo) => {
+    const mp = new MondrianPage(page, testInfo);
+    await mp.init();
+
+    const sx = 300;
+    const sy = 300;
+
+    const ex = 900;
+    const ey = 300;
+
+    await mp.brushName.selectOption("Pencil");
+    await mp.brushWidth.fill("50");
+    await mp.brushColor.fill("ff6666");
+
+    await mp.page.mouse.move(sx, sy);
+    await mp.page.mouse.down();
+    await mp.page.mouse.move(ex, ey, { steps: 10 });
+    await mp.page.mouse.up();
+
+    await mp.brushName.selectOption("Eraser");
+    await mp.brushWidth.fill("20");
+
+    await mp.page.mouse.move(sx + 100, sy);
+    await mp.page.mouse.down();
+    await mp.page.mouse.move(ex - 100, ey, { steps: 10 });
+    await mp.page.mouse.up();
+
+    await mp.brushName.selectOption("Highlighter");
+    await mp.brushWidth.fill("20");
+    await mp.brushColor.fill("eeff00");
+
+    await mp.page.mouse.move(sx - 100, sy - 50);
+    await mp.page.mouse.down();
+    await mp.page.mouse.move(ex + 100, ey + 50, { steps: 10 });
+    await mp.page.mouse.up();
+
+    await mp.brushName.selectOption("Eraser");
+    await mp.brushWidth.fill("50");
+
+    await mp.page.mouse.move(sx + 100, sy - 100);
+    await mp.page.mouse.down();
+    await mp.page.mouse.move(sx + 100, sy + 100, { steps: 10 });
+    await mp.page.mouse.up();
+
+    await mp.brushName.selectOption("Pencil");
+    await mp.brushWidth.fill("20");
+    await mp.brushColor.fill("ff6666");
+
+    await mp.page.mouse.move(ex - 200, sy - 100);
+    await mp.page.mouse.down();
+    await mp.page.mouse.move(ex - 200, sy + 100, { steps: 10 });
+    await mp.page.mouse.up();
+
     await mp.hideUI();
     await mp.screenshotAndCompare();
   });

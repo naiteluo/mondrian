@@ -4,6 +4,7 @@ import {
   MondrianInteractType,
   MondrianActionType,
   IMondrianInteractData,
+  IMondrianStateData,
 } from "../data-manager";
 import { MondrianRenderer } from "../renderer/renderer";
 import { MondrianPlayer } from "./player";
@@ -14,7 +15,7 @@ import { HistoryPlugin } from "../plugin/history-plugin";
 import { MondrianShared } from "../shared";
 import { EraserBrushPlugin } from "../plugin/eraser-plugin";
 import { IMondrianPlayerState } from ".";
-import { BrushType } from "../plugin/brush-plugin";
+import { BrushName } from "../plugin/brush-plugin";
 import { HighlighterBrushPlugin } from "../plugin/highlighter-plugin";
 
 export class MondrianConsumer extends MondrianPlayer {
@@ -56,15 +57,15 @@ export class MondrianConsumer extends MondrianPlayer {
 
       if (data.type === MondrianDataType.SET_STATE) {
         this.__delete_this_method_later_removeAllBrushPlugin();
-        const brushType = (data.data as IMondrianPlayerState).selectedBrush
-          .__brushType;
-        if (brushType === BrushType.Normal) {
+        const brushType = (data as IMondrianStateData).data.player.brush
+          .brushName;
+        if (brushType === BrushName.PENCIL) {
           this.pluginManager.loadPlugin(PencilBrushPlugin.PID);
         }
-        if (brushType === BrushType.Eraser) {
+        if (brushType === BrushName.Eraser) {
           this.pluginManager.loadPlugin(EraserBrushPlugin.PID);
         }
-        if (brushType === BrushType.Highlighter) {
+        if (brushType === BrushName.Highlighter) {
           this.pluginManager.loadPlugin(HighlighterBrushPlugin.PID);
         }
         this.pluginManager.interateInstances((plugin) => {

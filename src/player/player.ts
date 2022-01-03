@@ -2,7 +2,7 @@ import { BrushPluginState } from "../plugin/brush-plugin";
 import { IMondrianData } from "../data-manager";
 
 export interface IMondrianPlayerState {
-  selectedBrush: BrushPluginState;
+  brush: BrushPluginState;
 }
 
 export interface IMondrianPlayer {
@@ -14,6 +14,7 @@ export interface IMondrianPlayer {
 
 export class MondrianPlayer implements IMondrianPlayer {
   private _id: string;
+
   private _state: IMondrianPlayerState;
 
   consume(datas: IMondrianData[]) {}

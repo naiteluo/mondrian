@@ -1,9 +1,8 @@
 import { IMondrianMockInteractionEvent } from "./common/interactor";
 import { MondrianEventEmitter } from "./common/event-emitter";
-import { IMondrianPlayerState } from "./player/player";
 import { MondrianShared } from "./shared";
 import { MondrianPlayerManager } from "./player";
-import { IMondrianStateData } from "data-manager";
+import { IMondrianState, IMondrianStateData } from "data-manager";
 import { MondrianRenderer } from "./renderer/renderer";
 import { MondrianContainerManager } from "./container-manager";
 
@@ -64,32 +63,32 @@ export class MondrianEventProxier extends MondrianEventEmitter {
 
   public startSelfEventWatch() {
     // mostly emitted by mock or code manually
-    this.on("player:interaction:pointerdown", this.onDragStart);
-    this.on("player:interaction:pointermove", this.onDragMove);
-    this.on("player:interaction:pointerup", this.onDragEnd);
-    this.on("player:state:change", this.onStateChange);
-    this.on("player:action:undo", this.onUndo);
-    this.on("player:action:redo", this.onRedo);
+    this.on("interaction:pointerdown", this.onDragStart);
+    this.on("interaction:pointermove", this.onDragMove);
+    this.on("interaction:pointerup", this.onDragEnd);
+    this.on("state:change", this.onStateChange);
+    this.on("command:undo", this.onUndo);
+    this.on("command:redo", this.onRedo);
   }
 
   public stopSelfEventWatch() {
-    this.off("player:interaction:pointerdown", this.onDragStart);
-    this.off("player:interaction:pointermove", this.onDragMove);
-    this.off("player:interaction:pointerup", this.onDragEnd);
-    this.off("player:state:change", this.onStateChange);
-    this.off("play:action:undo", this.onUndo);
-    this.off("play:action:redo", this.onRedo);
+    this.off("interaction:pointerdown", this.onDragStart);
+    this.off("interaction:pointermove", this.onDragMove);
+    this.off("interaction:pointerup", this.onDragEnd);
+    this.off("state:change", this.onStateChange);
+    this.off("command:undo", this.onUndo);
+    this.off("command:redo", this.onRedo);
   }
 
   public destroy() {
     this.stop();
   }
 
-  private onStateChange = (state: IMondrianPlayerState) => {
+  private onStateChange = (states: IMondrianState) => {
     if (!this.interactor) {
       return;
     }
-    this.interactor.onStateChange(state);
+    this.interactor.onStateChange(states);
   };
 
   private onUndo = (event: IMondrianStateData) => {
@@ -119,6 +118,7 @@ export class MondrianEventProxier extends MondrianEventEmitter {
     }
     this.interactor.onDragMove(event);
   };
+
   private onDragEnd = (event: IMondrianMockInteractionEvent) => {
     if (!this.interactor) {
       return;

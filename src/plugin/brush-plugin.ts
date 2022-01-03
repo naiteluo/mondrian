@@ -6,31 +6,31 @@ import { filters } from "pixi.js";
 
 export const enum BrushName {
   PENCIL = "Pencil",
+  Eraser = "Eraser",
+  Highlighter = "Highlighter",
+  Dash = "Dash",
   RECTANGLE = "Rectangle",
   CIRCLE = "Circle",
 }
 
-export const enum BrushType {
-  Normal = "Normal",
-  Eraser = "Eraser",
-  Highlighter = "Highlighter",
-  Dash = "Dash",
-}
-
-export interface BrushPluginState extends ILineStyleOptions {
-  __brushType?: BrushType;
-  __brushName?: BrushName;
+export interface BrushPluginState {
+  brushName: BrushName;
+  brushColor: number;
+  brushWidth: 5;
+  lineStyle: ILineStyleOptions;
 }
 
 export const defaultBrushOptions: BrushPluginState = {
-  color: 0x000000,
-  width: 5,
-  alpha: 1,
-  native: false,
-  __brushType: BrushType.Normal,
-  __brushName: BrushName.PENCIL,
-  cap: LINE_CAP.ROUND,
-  join: LINE_JOIN.ROUND,
+  brushName: BrushName.PENCIL,
+  brushColor: 0x000000,
+  brushWidth: 5,
+  lineStyle: {
+    cap: LINE_CAP.ROUND,
+    join: LINE_JOIN.ROUND,
+    width: 5,
+    alpha: 1,
+    native: false,
+  },
 };
 
 export class BrushPlugin extends MondrianPlugin {

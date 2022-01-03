@@ -1,7 +1,6 @@
 import {
   BrushName,
   BrushPluginState,
-  BrushType,
   defaultBrushOptions,
 } from "./plugin/brush-plugin";
 import { Mondrian } from "./mondrian";
@@ -125,47 +124,38 @@ class App {
     settingsFolder.add(this, "onClearChannelCache").name("Clear Channel Cache");
     settingsFolder.add(this, "onResetChannel").name("Reset Channel");
 
-    const commandFolder = this.gui.addFolder("Command").close();
+    const commandFolder = this.gui.addFolder("Command");
     commandFolder.add(this, "onUndo").name("Undo");
     commandFolder.add(this, "onRedo").name("Redo");
     commandFolder.add(this, "onClear").name("Clear");
 
-    const brushFolder = this.gui.addFolder("Brush").close();
+    const brushFolder = this.gui.addFolder("Brush");
     brushFolder
-      .add(this.brushConfig, "__brushType", [
-        BrushType.Normal,
-        BrushType.Eraser,
-        BrushType.Highlighter,
-      ])
-      .name("BrushType")
-      .onChange(this._onBrushStateChange)
-      .$widget.setAttribute("data-test-id", "BrushType");
-    brushFolder
-      .add(this.brushConfig, "__brushName", [
+      .add(this.brushConfig, "brushName", [
         BrushName.PENCIL,
-        BrushName.CIRCLE,
+        BrushName.Eraser,
+        BrushName.Highlighter,
+        BrushName.Dash,
         BrushName.RECTANGLE,
+        BrushName.CIRCLE,
       ])
-      .name("BrushName")
       .onChange(this._onBrushStateChange)
-      .$widget.setAttribute("data-test-id", "BrushName");
+      .$widget.setAttribute("data-test-id", "brushName");
     brushFolder
-      .add(this.brushConfig, "width", 1, 50)
+      .add(this.brushConfig, "brushWidth", 1, 50)
       .onChange(this._onBrushStateChange)
-      .$widget.setAttribute("data-test-id", "width");
+      .$widget.setAttribute("data-test-id", "brushWidth");
     brushFolder
-      .add(this.brushConfig, "alpha", 0, 1)
+      .addColor(this.brushConfig, "brushColor")
       .onChange(this._onBrushStateChange)
-      .$widget.setAttribute("data-test-id", "alpha");
-    brushFolder
-      .addColor(this.brushConfig, "color")
-      .onChange(this._onBrushStateChange)
-      .$widget.setAttribute("data-test-id", "color");
+      .$widget.setAttribute("data-test-id", "brushColor");
   }
 
   initialBrush() {
-    this.mondrian.interaction.emit("player:state:change", {
-      selectedBrush: this.brushConfig,
+    this.mondrian.interaction.emit("state:change", {
+      player: {
+        brush: defaultBrushOptions,
+      },
     });
   }
 
@@ -182,21 +172,23 @@ class App {
   };
 
   sendBrushUpdateSignal() {
-    this.mondrian.interaction.emit("player:state:change", {
-      selectedBrush: this.brushConfig,
+    this.mondrian.interaction.emit("state:change", {
+      player: {
+        brush: this.brushConfig,
+      },
     });
   }
 
   onUndo() {
-    this.mondrian.interaction.emit("player:action:undo");
+    this.mondrian.interaction.emit("command:undo");
   }
 
   onRedo() {
-    this.mondrian.interaction.emit("player:action:redo");
+    this.mondrian.interaction.emit("command:redo");
   }
 
   onClear() {
-    this.mondrian.interaction.emit("player:action:clear");
+    this.mondrian.interaction.emit("command:clear");
   }
 
   onStart() {
@@ -228,20 +220,22 @@ class App {
         switch (this.autoStepIndex) {
           case 0:
             // simulate self drag
-            this.mondrian.interaction.emit("player:state:change", {
-              selectedBrush: {
-                ...this.brushConfig,
-                color: (Math.random() * 0xffffff) << 0,
+            this.mondrian.interaction.emit("state:change", {
+              player: {
+                brush: {
+                  ...this.brushConfig,
+                  brushColor: (Math.random() * 0xffffff) << 0,
+                },
               },
             });
-            this.mondrian.interaction.emit("player:interaction:pointerdown", {
+            this.mondrian.interaction.emit("interaction:pointerdown", {
               mock: true,
               mockX: this.lastPoint.x,
               mockY: this.lastPoint.y,
             });
             break;
           case this.autoStepCountPerTick:
-            this.mondrian.interaction.emit("player:interaction:pointerup", {
+            this.mondrian.interaction.emit("interaction:pointerup", {
               mock: true,
               mockX: this.lastPoint.x,
               mockY: this.lastPoint.y,
@@ -249,7 +243,7 @@ class App {
             break;
           default:
             this.randomUpdatePoint();
-            this.mondrian.interaction.emit("player:interaction:pointermove", {
+            this.mondrian.interaction.emit("interaction:pointermove", {
               mock: true,
               mockX: this.lastPoint.x,
               mockY: this.lastPoint.y,
@@ -266,7 +260,7 @@ class App {
   };
 
   private forcePointerUp() {
-    this.mondrian.interaction.emit("player:interaction:pointerup", {
+    this.mondrian.interaction.emit("interaction:pointerup", {
       mock: true,
       mockX: this.lastPoint.x,
       mockY: this.lastPoint.y,

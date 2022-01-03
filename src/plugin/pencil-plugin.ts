@@ -1,6 +1,7 @@
 import { IPointData } from "@pixi/math";
+import { ILineStyleOptions } from "pixi.js";
 import { MondrianUtils } from "../common/utils";
-import { IMondrianData } from "../data-manager";
+import { IMondrianData, IMondrianStateData } from "../data-manager";
 import { IMondrianPlayerState } from "../player";
 import { MondrianGraphicsHandler } from "../renderer/grapichs-handler";
 import { BrushPlugin } from "./brush-plugin";
@@ -24,10 +25,12 @@ export class PencilBrushPlugin extends BrushPlugin {
 
   protected state: IMondrianPlayerState;
 
+  protected lineStyle: ILineStyleOptions;
+
   reactDragStart(data: IMondrianData): void {
     const p = { x: data.data.x, y: data.data.y };
     this.handler = this.renderer.startGraphicsHandler();
-    this.handler.lineStyle = this.state.selectedBrush;
+    this.handler.lineStyle = this.lineStyle;
     this.isDrawing = true;
     this.startPos = this.currentPos = { ...p };
     this.pointCache = [p];
@@ -58,6 +61,11 @@ export class PencilBrushPlugin extends BrushPlugin {
   }
 
   reactStateChange(data: IMondrianData): void {
-    this.state = data.data as IMondrianPlayerState;
+    this.state = (data as IMondrianStateData).data.player;
+    this.lineStyle = {
+      ...this.state.brush.lineStyle,
+      width: this.state.brush.brushWidth,
+      color: this.state.brush.brushColor,
+    };
   }
 }

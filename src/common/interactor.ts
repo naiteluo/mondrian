@@ -1,5 +1,5 @@
 import { InteractionEvent } from "@pixi/interaction";
-import { IMondrianPlayerState } from "../player";
+import { IMondrianState } from "../data-manager";
 
 export type IMondrianMockInteractionEvent = InteractionEvent & {
   mock?: boolean;
@@ -8,7 +8,7 @@ export type IMondrianMockInteractionEvent = InteractionEvent & {
 };
 
 export interface IMondrianInteractor {
-  onStateChange(state: IMondrianPlayerState): void;
+  onStateChange(states: IMondrianState): void;
   onDragStart(event: IMondrianMockInteractionEvent): void;
   onDragMove(event: IMondrianMockInteractionEvent): void;
   onDragEnd(event: IMondrianMockInteractionEvent): void;

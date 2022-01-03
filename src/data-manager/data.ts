@@ -1,3 +1,5 @@
+import { IMondrianPlayerState } from "../player";
+
 export const enum MondrianDataType {
   INTERACT = "i",
   SET_STATE = "s",
@@ -34,11 +36,14 @@ export interface IMondrianInteractData extends IMondrianCommonData {
   };
 }
 
+export interface IMondrianState {
+  player: IMondrianPlayerState;
+  [key: string]: any;
+}
+
 export interface IMondrianStateData extends IMondrianCommonData {
   type: MondrianDataType.SET_STATE;
-  data: {
-    [key: string]: any;
-  };
+  data: IMondrianState;
 }
 
 export interface IMondrianActionData extends IMondrianCommonData {
