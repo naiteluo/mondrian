@@ -27,7 +27,7 @@ const enum TrashType {
 /**
  * default dynamic level for history stack
  */
-const DefaultDynamicLevel = 2;
+const DefaultDynamicLevel = 20;
 /**
  * default dynamic level for high capacity mode
  * will disable graphics' cacheasbitmap and mass
