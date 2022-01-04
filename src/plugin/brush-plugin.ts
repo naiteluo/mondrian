@@ -1,16 +1,17 @@
 import { IMondrianData } from "../data-manager";
-import { MondrianPlugin } from "./plugin";
+import { MondrianPlugin, PluginType } from "./plugin";
 
 import { ILineStyleOptions, LINE_CAP, LINE_JOIN } from "@pixi/graphics";
 import { filters } from "pixi.js";
+import { MondrianShared } from "../shared";
 
 export const enum BrushName {
-  PENCIL = "Pencil",
+  Pencil = "Pencil",
   Eraser = "Eraser",
   Highlighter = "Highlighter",
   Dash = "Dash",
-  RECTANGLE = "Rectangle",
-  CIRCLE = "Circle",
+  Rectangle = "Rectangle",
+  Circle = "Circle",
 }
 
 export interface BrushPluginState {
@@ -21,7 +22,7 @@ export interface BrushPluginState {
 }
 
 export const defaultBrushOptions: BrushPluginState = {
-  brushName: BrushName.PENCIL,
+  brushName: BrushName.Pencil,
   brushColor: 0x000000,
   brushWidth: 5,
   lineStyle: {
@@ -33,33 +34,29 @@ export const defaultBrushOptions: BrushPluginState = {
   },
 };
 
+/**
+ * this brush plugin class is a base class of brushes
+ * will not be actually loaded in real-time
+ */
 export class BrushPlugin extends MondrianPlugin {
+  static Type = PluginType.ConsumerExcludesive;
+
+  static PID = Symbol("brush-plugin");
+
+  static predicate(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    data: IMondrianData | null,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    shared?: MondrianShared
+  ): boolean {
+    throw new Error(
+      "Base BrushPlugin Class can't be registered to plugin list."
+    );
+  }
+
   protected sharedAlphaFilter = new filters.AlphaFilter(0.4);
 
   protected sharedFXAAFilter = new filters.FXAAFilter();
 
   private brushState;
-
-  reactDragStart(data: IMondrianData): void {}
-
-  reactDragMove(data: IMondrianData): void {}
-
-  reactDragEnd(data: IMondrianData): void {}
-
-  reactStateChange(data: IMondrianData): void {}
-
-  reactUndo(event: any): void {}
-
-  reactRedo(event: any): void {}
-
-  reactClick(event: any): void {}
-
-  reactInput(event: any): void {}
-
-  /**
-   *
-   * @param data
-   * @returns
-   */
-  static matcher(data: IMondrianData) {}
 }

@@ -1,17 +1,36 @@
 import { IPointData } from "@pixi/math";
 import { ILineStyleOptions } from "pixi.js";
 import { MondrianUtils } from "../common/utils";
-import { IMondrianData, IMondrianStateData } from "../data-manager";
+import {
+  IMondrianData,
+  IMondrianStateData,
+  MondrianDataType,
+} from "../data-manager";
 import { IMondrianPlayerState } from "../player";
 import { MondrianGraphicsHandler } from "../renderer/grapichs-handler";
-import { BrushPlugin } from "./brush-plugin";
-
-export const PencilBrushPluginPID = Symbol("pencil-plugin");
+import { MondrianShared } from "../shared";
+import { BrushName, BrushPlugin } from "./brush-plugin";
+import { PluginType } from "./plugin";
 
 export class PencilBrushPlugin extends BrushPlugin {
-  PID = PencilBrushPluginPID;
+  static Type = PluginType.ConsumerExcludesive;
 
-  static PID = PencilBrushPluginPID;
+  static PID = Symbol("pencil-plugin");
+
+  static predicate(
+    data: IMondrianData | null,
+    shared?: MondrianShared
+  ): boolean {
+    if (data === null) return false;
+    if (data.type === MondrianDataType.SET_STATE) {
+      if (data as IMondrianStateData) {
+        if (data.data.player.brush.brushName === BrushName.Pencil) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
   private isDrawing = false;
 

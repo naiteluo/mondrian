@@ -1,16 +1,26 @@
 import { BLEND_MODES } from "@pixi/constants";
+import { IMondrianData } from "../data-manager";
 import { MondrianGraphicsHandler } from "../renderer/grapichs-handler";
 import { MondrianRenderer } from "../renderer/renderer";
-import { MondrianPlugin } from "./plugin";
-
-export const ClearPluginPID = Symbol("clear-plugin");
+import { MondrianShared } from "../shared";
+import { MondrianPlugin, PluginType } from "./plugin";
 
 export class ClearPlugin extends MondrianPlugin {
+  static Type = PluginType.Global;
+
+  static PID = Symbol("clear-plugin");
+
+  static predicate(
+    data: IMondrianData | null,
+    shared?: MondrianShared
+  ): boolean {
+    if (data === null) {
+      return true;
+    }
+    return false;
+  }
+
   protected handler: MondrianGraphicsHandler;
-
-  PID = ClearPluginPID;
-
-  static PID = ClearPluginPID;
 
   constructor(_renderer: MondrianRenderer) {
     super(_renderer);

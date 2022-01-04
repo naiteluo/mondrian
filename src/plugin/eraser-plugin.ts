@@ -1,13 +1,33 @@
 import { BLEND_MODES } from "pixi.js";
-import { IMondrianData } from "../data-manager";
+import {
+  IMondrianData,
+  IMondrianStateData,
+  MondrianDataType,
+} from "../data-manager";
+import { MondrianShared } from "../shared";
+import { BrushName } from "./brush-plugin";
 import { PencilBrushPlugin } from "./pencil-plugin";
-
-export const EraserBrushPluginPID = Symbol("eraser-plugin");
+import { PluginType } from "./plugin";
 
 export class EraserBrushPlugin extends PencilBrushPlugin {
-  PID = EraserBrushPluginPID;
+  static Type = PluginType.ConsumerExcludesive;
 
-  static PID = EraserBrushPluginPID;
+  static PID = Symbol("eraser-plugin");
+
+  static predicate(
+    data: IMondrianData | null,
+    shared?: MondrianShared
+  ): boolean {
+    if (data === null) return false;
+    if (data.type === MondrianDataType.SET_STATE) {
+      if (data as IMondrianStateData) {
+        if (data.data.player.brush.brushName === BrushName.Eraser) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
   reactDragStart(data: IMondrianData): void {
     super.reactDragStart(data);

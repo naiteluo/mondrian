@@ -101,7 +101,7 @@ export class MondrianPage {
       })
     ).toMatchSnapshot({
       name: `${testTitleFileName(this.testInfo.title)}.png`,
-      threshold: 0,
+      threshold: 0.005,
     });
   }
 }

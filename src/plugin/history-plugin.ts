@@ -1,12 +1,22 @@
+import { IMondrianData } from "../data-manager";
 import { MondrianRenderer } from "../renderer/renderer";
-import { MondrianPlugin } from "./plugin";
-
-export const HistoryPluginPID = Symbol("history-plugin");
+import { MondrianShared } from "../shared";
+import { MondrianPlugin, PluginType } from "./plugin";
 
 export class HistoryPlugin extends MondrianPlugin {
-  PID = HistoryPluginPID;
+  static Type = PluginType.Global;
 
-  static PID = HistoryPluginPID;
+  static PID = Symbol("history-plugin");
+
+  static predicate(
+    data: IMondrianData | null,
+    shared?: MondrianShared
+  ): boolean {
+    if (data === null) {
+      return true;
+    }
+    return false;
+  }
 
   constructor(_renderer: MondrianRenderer) {
     super(_renderer);

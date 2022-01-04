@@ -1,113 +1,101 @@
+import { IMondrianData } from "../data-manager";
 import { MondrianRenderer } from "../renderer/renderer";
+import { MondrianShared } from "../shared";
 import { ClearPlugin } from "./clear-plugin";
 import { CursorPlugin } from "./cursor-plugin";
 import { EraserBrushPlugin } from "./eraser-plugin";
 import { HighlighterBrushPlugin } from "./highlighter-plugin";
 import { HistoryPlugin } from "./history-plugin";
-import { PencilBrushPlugin, PencilBrushPluginPID } from "./pencil-plugin";
-import { IMondrianPlugin, IPluginConfig, MondrianPlugin } from "./plugin";
+import { PencilBrushPlugin } from "./pencil-plugin";
+import {
+  IMondrianPluginConstructor,
+  MondrianPlugin,
+  PluginType,
+} from "./plugin";
 
-interface IMondrianPluginConstructor {
-  new (...args: any[]): MondrianPlugin;
+interface IMondrianPluginInstanceRecord {
+  classRef: IMondrianPluginConstructor;
+  instance: MondrianPlugin;
 }
-
-export interface IMondrianPluginRegisterConfig {
-  pid: symbol;
-  matcher: (ptype: string) => boolean;
-  c: IMondrianPluginConstructor;
-}
-
-const PluginList: IMondrianPluginRegisterConfig[] = [
-  {
-    pid: HighlighterBrushPlugin.PID,
-    matcher: () => {
-      return true;
-    },
-    c: HighlighterBrushPlugin,
-  },
-  {
-    pid: EraserBrushPlugin.PID,
-    matcher: () => {
-      return true;
-    },
-    c: EraserBrushPlugin,
-  },
-  {
-    pid: PencilBrushPlugin.PID,
-    matcher: () => {
-      return true;
-    },
-    c: PencilBrushPlugin,
-  },
-  {
-    pid: CursorPlugin.PID,
-    matcher: () => {
-      return true;
-    },
-    c: CursorPlugin,
-  },
-  {
-    pid: HistoryPlugin.PID,
-    matcher: () => {
-      return true;
-    },
-    c: HistoryPlugin,
-  },
-  {
-    pid: ClearPlugin.PID,
-    matcher: () => {
-      return true;
-    },
-    c: ClearPlugin,
-  },
-];
 
 export class MondrianPluginManager {
-  constructor(private _renderer: MondrianRenderer) {}
+  constructor(
+    private _renderer: MondrianRenderer,
+    private shared: MondrianShared
+  ) {
+    this.register(HistoryPlugin);
+    this.register(ClearPlugin);
+    this.register(CursorPlugin);
+    this.register(PencilBrushPlugin);
+    this.register(EraserBrushPlugin);
+    this.register(HighlighterBrushPlugin);
+  }
 
-  private _instancesMap: Map<symbol, MondrianPlugin> = new Map();
+  private _instanceRecordMap: {
+    [PluginType.Global]: Map<symbol, IMondrianPluginInstanceRecord>;
+    [PluginType.ConsumerExcludesive]?: IMondrianPluginInstanceRecord;
+  } = {
+    [PluginType.Global]: new Map(),
+    [PluginType.ConsumerExcludesive]: null,
+  };
 
-  private _instancesList: MondrianPlugin[] = [];
+  private _pluginClassRefList: IMondrianPluginConstructor[] = [];
 
-  private findPluginConfig(type: symbol): IMondrianPluginRegisterConfig {
-    const config = PluginList.find((v) => {
-      return v.pid === type;
-    });
-    if (!config)
-      throw new Error(
-        "Fail to find plugin config of: Symbol" + type.description
+  // todo if priority do matters, replace array with link list
+  private _instanceRecordList: IMondrianPluginInstanceRecord[] = [];
+
+  load(pluginClassRef: IMondrianPluginConstructor) {
+    // clear excludesive plugin before loading
+    if (pluginClassRef.Type === PluginType.ConsumerExcludesive) {
+      if (this._instanceRecordMap[PluginType.ConsumerExcludesive]) {
+        const i = this._instanceRecordList.findIndex((instanceRecord) => {
+          return (
+            instanceRecord.classRef ===
+            this._instanceRecordMap[PluginType.ConsumerExcludesive].classRef
+          );
+        });
+        if (i >= 0) {
+          this._instanceRecordList.splice(i, 1);
+        }
+        this._instanceRecordMap[PluginType.ConsumerExcludesive] = null;
+      }
+    }
+    const instance = new pluginClassRef(this._renderer);
+    const instanceRecord = {
+      classRef: pluginClassRef,
+      instance: instance,
+    };
+    this._instanceRecordList.push(instanceRecord);
+    if (pluginClassRef.Type === PluginType.ConsumerExcludesive) {
+      this._instanceRecordMap[PluginType.ConsumerExcludesive] = instanceRecord;
+    } else {
+      this._instanceRecordMap[pluginClassRef.Type].set(
+        pluginClassRef.PID,
+        instanceRecord
       );
-    return config;
-  }
-
-  loadPlugin<T extends MondrianPlugin>(type: symbol) {
-    let plugin = this._instancesMap.get(type);
-    if (!plugin) {
-      const config = this.findPluginConfig(type);
-      plugin = new config.c(this._renderer);
-      this._instancesMap.set(type, plugin);
-      this._instancesList.push(plugin);
     }
-    return plugin as T;
-  }
-
-  unloadPlugin<T extends IMondrianPlugin>(type: symbol) {
-    this._instancesMap.delete(type);
-    const i = this._instancesList.findIndex((instance) => {
-      return instance.PID === type;
-    });
-    if (i >= 0) {
-      this._instancesList.splice(i, 1);
-    }
-  }
-
-  get instancesList() {
-    return this._instancesList;
   }
 
   interateInstances(cb: (plugin: MondrianPlugin) => void) {
-    this.instancesList.forEach((p) => {
-      cb(p);
+    this._instanceRecordList.forEach((p) => {
+      cb(p.instance);
     });
+  }
+
+  register(pluginClassRef: IMondrianPluginConstructor) {
+    if (this._pluginClassRefList.includes(pluginClassRef)) {
+      throw new Error("duplicated plugin registered.");
+    }
+    this._pluginClassRefList.push(pluginClassRef);
+  }
+
+  predicateAndLoad(data: IMondrianData | null) {
+    this._pluginClassRefList
+      .filter((ref) => {
+        return ref.predicate(data, this.shared);
+      })
+      .forEach((ref) => {
+        this.load(ref);
+      });
   }
 }

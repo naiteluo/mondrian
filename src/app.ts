@@ -132,12 +132,12 @@ class App {
     const brushFolder = this.gui.addFolder("Brush");
     brushFolder
       .add(this.brushConfig, "brushName", [
-        BrushName.PENCIL,
+        BrushName.Pencil,
         BrushName.Eraser,
         BrushName.Highlighter,
         BrushName.Dash,
-        BrushName.RECTANGLE,
-        BrushName.CIRCLE,
+        BrushName.Rectangle,
+        BrushName.Circle,
       ])
       .onChange(this._onBrushStateChange)
       .$widget.setAttribute("data-test-id", "brushName");
