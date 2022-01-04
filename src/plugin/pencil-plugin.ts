@@ -61,7 +61,6 @@ export class PencilBrushPlugin extends BrushPlugin {
   reactDragEnd(data: IMondrianData): boolean {
     this.pointCache = [];
     if (!super.reactDragEnd(data)) return false;
-    this.handler.stop();
     return true;
   }
 }

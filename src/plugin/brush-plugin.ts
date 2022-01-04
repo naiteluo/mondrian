@@ -102,6 +102,7 @@ export class BrushPlugin extends MondrianPlugin {
   reactDragEnd(data: IMondrianData): boolean {
     if (!this.isDrawing) return false;
     this.isDrawing = false;
+    this.handler.stop();
     return true;
   }
 }

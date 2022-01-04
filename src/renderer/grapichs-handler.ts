@@ -124,4 +124,8 @@ export class MondrianGraphicsHandler {
     this.options.lineStyle = { ...style };
     this.g.lineStyle(this.options.lineStyle);
   }
+
+  get lineStyle() {
+    return this.options.lineStyle;
+  }
 }

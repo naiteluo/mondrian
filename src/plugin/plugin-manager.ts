@@ -12,6 +12,7 @@ import {
   MondrianPlugin,
   PluginType,
 } from "./plugin";
+import { RectanglePlugin } from "./rectangle-plugin";
 
 interface IMondrianPluginInstanceRecord {
   classRef: IMondrianPluginConstructor;
@@ -29,6 +30,7 @@ export class MondrianPluginManager {
     this.register(PencilBrushPlugin);
     this.register(EraserBrushPlugin);
     this.register(HighlighterBrushPlugin);
+    this.register(RectanglePlugin);
   }
 
   private _instanceRecordMap: {

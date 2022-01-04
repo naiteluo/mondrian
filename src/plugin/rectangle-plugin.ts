@@ -26,4 +26,17 @@ export class RectanglePlugin extends BrushPlugin {
     }
     return false;
   }
+
+  reactDragMove(data: IMondrianData): boolean {
+    if (!super.reactDragMove(data)) return false;
+
+    const sx = Math.min(this.startPos.x, this.currentPos.x);
+    const sy = Math.min(this.startPos.y, this.currentPos.y);
+    const ex = Math.max(this.startPos.x, this.currentPos.x);
+    const ey = Math.max(this.startPos.y, this.currentPos.y);
+
+    this.handler.g.clear();
+    this.handler.lineStyle = { ...this.handler.lineStyle };
+    this.handler.g.drawRect(sx, sy, ex - sx, ey - sy);
+  }
 }
