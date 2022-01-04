@@ -52,21 +52,39 @@ export class MondrianPlugin
     return this._renderer;
   }
 
-  reactDragStart(data: IMondrianData): void {}
+  reactDragStart(data: IMondrianData): boolean {
+    return true;
+  }
 
-  reactDragMove(data: IMondrianData): void {}
+  reactDragMove(data: IMondrianData): boolean {
+    return true;
+  }
 
-  reactDragEnd(data: IMondrianData): void {}
+  reactDragEnd(data: IMondrianData): boolean {
+    return true;
+  }
 
-  reactStateChange(data: IMondrianData): void {}
+  reactStateChange(data: IMondrianData): boolean {
+    return true;
+  }
 
-  reactUndo(event: any): void {}
+  reactUndo(event: any): boolean {
+    return true;
+  }
 
-  reactRedo(event: any): void {}
+  reactRedo(event: any): boolean {
+    return true;
+  }
 
-  reactClear(event: any): void {}
+  reactClear(event: any): boolean {
+    return true;
+  }
 
-  reactClick(event: any): void {}
+  reactClick(event: any): boolean {
+    return true;
+  }
 
-  reactInput(event: any): void {}
+  reactInput(event: any): boolean {
+    return true;
+  }
 }

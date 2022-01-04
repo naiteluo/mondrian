@@ -28,7 +28,7 @@ export class ClearPlugin extends MondrianPlugin {
 
   // todo do have racing issue in this kind of command
   // todo don't react continuous clear command
-  reactClear(event: any): void {
+  reactClear(event: any): boolean {
     this.handler = this.renderer.startGraphicsHandler();
     this.handler.config({
       enableDiscrete: false,
@@ -43,5 +43,6 @@ export class ClearPlugin extends MondrianPlugin {
       this.renderer.pixiApp.screen.height
     );
     this.handler.stop();
+    return true;
   }
 }

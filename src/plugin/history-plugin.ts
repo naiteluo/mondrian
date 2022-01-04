@@ -22,11 +22,13 @@ export class HistoryPlugin extends MondrianPlugin {
     super(_renderer);
   }
 
-  reactUndo(): void {
+  reactUndo(): boolean {
     this.renderer.backward();
+    return true;
   }
 
-  reactRedo(): void {
+  reactRedo(): boolean {
     this.renderer.forward();
+    return true;
   }
 }

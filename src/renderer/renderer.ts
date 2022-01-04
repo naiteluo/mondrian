@@ -202,7 +202,7 @@ export class MondrianRenderer extends MondrianModuleBase {
     this.pixiApp.ticker.add(this.perf, undefined, UPDATE_PRIORITY.LOW);
     // todo delete
     // expose base texture cache for debug
-    (window as any).BaseTextureCache = BaseTextureCache;
+    // (window as any).BaseTextureCache = BaseTextureCache;
   }
 
   /**

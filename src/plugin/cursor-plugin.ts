@@ -32,8 +32,9 @@ export class CursorPlugin extends MondrianPlugin {
     _renderer.uiLayer.addChild(this.cursor);
   }
 
-  reactDragMove(data: IMondrianData): void {
+  reactDragMove(data: IMondrianData): boolean {
     this.cursor.x = data.data.x;
     this.cursor.y = data.data.y;
+    return true;
   }
 }

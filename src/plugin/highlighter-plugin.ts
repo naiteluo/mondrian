@@ -28,12 +28,13 @@ export class HighlighterBrushPlugin extends PencilBrushPlugin {
     return false;
   }
 
-  reactDragStart(data: IMondrianData): void {
-    super.reactDragStart(data);
+  reactDragStart(data: IMondrianData): boolean {
+    if (!super.reactDragStart(data)) return false;
     this.handler.config({
       enableDiscrete: false,
       canCacheAsBitmap: true,
     });
     this.handler.c.filters = [this.sharedAlphaFilter];
+    return true;
   }
 }

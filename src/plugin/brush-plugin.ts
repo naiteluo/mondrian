@@ -1,9 +1,11 @@
-import { IMondrianData } from "../data-manager";
+import { IMondrianData, IMondrianStateData } from "../data-manager";
 import { MondrianPlugin, PluginType } from "./plugin";
 
 import { ILineStyleOptions, LINE_CAP, LINE_JOIN } from "@pixi/graphics";
-import { filters } from "pixi.js";
+import { filters, IPointData } from "pixi.js";
 import { MondrianShared } from "../shared";
+import { IMondrianPlayerState } from "../player";
+import { MondrianGraphicsHandler } from "../renderer/grapichs-handler";
 
 export const enum BrushName {
   Pencil = "Pencil",
@@ -58,5 +60,48 @@ export class BrushPlugin extends MondrianPlugin {
 
   protected sharedFXAAFilter = new filters.FXAAFilter();
 
-  private brushState;
+  private isDrawing = false;
+
+  protected startPos: IPointData;
+
+  protected currentPos: IPointData;
+
+  protected state: IMondrianPlayerState;
+
+  protected handler: MondrianGraphicsHandler;
+
+  protected lineStyle: ILineStyleOptions;
+
+  reactStateChange(data: IMondrianData): boolean {
+    this.state = (data as IMondrianStateData).data.player;
+    this.lineStyle = {
+      ...this.state.brush.lineStyle,
+      width: this.state.brush.brushWidth,
+      color: this.state.brush.brushColor,
+    };
+    return true;
+  }
+
+  reactDragStart(data: IMondrianData): boolean {
+    // todo if we should handle isDrawing === ture here?
+    const p = { x: data.data.x, y: data.data.y };
+    this.isDrawing = true;
+    this.startPos = this.currentPos = { ...p };
+    this.handler = this.renderer.startGraphicsHandler();
+    this.handler.lineStyle = this.lineStyle;
+    return true;
+  }
+
+  reactDragMove(data: IMondrianData): boolean {
+    if (!this.isDrawing) return false;
+    const p = { x: data.data.x, y: data.data.y };
+    this.currentPos = { ...p };
+    return true;
+  }
+
+  reactDragEnd(data: IMondrianData): boolean {
+    if (!this.isDrawing) return false;
+    this.isDrawing = false;
+    return true;
+  }
 }

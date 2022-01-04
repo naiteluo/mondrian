@@ -29,12 +29,13 @@ export class EraserBrushPlugin extends PencilBrushPlugin {
     return false;
   }
 
-  reactDragStart(data: IMondrianData): void {
-    super.reactDragStart(data);
+  reactDragStart(data: IMondrianData): boolean {
+    if (!super.reactDragStart(data)) return false;
     this.handler.config({
       enableDiscrete: false,
       canCacheAsBitmap: false,
     });
     this.handler.g.blendMode = BLEND_MODES.ERASE;
+    return true;
   }
 }
