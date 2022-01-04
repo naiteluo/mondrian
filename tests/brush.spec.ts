@@ -24,6 +24,7 @@ const basicLineData = [
 ];
 
 test.describe("brush", () => {
+
   test("draw simple line", async ({ page }, testInfo) => {
     const mp = new MondrianPage(page, testInfo);
     await mp.init();
@@ -112,6 +113,9 @@ test.describe("brush", () => {
     await mp.screenshotAndCompare();
   });
 
+  /**
+   * multi lines blend test
+   */
   test("lines blend", async ({ page }, testInfo) => {
     const mp = new MondrianPage(page, testInfo);
     await mp.init();
