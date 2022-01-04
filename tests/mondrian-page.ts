@@ -1,4 +1,4 @@
-import { expect, Locator, Page, TestInfo } from "@playwright/test";
+import { expect, Locator, Page, TestInfo, JSHandle } from "@playwright/test";
 
 const TEST_URL = "http://localhost:8080";
 const API_URL = "http://localhost:3000";
@@ -35,6 +35,17 @@ export class MondrianPage {
     await this.goto();
     await this.start();
     await this.page.waitForTimeout(1000);
+  }
+
+  async getMondrianHandle() {
+    return await this.page.evaluateHandle(() => {
+      return (window as any).mo;
+    });
+  }
+
+  async getDynamicLayerLength() {
+    const mo = await this.getMondrianHandle();
+    return await mo.evaluate((mo) => mo.renderer.dynamicLayer.children.length);
   }
 
   async resetChannel() {
