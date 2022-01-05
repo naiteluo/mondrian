@@ -45,7 +45,7 @@ export class PencilBrushPlugin extends BrushPlugin {
     if (!super.reactDragMove(data)) return false;
     const p = { x: data.data.x, y: data.data.y };
     const l = this.pointCache.length;
-    this.pointCache.push(MondrianUtils.midPos(this.pointCache[l - 1], p), p);
+    this.pointCache.push(MondrianUtils.getMidPos(this.pointCache[l - 1], p), p);
     const m = this.pointCache[this.pointCache.length - 4],
       e: IPointData = this.pointCache[this.pointCache.length - 3],
       d: IPointData = this.pointCache[this.pointCache.length - 2];

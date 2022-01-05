@@ -33,6 +33,9 @@ export interface IMondrianInteractData extends IMondrianCommonData {
     subType: MondrianInteractType;
     x: number;
     y: number;
+    shiftKey?: boolean;
+    altKey?: boolean;
+    ctrlKey?: boolean;
   };
 }
 

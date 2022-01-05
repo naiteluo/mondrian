@@ -48,35 +48,20 @@ export class MondrianProducer
   }
 
   onDragStart(event: IMondrianMockInteractionEvent): void {
-    const { x, y } = this.getXyFromEvent(event);
     this.dataManager.push([
-      {
-        playerID: this.id,
-        type: MondrianDataType.INTERACT,
-        data: { subType: MondrianInteractType.POINTER_DOWN, x, y },
-      },
+      this.packEvent(MondrianInteractType.POINTER_DOWN, event),
     ]);
   }
 
   onDragMove(event: IMondrianMockInteractionEvent): void {
-    const { x, y } = this.getXyFromEvent(event);
     this.dataManager.push([
-      {
-        playerID: this.id,
-        type: MondrianDataType.INTERACT,
-        data: { subType: MondrianInteractType.POINTER_MOVE, x, y },
-      },
+      this.packEvent(MondrianInteractType.POINTER_MOVE, event),
     ]);
   }
 
   onDragEnd(event: IMondrianMockInteractionEvent): void {
-    const { x, y } = this.getXyFromEvent(event);
     this.dataManager.push([
-      {
-        playerID: this.id,
-        type: MondrianDataType.INTERACT,
-        data: { subType: MondrianInteractType.POINTER_UP, x, y },
-      },
+      this.packEvent(MondrianInteractType.POINTER_UP, event),
     ]);
   }
 
@@ -116,6 +101,32 @@ export class MondrianProducer
 
   onInput(event: any): void {
     console.log("implement it");
+  }
+
+  private packEvent(
+    subType: MondrianInteractType,
+    event: IMondrianMockInteractionEvent
+  ): IMondrianData {
+    const newEvent: IMondrianData = {
+      playerID: this.id,
+      type: MondrianDataType.INTERACT,
+      data: {
+        subType,
+        ...this.getXyFromEvent(event),
+      },
+    };
+    if (event?.data?.originalEvent) {
+      if (event.data.originalEvent.shiftKey) {
+        newEvent.data.shiftKey = event.data.originalEvent.shiftKey;
+      }
+      if (event.data.originalEvent.altKey) {
+        newEvent.data.altKey = event.data.originalEvent.altKey;
+      }
+      if (event.data.originalEvent.ctrlKey) {
+        newEvent.data.ctrlKey = event.data.originalEvent.ctrlKey;
+      }
+    }
+    return newEvent;
   }
 
   // todo move this coord operation together for flexibility

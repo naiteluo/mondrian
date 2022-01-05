@@ -1,6 +1,7 @@
 import { IMondrianData } from "../data-manager";
 import { MondrianRenderer } from "../renderer/renderer";
 import { MondrianShared } from "../shared";
+import { CirclePlugin } from "./circle-plugin";
 import { ClearPlugin } from "./clear-plugin";
 import { CursorPlugin } from "./cursor-plugin";
 import { EraserBrushPlugin } from "./eraser-plugin";
@@ -31,6 +32,7 @@ export class MondrianPluginManager {
     this.register(EraserBrushPlugin);
     this.register(HighlighterBrushPlugin);
     this.register(RectanglePlugin);
+    this.register(CirclePlugin);
   }
 
   private _instanceRecordMap: {

@@ -1,13 +1,34 @@
 import { IPointData } from "@pixi/math";
 
+export interface IMondrianRect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
 export class MondrianUtils {
-  static getDistence(p1: IPointData, p2: IPointData): number {
+  static getRectByCorner(
+    x1,
+    y1,
+    x2,
+    y2,
+    ref: IMondrianRect = { x: 0, y: 0, w: 0, h: 0 }
+  ) {
+    ref.x = Math.min(x1, x2);
+    ref.y = Math.min(y1, y2);
+    ref.w = Math.abs(x1 - x2);
+    ref.h = Math.abs(y1 - y2);
+    return ref;
+  }
+
+  static getDistance(p1: IPointData, p2: IPointData): number {
     return Math.abs(
       Math.sqrt(Math.pow(p2.y - p1.y, 2) + Math.pow(p2.x - p1.x, 2))
     );
   }
 
-  static midPos(p1: IPointData, p2: IPointData): IPointData {
+  static getMidPos(p1: IPointData, p2: IPointData): IPointData {
     return {
       x: p1.x + (p2.x - p1.x) / 2,
       y: p1.y + (p2.y - p1.y) / 2,
@@ -16,36 +37,5 @@ export class MondrianUtils {
 
   static getScreenWH(): { w: number; h: number } {
     return { w: window.innerWidth, h: window.innerHeight };
-  }
-
-  static storageGet(key: string): any {
-    const r = window.localStorage.getItem(key);
-    if (r != null) {
-      return JSON.parse(window.localStorage.getItem(key));
-    } else {
-      return null;
-    }
-  }
-
-  static storageSet(key: string, value: any) {
-    window.localStorage.setItem(key, JSON.stringify(value));
-  }
-
-  static getQueryString(param) {
-    //param为要获取的参数名 注:获取不到是为null
-    const currentUrl = window.location.href; //获取当前链接
-    let arr = currentUrl.split("?"); //分割域名和参数界限
-    if (arr.length > 1) {
-      arr = arr[1].split("&"); //分割参数
-      for (let i = 0; i < arr.length; i++) {
-        const tem = arr[i].split("="); //分割参数名和参数内容
-        if (tem[0] == param) {
-          return tem[1];
-        }
-      }
-      return null;
-    } else {
-      return null;
-    }
   }
 }

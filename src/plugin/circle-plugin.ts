@@ -1,3 +1,4 @@
+import { MondrianUtils } from "../common/utils";
 import {
   IMondrianData,
   IMondrianStateData,
@@ -8,10 +9,10 @@ import { BrushName } from "./brush-plugin";
 import { PluginType } from "./plugin";
 import { ShapePlugin } from "./shape-plugin";
 
-export class RectanglePlugin extends ShapePlugin {
+export class CirclePlugin extends ShapePlugin {
   static Type = PluginType.ConsumerExcludesive;
 
-  static PID = Symbol("rectangle-plugin");
+  static PID = Symbol("circle-plugin");
 
   static predicate(
     data: IMondrianData | null,
@@ -20,7 +21,7 @@ export class RectanglePlugin extends ShapePlugin {
     if (data === null) return false;
     if (data.type === MondrianDataType.SET_STATE) {
       if (data as IMondrianStateData) {
-        if (data.data.player.brush.brushName === BrushName.Rectangle) {
+        if (data.data.player.brush.brushName === BrushName.Circle) {
           return true;
         }
       }
@@ -32,11 +33,20 @@ export class RectanglePlugin extends ShapePlugin {
     if (!super.reactDragMove(data)) return false;
     this.handler.g.clear();
     this.handler.lineStyle = { ...this.handler.lineStyle };
-    this.handler.g.drawRect(
-      this.shapeRect.x,
-      this.shapeRect.y,
-      this.shapeRect.w,
-      this.shapeRect.h
-    );
+    if (data.data.shiftKey) {
+      const mw = Math.max(this.shapeRect.w, this.shapeRect.h);
+      this.handler.g.drawCircle(
+        this.shapeRect.x + mw / 2,
+        this.shapeRect.y + mw / 2,
+        mw / 2
+      );
+    } else {
+      this.handler.g.drawEllipse(
+        this.shapeRect.x + this.shapeRect.w / 2,
+        this.shapeRect.y + this.shapeRect.h / 2,
+        this.shapeRect.w / 2,
+        this.shapeRect.h / 2
+      );
+    }
   }
 }
