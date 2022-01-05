@@ -1,6 +1,11 @@
 import { IMondrianData } from "../data-manager";
 import { MondrianRenderer } from "../renderer/renderer";
 import { MondrianShared } from "../shared";
+import {
+  IMondrianPluginConstructor,
+  MondrianPlugin,
+  PluginType,
+} from "./plugin";
 import { CirclePlugin } from "./circle-plugin";
 import { ClearPlugin } from "./clear-plugin";
 import { CursorPlugin } from "./cursor-plugin";
@@ -8,12 +13,8 @@ import { EraserBrushPlugin } from "./eraser-plugin";
 import { HighlighterBrushPlugin } from "./highlighter-plugin";
 import { HistoryPlugin } from "./history-plugin";
 import { PencilBrushPlugin } from "./pencil-plugin";
-import {
-  IMondrianPluginConstructor,
-  MondrianPlugin,
-  PluginType,
-} from "./plugin";
 import { RectanglePlugin } from "./rectangle-plugin";
+import { TrianglePlugin } from "./triangle-plugin";
 
 interface IMondrianPluginInstanceRecord {
   classRef: IMondrianPluginConstructor;
@@ -33,6 +34,7 @@ export class MondrianPluginManager {
     this.register(HighlighterBrushPlugin);
     this.register(RectanglePlugin);
     this.register(CirclePlugin);
+    this.register(TrianglePlugin);
   }
 
   private _instanceRecordMap: {

@@ -138,6 +138,7 @@ class App {
         BrushName.Dash,
         BrushName.Rectangle,
         BrushName.Circle,
+        BrushName.Triangle,
       ])
       .onChange(this._onBrushStateChange)
       .$widget.setAttribute("data-test-id", "brushName");

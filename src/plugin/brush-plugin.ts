@@ -14,6 +14,7 @@ export const enum BrushName {
   Dash = "Dash",
   Rectangle = "Rectangle",
   Circle = "Circle",
+  Triangle = "Triangle",
 }
 
 export interface BrushPluginState {
