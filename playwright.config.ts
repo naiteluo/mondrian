@@ -30,6 +30,23 @@ const config: PlaywrightTestConfig = {
             },
           ],
         },
+        {
+          origin: "http://naiteluo.cc",
+          localStorage: [
+            {
+              name: "__mo_config_auto_start",
+              value: "false",
+            },
+            {
+              name: "__mo_config_channel",
+              value: "playwright_test",
+            },
+            {
+              name: "__mo_config_disable_cursor",
+              value: "true",
+            },
+          ],
+        },
       ],
     },
   },

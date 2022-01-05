@@ -2,6 +2,8 @@ import { expect, Locator, Page, TestInfo, JSHandle } from "@playwright/test";
 
 const TEST_URL = "http://localhost:8080";
 const API_URL = "http://localhost:3000";
+// const TEST_URL = "http://naiteluo.cc/mondrian/";
+// const API_URL = "http://naiteluo.cc:3000";
 const DEFAULT_CHANNEL_NAME = "playwright_test";
 
 export class MondrianPage {
@@ -34,7 +36,7 @@ export class MondrianPage {
     await this.resetChannel();
     await this.goto();
     await this.start();
-    await this.page.waitForTimeout(1000);
+    await this.page.waitForTimeout(5000);
   }
 
   async getMondrianHandle() {
