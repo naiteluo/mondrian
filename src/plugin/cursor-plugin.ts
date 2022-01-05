@@ -11,6 +11,8 @@ export class CursorPlugin extends MondrianPlugin {
 
   static PID = Symbol("cursor-plugin");
 
+  private autoHideHandler?: number;
+
   static predicate(
     data: IMondrianData | null,
     shared?: MondrianShared
@@ -30,11 +32,24 @@ export class CursorPlugin extends MondrianPlugin {
     super(_renderer);
     this.cursor = Sprite.from(cursorImg);
     _renderer.uiLayer.addChild(this.cursor);
+    this.triggerHideWhenIdle();
   }
 
   reactDragMove(data: IMondrianData): boolean {
+    this.cursor.visible = true;
     this.cursor.x = data.data.x;
     this.cursor.y = data.data.y;
+    this.triggerHideWhenIdle();
     return true;
+  }
+
+  private triggerHideWhenIdle() {
+    if (this.autoHideHandler) {
+      clearTimeout(this.autoHideHandler);
+      this.autoHideHandler = undefined;
+    }
+    this.autoHideHandler = window.setTimeout(() => {
+      this.cursor.visible = false;
+    }, 1000);
   }
 }
