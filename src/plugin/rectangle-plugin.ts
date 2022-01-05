@@ -32,11 +32,17 @@ export class RectanglePlugin extends ShapePlugin {
     if (!super.reactDragMove(data)) return false;
     this.handler.g.clear();
     this.handler.lineStyle = { ...this.handler.lineStyle };
-    this.handler.g.drawRect(
-      this.shapeRect.x,
-      this.shapeRect.y,
-      this.shapeRect.w,
-      this.shapeRect.h
-    );
+    if (data.data.shiftKey) {
+      const mw = Math.max(this.shapeRect.w, this.shapeRect.h);
+      this.handler.g.drawRect(this.shapeRect.x, this.shapeRect.y, mw, mw);
+    } else {
+      this.handler.g.drawRect(
+        this.shapeRect.x,
+        this.shapeRect.y,
+        this.shapeRect.w,
+        this.shapeRect.h
+      );
+    }
+    return true;
   }
 }

@@ -48,5 +48,6 @@ export class CirclePlugin extends ShapePlugin {
         this.shapeRect.h / 2
       );
     }
+    return true;
   }
 }

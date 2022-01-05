@@ -32,16 +32,22 @@ test.describe("shape", () => {
 
     await page.selectOption('[data-test-id="brushName"] select', "Rectangle");
 
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < basicShapeData.length; i++) {
       const lineData = basicShapeData[i];
       for (let j = 0; j < lineData.length; j++) {
         const [x, y] = lineData[j];
+        if (i === 2) {
+          mp.page.keyboard.down("Shift");
+        }
         await mp.page.mouse.move(x, y);
         if (j === 0) {
           await mp.page.mouse.down();
         }
         if (j === lineData.length - 1) {
           await mp.page.mouse.up();
+        }
+        if (i === 2) {
+          mp.page.keyboard.up("Shift");
         }
       }
     }
