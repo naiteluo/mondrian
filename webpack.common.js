@@ -3,14 +3,17 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-  entry: "./src/app.ts",
+  entry: {
+    app: "./src/app.ts",
+  },
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "app.[chunkhash].js",
+    filename: "[name].[chunkhash].js",
+    clean: true,
   },
-
   module: {
     rules: [
+      // loader for shader
       {
         test: /\.(glsl|vs|fs|vert|frag)$/,
         loader: "raw-loader",
@@ -24,45 +27,20 @@ module.exports = {
         use: [{ loader: "style-loader" }, { loader: "css-loader" }],
       },
       {
-        test: /\.(woff2?|eot|ttf|otf|png|gif|jpg|jpeg)(\?.*)?$/,
+        test: /\.(woff2?|eot|ttf|otf|png|gif|jpg|jpeg|ico)(\?.*)?$/,
         loader: "file-loader",
       },
     ],
   },
-
   resolve: {
-    extensions: [
-      ".js",
-      ".json",
-      ".jsx",
-      ".ts",
-      ".tsx",
-      ".css",
-      ".jpg",
-      ".jpeg",
-      ".png",
-      ".gif",
-    ],
+    extensions: [".js", ".json", ".ts"],
   },
-
-  devtool: "source-map",
   context: __dirname,
   target: "web",
-  watch: false,
-  devServer: {
-    proxy: {
-      "/api": "http://localhost:3000",
-    },
-    compress: false,
-    historyApiFallback: false,
-    hot: true,
-    overlay: true,
-  },
-
   plugins: [
     new HtmlWebpackPlugin({
       title: "Mondrian",
-      template: "assets/__index.html",
+      template: "./assets/__index.html",
     }),
     new CopyWebpackPlugin({
       patterns: [{ from: "assets", to: "assets" }],
