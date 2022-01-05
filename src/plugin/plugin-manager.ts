@@ -96,12 +96,19 @@ export class MondrianPluginManager {
   }
 
   predicateAndLoad(data: IMondrianData | null) {
-    this._pluginClassRefList
-      .filter((ref) => {
-        return ref.predicate(data, this.shared);
-      })
-      .forEach((ref) => {
-        this.load(ref);
-      });
+    try {
+      this._pluginClassRefList
+        .filter((ref) => {
+          return ref.predicate(data, this.shared);
+        })
+        .forEach((ref) => {
+          this.load(ref);
+        });
+    } catch (error) {
+      console.log(error);
+      alert(
+        "todo: handle dirty data. Temporarily, try to clear channel data."
+      );
+    }
   }
 }
