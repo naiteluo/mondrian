@@ -107,15 +107,28 @@ export class MondrianPage {
     });
   }
 
-  async screenshotAndCompare() {
+  async screenshotAndCompare(suffix = "") {
     expect(
       await this.container.screenshot({
         omitBackground: true,
       })
     ).toMatchSnapshot({
-      name: `${testTitleFileName(this.testInfo.title)}.png`,
+      name: `${testTitleFileName(this.testInfo.title)}${
+        suffix ? "-" + suffix : ""
+      }.png`,
       threshold: 0.005,
     });
+  }
+
+  async quickFill(count = 20) {
+    const sx = 100;
+    const sy = 100;
+    for (let i = 0; i < count; i++) {
+      await this.page.mouse.move(sx + 10, sy + i * 10);
+      await this.page.mouse.down();
+      await this.page.mouse.move(sx + 200, sy + i * 10, { steps: 10 });
+      await this.page.mouse.up();
+    }
   }
 }
 

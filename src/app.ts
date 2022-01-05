@@ -127,7 +127,10 @@ class App {
     const commandFolder = this.gui.addFolder("Command");
     commandFolder.add(this, "onUndo").name("Undo");
     commandFolder.add(this, "onRedo").name("Redo");
-    commandFolder.add(this, "onClear").name("Clear");
+    commandFolder
+      .add(this, "onClear")
+      .name("Clear")
+      .$widget.setAttribute("data-test-id", "clear");
 
     const brushFolder = this.gui.addFolder("Brush");
     brushFolder
