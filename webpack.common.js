@@ -11,6 +11,17 @@ module.exports = {
     filename: "[name].[chunkhash].js",
     clean: true,
   },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/](@pixi|pixi.js)[\\/]/,
+          name: "vendors-pixi",
+          chunks: "all",
+        },
+      },
+    },
+  },
   module: {
     rules: [
       // loader for shader
