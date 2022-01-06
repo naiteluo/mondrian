@@ -67,8 +67,11 @@ export class MondrianContainerManager extends MondrianModuleBase {
     return this._$panel;
   }
 
-  public togglePannel() {
-    this._$panel.style.visibility =
-      this._$panel.style.visibility === "hidden" ? "visible" : "hidden";
+  hidePannel() {
+    this._$panel.style.visibility = "hidden";
+  }
+
+  showPannel() {
+    this._$panel.style.visibility = "visible";
   }
 }

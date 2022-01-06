@@ -156,8 +156,12 @@ export class Mondrian extends MondrianModuleBase {
     return this.shared;
   }
 
-  public togglePannel() {
-    this.containerManager.togglePannel();
+  public showPannel() {
+    this.containerManager.showPannel();
+  }
+
+  public hidePannel() {
+    this.containerManager.hidePannel();
   }
 
   static EVENT_RECOVER_CONSUMED = "recover:consumed";

@@ -36,7 +36,7 @@ export class MondrianPage {
     await this.resetChannel();
     await this.goto();
     await this.start();
-    await this.page.waitForTimeout(5000);
+    await this.page.waitForTimeout(1000);
   }
 
   async getMondrianHandle() {
@@ -69,9 +69,6 @@ export class MondrianPage {
 
   async goto() {
     await this.page.goto(TEST_URL);
-    // hide lil-gui
-    // Click text=Mondrian
-    // await this.page.click("text=Mondrian");
   }
 
   async start() {
@@ -101,12 +98,31 @@ export class MondrianPage {
     });
   }
 
+  /**
+   * show ui
+   * @returns
+   */
+  async showUI() {
+    return await this.page.evaluate(() => {
+      return (window as any).moApp.showUI();
+    });
+  }
+
+  /**
+   * ui might capture some mouseevent, cause unexpected results in test
+   * hide ui before doing complicated draw test
+   * @returns
+   */
   async hideUI() {
     return await this.page.evaluate(() => {
       return (window as any).moApp.hideUI();
     });
   }
 
+  /**
+   * take screenshot and do assertions
+   * @param suffix screenshot local identifier suffix
+   */
   async screenshotAndCompare(suffix = "") {
     expect(
       await this.container.screenshot({
@@ -116,17 +132,25 @@ export class MondrianPage {
       name: `${testTitleFileName(this.testInfo.title)}${
         suffix ? "-" + suffix : ""
       }.png`,
-      threshold: 0.005,
+      threshold: 0.001,
     });
   }
 
-  async quickFill(count = 20) {
-    const sx = 100;
-    const sy = 100;
+  /**
+   *
+   * automatically draw lines for easy testing
+   *
+   * @param count lines count
+   * @param sx start x
+   * @param sy start y
+   * @param length line length
+   * @param span space between lines
+   */
+  async quickFill(count = 20, sx = 100, sy = 100, length = 200, span = 10) {
     for (let i = 0; i < count; i++) {
-      await this.page.mouse.move(sx + 10, sy + i * 10);
+      await this.page.mouse.move(sx + span, sy + i * span);
       await this.page.mouse.down();
-      await this.page.mouse.move(sx + 200, sy + i * 10, { steps: 10 });
+      await this.page.mouse.move(sx + length, sy + i * span, { steps: 10 });
       await this.page.mouse.up();
     }
   }

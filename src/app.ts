@@ -338,9 +338,15 @@ class App {
   }
 
   hideUI() {
-    this.mondrian.togglePannel();
+    this.mondrian.hidePannel();
     this.gui.$title.hidden = true;
     this.gui.$children.hidden = true;
+  }
+
+  showUI() {
+    this.mondrian.showPannel();
+    this.gui.$title.hidden = false;
+    this.gui.$children.hidden = false;
   }
 }
 
