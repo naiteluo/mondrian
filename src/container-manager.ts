@@ -32,6 +32,10 @@ export class MondrianContainerManager extends MondrianModuleBase {
     this.$container.style.position = "absolute";
     this.$container.style.zIndex = "0";
     this.$container.style.margin = "0px 0px";
+    this.$container.style.userSelect = "none";
+    this.$container.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+    });
   }
 
   private initialzieDebugPanel() {
