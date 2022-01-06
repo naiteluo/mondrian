@@ -3968,6 +3968,11 @@ pixelmatch@^5.2.1:
   dependencies:
     pngjs "^4.0.1"
 
+pixi-dashed-line@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.npmmirror.com/pixi-dashed-line/download/pixi-dashed-line-1.2.0.tgz#095853fe9010e5af4cf05ef2efca6e247137c1f5"
+  integrity sha1-CVhT/pAQ5a9M8F7y78puJHE3wfU=
+
 pixi.js@^6.2.0:
   version "6.2.1"
   resolved "https://registry.npmmirror.com/pixi.js/download/pixi.js-6.2.1.tgz#97361731cf20dfa9a403fae8f26f8a69c8a4dcd0"

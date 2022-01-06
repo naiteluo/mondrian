@@ -8,10 +8,10 @@ import { BrushName } from "./brush-plugin";
 import { PluginType } from "./plugin";
 import { ShapePlugin } from "./shape-plugin";
 
-export class RectanglePlugin extends ShapePlugin {
+export class StrokePlugin extends ShapePlugin {
   static Type = PluginType.ConsumerExcludesive;
 
-  static PID = Symbol("rectangle-plugin");
+  static PID = Symbol("stroke-plugin");
 
   static predicate(
     data: IMondrianData | null,
@@ -20,7 +20,7 @@ export class RectanglePlugin extends ShapePlugin {
     if (data === null) return false;
     if (data.type === MondrianDataType.SET_STATE) {
       if (data as IMondrianStateData) {
-        if (data.data.player.brush.brushName === BrushName.Rectangle) {
+        if (data.data.player.brush.brushName === BrushName.Stroke) {
           return true;
         }
       }
@@ -32,12 +32,12 @@ export class RectanglePlugin extends ShapePlugin {
     if (!super.reactDragMove(data)) return false;
     this.handler.g.clear();
     this.handler.lineStyle = { ...this.handler.lineStyle };
-    this.getDrawShapeHandle(data).drawRect(
-      this.shapeRect.x,
-      this.shapeRect.y,
-      this.shapeRect.w,
-      this.shapeRect.h
-    );
+    this.getDrawShapeHandle(data)
+      .moveTo(this.shapeRect.ox, this.shapeRect.oy)
+      .lineTo(
+        this.shapeRect.ox + this.shapeRect.dx,
+        this.shapeRect.oy + this.shapeRect.dy
+      );
     return true;
   }
 }

@@ -32,20 +32,20 @@ export class TrianglePlugin extends ShapePlugin {
     if (!super.reactDragMove(data)) return false;
     this.handler.g.clear();
     this.handler.lineStyle = { ...this.handler.lineStyle };
-    if (data.data.shiftKey) {
-      const mw = Math.max(this.shapeRect.w, this.shapeRect.h);
-      this.handler.g.drawRect(this.shapeRect.x, this.shapeRect.y, mw, mw);
-    } else {
-      const sx = this.shapeRect.x + this.shapeRect.w * 0.6;
-      this.handler.g.drawPolygon([
-        sx,
-        this.shapeRect.y,
-        this.shapeRect.x + this.shapeRect.w,
-        this.shapeRect.y + this.shapeRect.h,
-        this.shapeRect.x,
-        this.shapeRect.y + this.shapeRect.h,
-      ]);
-    }
+    this.getDrawShapeHandle(data).drawPolygon([
+      // point 1
+      this.shapeRect.ox + this.shapeRect.dx / 2,
+      this.shapeRect.oy,
+      // point 2
+      this.shapeRect.ox,
+      this.shapeRect.oy + this.shapeRect.dy,
+      // point 3
+      this.shapeRect.ox + this.shapeRect.dx,
+      this.shapeRect.oy + this.shapeRect.dy,
+      // point 1
+      this.shapeRect.ox + this.shapeRect.dx / 2,
+      this.shapeRect.oy,
+    ]);
     return true;
   }
 }

@@ -1,12 +1,13 @@
 import {
-  BrushName,
   BrushPluginState,
   defaultBrushOptions,
+  MondrianDefaultBrushPluginList,
 } from "./plugin/brush-plugin";
 import { Mondrian } from "./mondrian";
 import { Controller, GUI } from "lil-gui";
 import { appSettings } from "./app/app-settings";
 
+const BrushPluginList = MondrianDefaultBrushPluginList;
 class App {
   $div: HTMLElement;
 
@@ -134,17 +135,17 @@ class App {
 
     const brushFolder = this.gui.addFolder("Brush");
     brushFolder
-      .add(this.brushConfig, "brushName", [
-        BrushName.Pencil,
-        BrushName.Eraser,
-        BrushName.Highlighter,
-        BrushName.Dash,
-        BrushName.Rectangle,
-        BrushName.Circle,
-        BrushName.Triangle,
-      ])
+      .add(this.brushConfig, "brushName", [...BrushPluginList])
       .onChange(this._onBrushStateChange)
       .$widget.setAttribute("data-test-id", "brushName");
+    brushFolder
+      .add(this.brushConfig, "dash", [true, false])
+      .onChange(this._onBrushStateChange)
+      .$widget.setAttribute("data-test-id", "dash");
+    brushFolder
+      .add(this.brushConfig, "restrict", [true, false])
+      .onChange(this._onBrushStateChange)
+      .$widget.setAttribute("data-test-id", "restrict");
     brushFolder
       .add(this.brushConfig, "brushWidth", 1, 50)
       .onChange(this._onBrushStateChange)

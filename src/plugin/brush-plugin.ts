@@ -15,12 +15,34 @@ export const enum BrushName {
   Rectangle = "Rectangle",
   Circle = "Circle",
   Triangle = "Triangle",
+  Stroke = "Stroke",
 }
+
+export const MondrianDefaultBrushPluginList = [
+  BrushName.Pencil,
+  BrushName.Eraser,
+  BrushName.Highlighter,
+  BrushName.Dash,
+  BrushName.Rectangle,
+  BrushName.Circle,
+  BrushName.Triangle,
+  BrushName.Stroke,
+];
 
 export interface BrushPluginState {
   brushName: BrushName;
   brushColor: number;
   brushWidth: 5;
+
+  /**
+   * apply dash line
+   */
+  dash?: boolean;
+  /**
+   * restrict shape bounding to square
+   */
+  restrict?: boolean;
+
   lineStyle: ILineStyleOptions;
 }
 
@@ -28,11 +50,11 @@ export const defaultBrushOptions: BrushPluginState = {
   brushName: BrushName.Pencil,
   brushColor: 0x000000,
   brushWidth: 5,
+  dash: false,
+  restrict: false,
   lineStyle: {
     cap: LINE_CAP.ROUND,
     join: LINE_JOIN.ROUND,
-    width: 5,
-    alpha: 1,
     native: false,
   },
 };
@@ -67,18 +89,21 @@ export class BrushPlugin extends MondrianPlugin {
 
   protected currentPos: IPointData;
 
-  protected state: IMondrianPlayerState;
+  protected playerState: IMondrianPlayerState;
+
+  protected brushState: Partial<BrushPluginState>;
 
   protected handler: MondrianGraphicsHandler;
 
   protected lineStyle: ILineStyleOptions;
 
   reactStateChange(data: IMondrianData): boolean {
-    this.state = (data as IMondrianStateData).data.player;
+    this.playerState = (data as IMondrianStateData).data.player;
+    this.brushState = this.playerState.brush || {};
     this.lineStyle = {
-      ...this.state.brush.lineStyle,
-      width: this.state.brush.brushWidth,
-      color: this.state.brush.brushColor,
+      ...(this.brushState.lineStyle || {}),
+      width: this.brushState.brushWidth,
+      color: this.brushState.brushColor,
     };
     return true;
   }

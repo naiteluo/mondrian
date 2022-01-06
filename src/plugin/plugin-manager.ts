@@ -15,6 +15,7 @@ import { HistoryPlugin } from "./history-plugin";
 import { PencilBrushPlugin } from "./pencil-plugin";
 import { RectanglePlugin } from "./rectangle-plugin";
 import { TrianglePlugin } from "./triangle-plugin";
+import { StrokePlugin } from "./stroke-plugin";
 
 interface IMondrianPluginInstanceRecord {
   classRef: IMondrianPluginConstructor;
@@ -35,6 +36,7 @@ export class MondrianPluginManager {
     this.register(RectanglePlugin);
     this.register(CirclePlugin);
     this.register(TrianglePlugin);
+    this.register(StrokePlugin);
   }
 
   private _instanceRecordMap: {
@@ -106,9 +108,7 @@ export class MondrianPluginManager {
         });
     } catch (error) {
       console.log(error);
-      alert(
-        "todo: handle dirty data. Temporarily, try to clear channel data."
-      );
+      alert("todo: handle dirty data. Temporarily, try to clear channel data.");
     }
   }
 }
