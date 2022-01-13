@@ -8,6 +8,8 @@ export interface IMondrianReactor {
   reactUndo(event: any): boolean;
   reactRedo(event: any): boolean;
   reactClear(event: any): boolean;
+  reactKeyDown(event: IMondrianData): boolean;
+  reactKeyUp(event: IMondrianData): boolean;
   reactClick(event: any): boolean;
   reactInput(event: any): boolean;
 }

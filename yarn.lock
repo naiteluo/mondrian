@@ -530,35 +530,199 @@
   resolved "https://registry.npmmirror.com/@pixi/extract/download/@pixi/extract-6.2.1.tgz#23cce92537ea45e1d6af381521f6f8bb4ed53f75"
   integrity sha512-11MTxqXaZlsYRf9QumEDqZXoTb2RlIwpL42k7CnY7ycP+pu8TV+HB5NfLzFltCjnzXuBbl0/bz8eYeU5cSlVkA==
 
+"@pixi/filter-adjustment@4.1.3":
+  version "4.1.3"
+  resolved "https://registry.npmmirror.com/@pixi/filter-adjustment/download/@pixi/filter-adjustment-4.1.3.tgz#61e34b4dd9766ccf40463f0538201bf68f78df66"
+  integrity sha1-YeNLTdl2bM9ARj8FOCAb9o9432Y=
+
+"@pixi/filter-advanced-bloom@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-advanced-bloom/download/@pixi/filter-advanced-bloom-4.1.5.tgz#9c8b7d087c896083f3f13541cd40c50add1d6388"
+  integrity sha1-nIt9CHyJYIPz8TVBzUDFCt0dY4g=
+  dependencies:
+    "@pixi/filter-kawase-blur" "4.1.5"
+
 "@pixi/filter-alpha@6.2.1":
   version "6.2.1"
   resolved "https://registry.npmmirror.com/@pixi/filter-alpha/download/@pixi/filter-alpha-6.2.1.tgz#86ef8588177b5f4b88791782342ef0846fff2ab4"
   integrity sha512-f/xSY+T9JnpzrtB2F1EOsGr6urgln6Wdr/NQgVk13L/g8jrM/PhMlbDsodEwf5IL/2xRjAFwYjCFMgzWVXALkw==
+
+"@pixi/filter-ascii@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-ascii/download/@pixi/filter-ascii-4.1.5.tgz#c2dc5ce4fea837d60b46ad6b2b36ad1219fa6275"
+  integrity sha1-wtxc5P6oN9YLRq1rKzatEhn6YnU=
+
+"@pixi/filter-bevel@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-bevel/download/@pixi/filter-bevel-4.1.5.tgz#142ee7658f72197944b3cbdc5aa54d13d17d4400"
+  integrity sha1-FC7nZY9yGXlEs8vcWqVNE9F9RAA=
+
+"@pixi/filter-bloom@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-bloom/download/@pixi/filter-bloom-4.1.5.tgz#f37dfebac6ccc45e546329390471f0fe8ea5d097"
+  integrity sha1-833+usbMxF5UYyk5BHHw/o6l0Jc=
 
 "@pixi/filter-blur@6.2.1":
   version "6.2.1"
   resolved "https://registry.npmmirror.com/@pixi/filter-blur/download/@pixi/filter-blur-6.2.1.tgz#c7a1360a3759b7507dff3caa5ef7aedc35d14fb9"
   integrity sha512-5pIcdL4u5WAwGHsI8uNovb4iK50l+7Dz1ZIwuwbkGU8Xoti/dzeox4bgywnXPq+yN33/Ty0nwd7VYuHmaNl/Rw==
 
+"@pixi/filter-bulge-pinch@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-bulge-pinch/download/@pixi/filter-bulge-pinch-4.1.5.tgz#aaeb31df9191ef42d553a615cd37e27af8359eeb"
+  integrity sha1-qusx35GR70LVU6YVzTfievg1nus=
+
+"@pixi/filter-color-map@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-color-map/download/@pixi/filter-color-map-4.1.5.tgz#ffa685356c666295fe66c0c871196b0ae13a5e29"
+  integrity sha1-/6aFNWxmYpX+ZsDIcRlrCuE6Xik=
+
 "@pixi/filter-color-matrix@6.2.1":
   version "6.2.1"
   resolved "https://registry.npmmirror.com/@pixi/filter-color-matrix/download/@pixi/filter-color-matrix-6.2.1.tgz#ae3e34606f86ccb0e559fde663d8c17d34cc3ca9"
   integrity sha512-f3yyaruhr8lAVv13YpMb5L4yolvuTygq05CvM3OIFK+dP5bYar2cajGc1Zu0bR3VGF03N8JeHxCUwfMwV7V7AA==
+
+"@pixi/filter-color-overlay@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-color-overlay/download/@pixi/filter-color-overlay-4.1.5.tgz#db9bc841228c41f469267d09e566006496dfe3f1"
+  integrity sha1-25vIQSKMQfRpJn0J5WYAZJbf4/E=
+
+"@pixi/filter-color-replace@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-color-replace/download/@pixi/filter-color-replace-4.1.5.tgz#c58cb6b7283781b56bcf1075be8ad6c15795d125"
+  integrity sha1-xYy2tyg3gbVrzxB1vorWwVeV0SU=
+
+"@pixi/filter-convolution@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-convolution/download/@pixi/filter-convolution-4.1.5.tgz#37607a13f8d3fb94393dee64eebecfde105899e8"
+  integrity sha1-N2B6E/jT+5Q5Pe5k7r7P3hBYmeg=
+
+"@pixi/filter-cross-hatch@4.1.3":
+  version "4.1.3"
+  resolved "https://registry.npmmirror.com/@pixi/filter-cross-hatch/download/@pixi/filter-cross-hatch-4.1.3.tgz#d5eb38d7e9f4c532755fe82c2de343275bf86f4b"
+  integrity sha1-1es41+n0xTJ1X+gsLeNDJ1v4b0s=
+
+"@pixi/filter-crt@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-crt/download/@pixi/filter-crt-4.1.5.tgz#19a98391d00cffa99befabf54b02ca7c47ddaf2c"
+  integrity sha1-GamDkdAM/6mb76v1SwLKfEfdryw=
 
 "@pixi/filter-displacement@6.2.1":
   version "6.2.1"
   resolved "https://registry.npmmirror.com/@pixi/filter-displacement/download/@pixi/filter-displacement-6.2.1.tgz#f178b54c870b75df4b0a8bc8b057e90fe4c7c500"
   integrity sha512-o/MjC3tz1y3qZwf22FThGSqfn+zN5bMaBoXn+xSfCqC48thg9vgl2REq0jerDDMVSMW8vUvBUARfT+Wfm3SMDw==
 
+"@pixi/filter-dot@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-dot/download/@pixi/filter-dot-4.1.5.tgz#0715e7b8e1ec006269f48418f5cdad187cf944ba"
+  integrity sha1-BxXnuOHsAGJp9IQY9c2tGHz5RLo=
+
+"@pixi/filter-drop-shadow@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-drop-shadow/download/@pixi/filter-drop-shadow-4.1.5.tgz#8eb6320ac45f1b218066ffe8e46a692a2706ba5d"
+  integrity sha1-jrYyCsRfGyGAZv/o5GppKicGul0=
+  dependencies:
+    "@pixi/filter-kawase-blur" "4.1.5"
+
+"@pixi/filter-emboss@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-emboss/download/@pixi/filter-emboss-4.1.5.tgz#e252bb109e2a9d0c63025e79caa0bf1fe33defbc"
+  integrity sha1-4lK7EJ4qnQxjAl55yqC/H+M977w=
+
 "@pixi/filter-fxaa@6.2.1":
   version "6.2.1"
   resolved "https://registry.npmmirror.com/@pixi/filter-fxaa/download/@pixi/filter-fxaa-6.2.1.tgz#15c2c92e41e56336d28b53bd2845b96018189e7b"
   integrity sha512-mIiAhBBDrOOPm1UF4isp7ti3d0y1y0xIZJnYbi15/Stmi1EQsMckDKg+V5uq9qbSm1jP3KoYq9dd7Oz/lr9srw==
 
+"@pixi/filter-glitch@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-glitch/download/@pixi/filter-glitch-4.1.5.tgz#b657a2a79eedc645b7a77e0afb96dbf7413c5e8b"
+  integrity sha1-tleip57txkW3p34K+5bb90E8Xos=
+
+"@pixi/filter-glow@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-glow/download/@pixi/filter-glow-4.1.5.tgz#bd92a6eca3320b71e8c3651fea26c56480a7b640"
+  integrity sha1-vZKm7KMyC3How2Uf6ibFZICntkA=
+
+"@pixi/filter-godray@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-godray/download/@pixi/filter-godray-4.1.5.tgz#00638291f7727810ba1b225af1ccb08cfd0682a9"
+  integrity sha1-AGOCkfdyeBC6GyJa8cywjP0Ggqk=
+
+"@pixi/filter-kawase-blur@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-kawase-blur/download/@pixi/filter-kawase-blur-4.1.5.tgz#c84fd3f452bfa44aaba4cba0c43a2b6071e0c6b2"
+  integrity sha1-yE/T9FK/pEqrpMugxDorYHHgxrI=
+
+"@pixi/filter-motion-blur@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-motion-blur/download/@pixi/filter-motion-blur-4.1.5.tgz#b989b06d47bf5c398c89f9616f92feee3b0bea71"
+  integrity sha1-uYmwbUe/XDmMiflhb5L+7jsL6nE=
+
+"@pixi/filter-multi-color-replace@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-multi-color-replace/download/@pixi/filter-multi-color-replace-4.1.5.tgz#f205296b5275d74f843a018c06688d4d598a06f8"
+  integrity sha1-8gUpa1J110+EOgGMBmiNTVmKBvg=
+
 "@pixi/filter-noise@6.2.1":
   version "6.2.1"
   resolved "https://registry.npmmirror.com/@pixi/filter-noise/download/@pixi/filter-noise-6.2.1.tgz#aae2a66eced6179c0e883f6e5db546e786bdd154"
   integrity sha512-jDIKo65p1VbqfUKuvb9UaNWaL4SRoc0SMYUwhSJcPjaWKv5bl7Ifqa6b/iQ31ZGHZGSot2ypwFeBiZLG1ndInQ==
+
+"@pixi/filter-old-film@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-old-film/download/@pixi/filter-old-film-4.1.5.tgz#2aae40cb1abb4e7692a70c4c0beab15f6ac895cc"
+  integrity sha1-Kq5Ayxq7TnaSpwxMC+qxX2rIlcw=
+
+"@pixi/filter-outline@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-outline/download/@pixi/filter-outline-4.1.5.tgz#d44f63fb40e80ea8719a4f72a8f5453c1244b515"
+  integrity sha1-1E9j+0DoDqhxmk9yqPVFPBJEtRU=
+
+"@pixi/filter-pixelate@4.1.3":
+  version "4.1.3"
+  resolved "https://registry.npmmirror.com/@pixi/filter-pixelate/download/@pixi/filter-pixelate-4.1.3.tgz#8200ccf4e47803a5b2f86ab3a755d438769b0e37"
+  integrity sha1-ggDM9OR4A6Wy+Gqzp1XUOHabDjc=
+
+"@pixi/filter-radial-blur@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-radial-blur/download/@pixi/filter-radial-blur-4.1.5.tgz#ac4fbb513e5056bdc9a4f518a02f2d715061f874"
+  integrity sha1-rE+7UT5QVr3JpPUYoC8tcVBh+HQ=
+
+"@pixi/filter-reflection@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-reflection/download/@pixi/filter-reflection-4.1.5.tgz#a73f18a2b2c336e6b0a1f048343196f155e91e2e"
+  integrity sha1-pz8YorLDNuawofBINDGW8VXpHi4=
+
+"@pixi/filter-rgb-split@4.1.3":
+  version "4.1.3"
+  resolved "https://registry.npmmirror.com/@pixi/filter-rgb-split/download/@pixi/filter-rgb-split-4.1.3.tgz#dfe68d36cf344b2644ceee9fd50f1bd970639b12"
+  integrity sha1-3+aNNs80SyZEzu6f1Q8b2XBjmxI=
+
+"@pixi/filter-shockwave@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-shockwave/download/@pixi/filter-shockwave-4.1.5.tgz#2500f52f0ef77d790bc4890cc6d32c3a88bdf0c5"
+  integrity sha1-JQD1Lw73fXkLxIkMxtMsOoi98MU=
+
+"@pixi/filter-simple-lightmap@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-simple-lightmap/download/@pixi/filter-simple-lightmap-4.1.5.tgz#6b6c35e4e3f6079091d494aab2394f88b203c31c"
+  integrity sha1-a2w15OP2B5CR1JSqsjlPiLIDwxw=
+
+"@pixi/filter-tilt-shift@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-tilt-shift/download/@pixi/filter-tilt-shift-4.1.5.tgz#cbdf2c658648ca50f2250ef0efe7eacf04ed8d5d"
+  integrity sha1-y98sZYZIylDyJQ7w7+fqzwTtjV0=
+
+"@pixi/filter-twist@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-twist/download/@pixi/filter-twist-4.1.5.tgz#1baaa591ad50b85fcacc1a201150470f6a8dd2ca"
+  integrity sha1-G6qlka1QuF/KzBogEVBHD2qN0so=
+
+"@pixi/filter-zoom-blur@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-zoom-blur/download/@pixi/filter-zoom-blur-4.1.5.tgz#7602636fc6b19c0c0f26cc4db26fb838593e5ae8"
+  integrity sha1-dgJjb8axnAwPJsxNsm+4OFk+Wug=
 
 "@pixi/graphics@6.2.1":
   version "6.2.1"
@@ -3972,6 +4136,49 @@ pixi-dashed-line@^1.2.0:
   version "1.2.0"
   resolved "https://registry.npmmirror.com/pixi-dashed-line/download/pixi-dashed-line-1.2.0.tgz#095853fe9010e5af4cf05ef2efca6e247137c1f5"
   integrity sha1-CVhT/pAQ5a9M8F7y78puJHE3wfU=
+
+pixi-filters@^4.1.5:
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/pixi-filters/download/pixi-filters-4.1.5.tgz#2c34845b212f252285f59c0992db672dd1aa7ebb"
+  integrity sha1-LDSEWyEvJSKF9ZwJkttnLdGqfrs=
+  dependencies:
+    "@pixi/filter-adjustment" "4.1.3"
+    "@pixi/filter-advanced-bloom" "4.1.5"
+    "@pixi/filter-ascii" "4.1.5"
+    "@pixi/filter-bevel" "4.1.5"
+    "@pixi/filter-bloom" "4.1.5"
+    "@pixi/filter-bulge-pinch" "4.1.5"
+    "@pixi/filter-color-map" "4.1.5"
+    "@pixi/filter-color-overlay" "4.1.5"
+    "@pixi/filter-color-replace" "4.1.5"
+    "@pixi/filter-convolution" "4.1.5"
+    "@pixi/filter-cross-hatch" "4.1.3"
+    "@pixi/filter-crt" "4.1.5"
+    "@pixi/filter-dot" "4.1.5"
+    "@pixi/filter-drop-shadow" "4.1.5"
+    "@pixi/filter-emboss" "4.1.5"
+    "@pixi/filter-glitch" "4.1.5"
+    "@pixi/filter-glow" "4.1.5"
+    "@pixi/filter-godray" "4.1.5"
+    "@pixi/filter-kawase-blur" "4.1.5"
+    "@pixi/filter-motion-blur" "4.1.5"
+    "@pixi/filter-multi-color-replace" "4.1.5"
+    "@pixi/filter-old-film" "4.1.5"
+    "@pixi/filter-outline" "4.1.5"
+    "@pixi/filter-pixelate" "4.1.3"
+    "@pixi/filter-radial-blur" "4.1.5"
+    "@pixi/filter-reflection" "4.1.5"
+    "@pixi/filter-rgb-split" "4.1.3"
+    "@pixi/filter-shockwave" "4.1.5"
+    "@pixi/filter-simple-lightmap" "4.1.5"
+    "@pixi/filter-tilt-shift" "4.1.5"
+    "@pixi/filter-twist" "4.1.5"
+    "@pixi/filter-zoom-blur" "4.1.5"
+
+pixi-viewport@^4.34.4:
+  version "4.34.4"
+  resolved "https://registry.npmmirror.com/pixi-viewport/download/pixi-viewport-4.34.4.tgz#78d575235225d852e5017e89da7cc939ec50a9f8"
+  integrity sha512-JARPbHRxmbiedj2qc/kjwd0rKIplKoRcLIDjO9DAMtjXzAlVWAdkwLxvY7g2EJBCHqNqxrEQy9ssye1DM4XRKg==
 
 pixi.js@^6.2.0:
   version "6.2.1"

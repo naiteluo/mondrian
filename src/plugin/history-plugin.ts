@@ -18,10 +18,6 @@ export class HistoryPlugin extends MondrianPlugin {
     return false;
   }
 
-  constructor(_renderer: MondrianRenderer) {
-    super(_renderer);
-  }
-
   reactUndo(): boolean {
     this.renderer.backward();
     return true;

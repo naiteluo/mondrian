@@ -1,9 +1,10 @@
-import { Application } from "@pixi/app";
+import { Application, IApplicationOptions } from "@pixi/app";
 import { Container, DisplayObject } from "@pixi/display";
 import { BaseTextureCache } from "@pixi/utils";
 import { MondrianModuleBase } from "../common/module-base";
 import {
   ENV,
+  Graphics,
   MSAA_QUALITY,
   RenderTexture,
   settings,
@@ -18,6 +19,7 @@ import {
 } from "./grapichs-handler";
 import { MondrianContainerManager } from "../container-manager";
 import { MondrianUtils } from "../common/utils";
+import { Viewport } from "pixi-viewport";
 
 const enum TrashType {
   DisplayObject,
@@ -48,7 +50,9 @@ export class MondrianRenderer extends MondrianModuleBase {
    */
   private app: Application;
 
-  private rootLayer: Container;
+  public viewport: Viewport;
+
+  public rootLayer: Container;
 
   // todo unsafe
   // high update freqency element like cursor or performces ui
@@ -106,6 +110,14 @@ export class MondrianRenderer extends MondrianModuleBase {
     return this.app.ticker;
   }
 
+  get scale() {
+    if (this.viewport) {
+      return this.viewport.scale;
+    } else {
+      return { x: 1, y: 1 };
+    }
+  }
+
   private get $panel() {
     return this.containerManager.$panel;
   }
@@ -142,7 +154,49 @@ export class MondrianRenderer extends MondrianModuleBase {
       this.dynamicLayer,
       this.uiLayer
     );
-    this.pixiApp.stage.addChild(this.rootLayer);
+
+    if (this.shared.settings.viewport) {
+      this.viewport = new Viewport({
+        screenWidth: this.pixiApp.screen.width,
+        screenHeight: this.pixiApp.screen.height,
+        worldWidth: 1280,
+        worldHeight: 760,
+
+        interaction: this.pixiApp.renderer.plugins.interaction,
+      });
+      if (this.shared.settings.background) {
+        console.log(123123);
+        const background = this.viewport.addChild(new Graphics());
+        background
+          .beginFill(0xffffff, 1)
+          .drawRect(0, 0, this.viewport.worldWidth, this.viewport.worldHeight)
+          .endFill()
+          .lineStyle({
+            width: 2,
+            color: 0x13c039,
+          })
+          .drawRect(
+            1,
+            1,
+            this.viewport.worldWidth - 2,
+            this.viewport.worldHeight - 2
+          );
+      }
+      this.pixiApp.stage.addChild(this.viewport);
+      this.viewport.addChild(this.rootLayer);
+
+      this.viewport.drag().pinch().wheel().decelerate();
+
+      this.viewport.fit();
+      this.viewport.moveCenter(
+        this.viewport.worldWidth / 2,
+        this.viewport.worldHeight / 2
+      );
+
+      this.viewport.pause = true;
+    } else {
+      this.pixiApp.stage.addChild(this.rootLayer);
+    }
 
     this.pixiApp.ticker.minFPS = 30;
     this.pixiApp.ticker.maxFPS = 60;
@@ -175,13 +229,21 @@ export class MondrianRenderer extends MondrianModuleBase {
     // todo add version detect to set webgl1 as prefer_env before chrome 75
     settings.PREFER_ENV = ENV.WEBGL2;
     // Create a Pixi Application
-    this.app = new Application({
+
+    const pixiConfig: IApplicationOptions = {
       antialias: true,
       backgroundAlpha: 0,
       autoDensity: true,
       resolution: this.shared.settings.resolution,
       autoStart: false,
-    });
+    };
+
+    if (this.shared.settings.background) {
+      pixiConfig.backgroundAlpha = 1;
+      pixiConfig.backgroundColor = 0xf8f9fa;
+    }
+
+    this.app = new Application(pixiConfig);
     // Add the canvas that Pixi automatically created for you to the HTML document
     this.$canvas = this.app.view;
     this.containerManager.$container.appendChild(this.$canvas);

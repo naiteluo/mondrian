@@ -1,19 +1,23 @@
 import { IMondrianSettings } from "../mondian-settings";
 import {
   getAutoStart,
+  getBackground,
   getChannel,
   getChunkLimit,
   getDebug,
   getDisableCursor,
   getIsProducer,
   getResolution,
+  getViewport,
   setAutoStart,
+  setBackground,
   setChannel,
   setChunkLimit,
   setDebug,
   setDisableCursor,
   setIsProducer,
   setResolution,
+  setViewport,
 } from "./app-helper";
 
 const mondrianSettings: Partial<IMondrianSettings> = {
@@ -65,6 +69,20 @@ const mondrianSettings: Partial<IMondrianSettings> = {
   },
   set debug(v) {
     setDebug(v);
+  },
+
+  get viewport() {
+    return getViewport();
+  },
+  set viewport(v) {
+    setViewport(v);
+  },
+
+  get background() {
+    return getBackground();
+  },
+  set background(v) {
+    setBackground(v);
   },
 };
 

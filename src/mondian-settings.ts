@@ -7,6 +7,14 @@ export interface IMondrianSettings {
   channel?: string;
   disableCursor?: boolean;
   debug?: boolean;
+  /**
+   * enable viewport
+   */
+  viewport?: boolean;
+  /**
+   * enable background
+   */
+  background?: boolean;
 }
 
 export const DefaultMondrianSettings: IMondrianSettings = {
@@ -18,4 +26,6 @@ export const DefaultMondrianSettings: IMondrianSettings = {
   channel: "guest",
   disableCursor: false,
   debug: false,
+  viewport: false,
+  background: false,
 };

@@ -82,3 +82,27 @@ export const getDisableCursor = () => {
   }
   return false;
 };
+
+const __localViewportKey = "__mo_config_viewport";
+export const setViewport = (r: boolean) => {
+  localStorage.setItem(__localViewportKey, JSON.stringify(r));
+};
+export const getViewport = () => {
+  const r = localStorage.getItem(__localViewportKey);
+  if (r) {
+    return JSON.parse(r);
+  }
+  return false;
+};
+
+const __localBackgroundKey = "__mo_config_background";
+export const setBackground = (r: boolean) => {
+  localStorage.setItem(__localBackgroundKey, JSON.stringify(r));
+};
+export const getBackground = () => {
+  const r = localStorage.getItem(__localBackgroundKey);
+  if (r) {
+    return JSON.parse(r);
+  }
+  return false;
+};

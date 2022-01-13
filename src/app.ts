@@ -113,6 +113,20 @@ class App {
         window.location.reload();
       });
     settingsFolder
+      .add(this.appSettings.mondrianSettings, "viewport", [true, false])
+      .listen()
+      .name("useViewport")
+      .onFinishChange(() => {
+        window.location.reload();
+      });
+    settingsFolder
+      .add(this.appSettings.mondrianSettings, "background", [true, false])
+      .listen()
+      .name("showBackground")
+      .onFinishChange(() => {
+        window.location.reload();
+      });
+    settingsFolder
       .add(this, "autoStepTimeSpan", 10, 1000, 20)
       .name("time per step (ms)");
     this.guiAutoCtrl = settingsFolder

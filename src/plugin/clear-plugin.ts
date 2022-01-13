@@ -22,10 +22,6 @@ export class ClearPlugin extends MondrianPlugin {
 
   protected handler: MondrianGraphicsHandler;
 
-  constructor(_renderer: MondrianRenderer) {
-    super(_renderer);
-  }
-
   // todo do have racing issue in this kind of command
   // todo don't react continuous clear command
   reactClear(event: any): boolean {

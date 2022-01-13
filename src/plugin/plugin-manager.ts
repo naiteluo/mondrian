@@ -16,6 +16,7 @@ import { PencilBrushPlugin } from "./pencil-plugin";
 import { RectanglePlugin } from "./rectangle-plugin";
 import { TrianglePlugin } from "./triangle-plugin";
 import { StrokePlugin } from "./stroke-plugin";
+import { ViewportPlugin } from "./viewport-plugin";
 
 interface IMondrianPluginInstanceRecord {
   classRef: IMondrianPluginConstructor;
@@ -37,6 +38,7 @@ export class MondrianPluginManager {
     this.register(CirclePlugin);
     this.register(TrianglePlugin);
     this.register(StrokePlugin);
+    this.register(ViewportPlugin);
   }
 
   private _instanceRecordMap: {
@@ -47,6 +49,8 @@ export class MondrianPluginManager {
     [PluginType.ConsumerExcludesive]: null,
   };
 
+  private _suspendedInstanceRecord: IMondrianPluginInstanceRecord;
+
   private _pluginClassRefList: IMondrianPluginConstructor[] = [];
 
   // todo if priority do matters, replace array with link list
@@ -54,7 +58,10 @@ export class MondrianPluginManager {
 
   load(pluginClassRef: IMondrianPluginConstructor) {
     // clear excludesive plugin before loading
-    if (pluginClassRef.Type === PluginType.ConsumerExcludesive) {
+    if (
+      pluginClassRef.Type === PluginType.ConsumerExcludesive ||
+      pluginClassRef.Type === PluginType.ConsumerTemp
+    ) {
       if (this._instanceRecordMap[PluginType.ConsumerExcludesive]) {
         const i = this._instanceRecordList.findIndex((instanceRecord) => {
           return (
@@ -62,25 +69,47 @@ export class MondrianPluginManager {
             this._instanceRecordMap[PluginType.ConsumerExcludesive].classRef
           );
         });
-        if (i >= 0) {
-          this._instanceRecordList.splice(i, 1);
-        }
+        const [removed] = this._instanceRecordList.splice(i, 1);
         this._instanceRecordMap[PluginType.ConsumerExcludesive] = null;
+        if (pluginClassRef.Type === PluginType.ConsumerTemp) {
+          this._suspendedInstanceRecord = removed;
+        }
       }
     }
-    const instance = new pluginClassRef(this._renderer);
+    const instance = new pluginClassRef(this._renderer, this.shared, this);
     const instanceRecord = {
       classRef: pluginClassRef,
       instance: instance,
     };
     this._instanceRecordList.push(instanceRecord);
-    if (pluginClassRef.Type === PluginType.ConsumerExcludesive) {
+    if (
+      pluginClassRef.Type === PluginType.ConsumerExcludesive ||
+      pluginClassRef.Type === PluginType.ConsumerTemp
+    ) {
       this._instanceRecordMap[PluginType.ConsumerExcludesive] = instanceRecord;
     } else {
       this._instanceRecordMap[pluginClassRef.Type].set(
         pluginClassRef.PID,
         instanceRecord
       );
+    }
+  }
+
+  restore() {
+    if (this._suspendedInstanceRecord) {
+      const current = this._instanceRecordMap[PluginType.ConsumerExcludesive];
+      if (current) {
+        const i = this._instanceRecordList.findIndex((instanceRecord) => {
+          return (
+            instanceRecord.classRef ===
+            this._instanceRecordMap[PluginType.ConsumerExcludesive].classRef
+          );
+        });
+        this._instanceRecordList.splice(i, 1, this._suspendedInstanceRecord);
+        this._instanceRecordMap[PluginType.ConsumerExcludesive] =
+          this._suspendedInstanceRecord;
+        this._suspendedInstanceRecord = null;
+      }
     }
   }
 

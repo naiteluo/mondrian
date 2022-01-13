@@ -19,6 +19,7 @@ export class MondrianContainerManager extends MondrianModuleBase {
     super.start();
     this.initializeContainer();
     this.initialzieDebugPanel();
+    this.setCursorVisible(false);
   }
 
   resize() {
@@ -59,7 +60,7 @@ export class MondrianContainerManager extends MondrianModuleBase {
     document.body.appendChild(this._$panel);
   }
 
-  private setCursorVisible(flag: boolean) {
+  public setCursorVisible(flag: boolean) {
     this.$container.style.cursor = flag ? "pointer" : "none";
   }
 

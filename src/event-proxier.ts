@@ -70,6 +70,9 @@ export class MondrianEventProxier extends MondrianEventEmitter {
     this.on("command:undo", this.onUndo);
     this.on("command:redo", this.onRedo);
     this.on("command:clear", this.onClear);
+
+    window.addEventListener("keydown", this.onKeyDown);
+    window.addEventListener("keyup", this.onKeyUp);
   }
 
   public stopSelfEventWatch() {
@@ -80,6 +83,9 @@ export class MondrianEventProxier extends MondrianEventEmitter {
     this.off("command:undo", this.onUndo);
     this.off("command:redo", this.onRedo);
     this.off("command:clear", this.onClear);
+
+    window.removeEventListener("keydown", this.onKeyDown);
+    window.removeEventListener("keyup", this.onKeyUp);
   }
 
   public destroy() {
@@ -133,6 +139,22 @@ export class MondrianEventProxier extends MondrianEventEmitter {
       return;
     }
     this.interactor.onDragEnd(event);
+  };
+
+  private keyDownMap: { [key: string]: boolean } = {};
+
+  private onKeyDown = (event: KeyboardEvent) => {
+    const code = event.code;
+    if (!this.keyDownMap[code]) {
+      this.interactor.onKeyDown(event);
+      this.keyDownMap[code] = true;
+    }
+  };
+
+  private onKeyUp = (event: KeyboardEvent) => {
+    const code = event.code;
+    this.interactor.onKeyUp(event);
+    delete this.keyDownMap[code];
   };
 
   private resizeEventHandler = () => {

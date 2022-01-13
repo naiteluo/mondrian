@@ -5,10 +5,19 @@ import { IMondrianReactor } from "../common/reactor";
 import { IMondrianData } from "../data-manager";
 import { MondrianRenderer } from "../renderer/renderer";
 import { MondrianShared } from "../shared";
+import { MondrianPluginManager } from "./plugin-manager";
 
 export enum PluginType {
   Global = 0,
+  /**
+   * clear all activated plugin and load
+   */
   ConsumerExcludesive = 1,
+  /**
+   * record last activated plugin and load,
+   * unload and replace self with last activated plugin
+   */
+  ConsumerTemp = 2,
 }
 
 export abstract class AbstractMondrianPlugin {
@@ -22,7 +31,12 @@ export abstract class AbstractMondrianPlugin {
 }
 
 export interface IMondrianPluginConstructor {
-  new (renderer: MondrianRenderer, ...args: unknown[]): MondrianPlugin;
+  new (
+    renderer: MondrianRenderer,
+    shared: MondrianShared,
+    manager: MondrianPluginManager,
+    ...args: unknown[]
+  ): MondrianPlugin;
 
   /**
    * static members
@@ -46,11 +60,11 @@ export class MondrianPlugin
     throw new Error("Base Plugin Class can't be registered to plugin list.");
   }
 
-  constructor(private _renderer: MondrianRenderer) {}
-
-  get renderer() {
-    return this._renderer;
-  }
+  constructor(
+    protected readonly renderer: MondrianRenderer,
+    protected readonly shared: MondrianShared,
+    protected manager: MondrianPluginManager
+  ) {}
 
   reactDragStart(data: IMondrianData): boolean {
     return true;
@@ -73,6 +87,14 @@ export class MondrianPlugin
   }
 
   reactRedo(event: any): boolean {
+    return true;
+  }
+
+  reactKeyDown(data: IMondrianData): boolean {
+    return true;
+  }
+
+  reactKeyUp(data: IMondrianData): boolean {
     return true;
   }
 

@@ -72,8 +72,17 @@ export class MondrianConsumer extends MondrianPlayer {
       if (data.type === MondrianDataType.INTERACT) {
         const subType = data.data.subType;
         this.dataXyToLeftTop(data);
+        if (data.data.subType === MondrianInteractType.KEY_DOWN) {
+          this.pluginManager.predicateAndLoad(data);
+        }
         this.pluginManager.interateInstances((plugin) => {
           switch (subType) {
+            case MondrianInteractType.KEY_DOWN:
+              plugin.reactKeyDown(data);
+              break;
+            case MondrianInteractType.KEY_UP:
+              plugin.reactKeyUp(data);
+              break;
             case MondrianInteractType.POINTER_DOWN:
               plugin.reactDragStart(data);
               break;

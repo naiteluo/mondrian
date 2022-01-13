@@ -19,8 +19,8 @@ export class MondrianProducer
   extends MondrianPlayer
   implements IMondrianInteractor
 {
-  private get stage() {
-    return this.renderer.pixiApp.stage;
+  private get root() {
+    return this.renderer.rootLayer;
   }
 
   constructor(
@@ -95,6 +95,40 @@ export class MondrianProducer
     ]);
   }
 
+  onKeyDown(event: KeyboardEvent): void {
+    if (event.code === "Space") {
+      this.dataManager.push([
+        {
+          playerID: this.id,
+          type: MondrianDataType.INTERACT,
+          data: {
+            subType: MondrianInteractType.KEY_DOWN,
+            x: 0,
+            y: 0,
+            code: event.code,
+          },
+        },
+      ]);
+    }
+  }
+
+  onKeyUp(event: KeyboardEvent): void {
+    if (event.code === "Space") {
+      this.dataManager.push([
+        {
+          playerID: this.id,
+          type: MondrianDataType.INTERACT,
+          data: {
+            subType: MondrianInteractType.KEY_UP,
+            x: 0,
+            y: 0,
+            code: event.code,
+          },
+        },
+      ]);
+    }
+  }
+
   onClick(event: any): void {
     console.log("implement it");
   }
@@ -135,7 +169,7 @@ export class MondrianProducer
     return this.xyToCenter(
       event.mock
         ? { x: event.mockX, y: event.mockY }
-        : event.data.getLocalPosition(this.stage)
+        : event.data.getLocalPosition(this.root)
     );
   }
 

@@ -41,6 +41,8 @@
     "axios": "^0.24.0",
     "lil-gui": "^0.15.0",
     "pixi-dashed-line": "^1.2.0",
+    "pixi-filters": "^4.1.5",
+    "pixi-viewport": "^4.34.4",
     "pixi.js": "^6.2.0",
     "reflect-metadata": "^0.1.13",
     "socket.io-client": "^4.4.0",
