@@ -70,21 +70,6 @@ export class MondrianRenderer extends MondrianModuleBase {
   // sprite that hold snapshot
   private fixedSprite: Sprite;
 
-  private _isHighCapacity = false;
-
-  get isHighCapactity() {
-    return this._isHighCapacity;
-  }
-
-  set isHighCapactity(v: boolean) {
-    this._isHighCapacity = v;
-    this.dynamicLevel = v
-      ? HighCapactityDefaultDynamicLevel
-      : DefaultDynamicLevel;
-    // todo the last 20 handler's grahpic is not cached as bitmap,
-    // todo can trigger here
-  }
-
   private dynamicLevel = DefaultDynamicLevel;
 
   // two level dynamic cache:
@@ -118,6 +103,20 @@ export class MondrianRenderer extends MondrianModuleBase {
     }
   }
 
+  get worldRect() {
+    if (this.viewport) {
+      return {
+        width: this.viewport.worldWidth,
+        height: this.viewport.worldHeight,
+      };
+    } else {
+      return {
+        width: this.pixiApp.screen.width,
+        height: this.pixiApp.screen.height,
+      };
+    }
+  }
+
   private get $panel() {
     return this.containerManager.$panel;
   }
@@ -141,62 +140,96 @@ export class MondrianRenderer extends MondrianModuleBase {
     // draw static layer to this fixedTexture, and reuse this texture,
     // instead of creating new texture again an again.
     this.fixedTexture = RenderTexture.create({
-      width: this.pixiApp.screen.width,
-      height: this.pixiApp.screen.height,
+      width: this.shared.settings.worldWidth,
+      height: this.shared.settings.worldHeight,
       multisample: MSAA_QUALITY.MEDIUM,
       resolution: this.shared.settings.resolution,
     });
     this.fixedSprite = new Sprite(this.fixedTexture);
 
+    /**
+     * use mask to clip out of bound elements
+     */
+    const rootLayerMask = new Graphics();
+    rootLayerMask.beginFill(0x000000);
+    rootLayerMask.drawRect(
+      0,
+      0,
+      this.shared.settings.worldWidth,
+      this.shared.settings.worldHeight
+    );
+    this.rootLayer.mask = rootLayerMask;
+
     this.rootLayer.addChild(
+      // add mask to root so it can transfrom with view port
+      rootLayerMask,
       this.fixedSprite,
       this.staticLayer,
       this.dynamicLayer,
       this.uiLayer
     );
 
-    if (this.shared.settings.viewport) {
-      this.viewport = new Viewport({
-        screenWidth: this.pixiApp.screen.width,
-        screenHeight: this.pixiApp.screen.height,
-        worldWidth: 1280,
-        worldHeight: 760,
-
-        interaction: this.pixiApp.renderer.plugins.interaction,
-      });
-      if (this.shared.settings.background) {
-        console.log(123123);
-        const background = this.viewport.addChild(new Graphics());
-        background
-          .beginFill(0xffffff, 1)
-          .drawRect(0, 0, this.viewport.worldWidth, this.viewport.worldHeight)
-          .endFill()
-          .lineStyle({
-            width: 2,
-            color: 0x13c039,
-          })
-          .drawRect(
-            1,
-            1,
-            this.viewport.worldWidth - 2,
-            this.viewport.worldHeight - 2
-          );
-      }
-      this.pixiApp.stage.addChild(this.viewport);
-      this.viewport.addChild(this.rootLayer);
-
-      this.viewport.drag().pinch().wheel().decelerate();
-
-      this.viewport.fit();
-      this.viewport.moveCenter(
-        this.viewport.worldWidth / 2,
-        this.viewport.worldHeight / 2
-      );
-
-      this.viewport.pause = true;
-    } else {
-      this.pixiApp.stage.addChild(this.rootLayer);
+    this.viewport = new Viewport({
+      screenWidth: this.pixiApp.screen.width,
+      screenHeight: this.pixiApp.screen.height,
+      worldWidth: this.shared.settings.worldWidth,
+      worldHeight: this.shared.settings.worldHeight,
+      interaction: this.pixiApp.renderer.plugins.interaction,
+    });
+    if (this.shared.settings.background) {
+      const background = this.viewport.addChild(new Graphics());
+      background
+        .beginFill(0xffffff, 1)
+        .drawRect(0, 0, this.viewport.worldWidth, this.viewport.worldHeight)
+        .endFill()
+        .lineStyle({
+          width: 2,
+          color: 0x13c039,
+        })
+        .drawRect(
+          1,
+          1,
+          this.viewport.worldWidth - 2,
+          this.viewport.worldHeight - 2
+        );
     }
+    this.pixiApp.stage.addChild(this.viewport);
+    this.viewport.addChild(this.rootLayer);
+    this.viewport.clamp({
+      left: -this.viewport.worldWidth / 2,
+      right: (this.viewport.worldWidth * 3) / 2,
+      top: -this.viewport.worldHeight / 2,
+      bottom: (this.viewport.worldHeight * 3) / 2,
+    });
+    this.viewport.clampZoom({ minScale: 0.5, maxScale: 20 });
+    this.viewport.drag().pinch().wheel().decelerate();
+
+    if (this.shared.settings.viewport) {
+      this.viewport.fit();
+    } else {
+      const screenRatio =
+        this.pixiApp.screen.width / this.pixiApp.screen.height;
+      const worldRatio =
+        this.shared.settings.worldWidth / this.shared.settings.worldHeight;
+      if (screenRatio > worldRatio) {
+        this.viewport.fitWidth(
+          this.viewport.findFitWidth(this.pixiApp.screen.width) *
+            this.viewport.worldWidth
+        );
+      } else {
+        this.viewport.fitHeight(
+          this.viewport.findFitHeight(this.pixiApp.screen.height) *
+            this.viewport.worldHeight
+        );
+      }
+    }
+
+    this.viewport.moveCenter(
+      this.viewport.worldWidth / 2,
+      this.viewport.worldHeight / 2
+    );
+
+    this.viewport.pause = true;
 
     this.pixiApp.ticker.minFPS = 30;
     this.pixiApp.ticker.maxFPS = 60;
@@ -210,8 +243,6 @@ export class MondrianRenderer extends MondrianModuleBase {
     this.pixiApp.ticker.add(this.gc, undefined, UPDATE_PRIORITY.LOW);
     // show perf info
     this.initialPerfTool();
-    // set large dynamic level to prevent take snapshot in high frequency
-    this.isHighCapactity = false;
 
     this.pixiApp.start();
   }
@@ -295,24 +326,22 @@ export class MondrianRenderer extends MondrianModuleBase {
     // discard handlers if reaching dynamic level,
 
     // 1. check and discard leading cache
-    if (!this.isHighCapactity) {
-      this.shiftGrapicsHandlersToStatic();
-    }
+    this.shiftGrapicsHandlersToStatic();
 
     // 2. check and discard tail of cache
     this.checkAndCleanDiscardableDynamicCache();
 
     const handlerOptions = { ...options };
 
-    // disable canCacheAsBitmap in high capacity mode
-    if (this.isHighCapactity) {
-      handlerOptions.canCacheAsBitmap = false;
-    }
-
     // create handler and add to cache
-    const handler = new MondrianGraphicsHandler(this, this.dynamicLayer, {
-      ...handlerOptions,
-    });
+    const handler = new MondrianGraphicsHandler(
+      this,
+      this.dynamicLayer,
+      this.shared,
+      {
+        ...handlerOptions,
+      }
+    );
     this.dynamicBufferingCache.push(handler);
     handler.start();
 
@@ -327,9 +356,8 @@ export class MondrianRenderer extends MondrianModuleBase {
     if (idx !== -1) {
       // todo do we really need to double check it?
       // check and discard leading cache
-      if (!this.isHighCapactity) {
-        this.shiftGrapicsHandlersToStatic();
-      }
+      this.shiftGrapicsHandlersToStatic();
+
       const removed = this.dynamicBufferingCache.splice(idx, 1);
       this.dynamicCache.push(...removed);
       // move indicator
@@ -393,7 +421,11 @@ export class MondrianRenderer extends MondrianModuleBase {
     this.shiftGrapicsHandlersToStatic();
 
     // nothing in static layer, no need to update texture
-    if (this.staticLayer.children.length === 0) {
+    // if viewport control opens, no need to update texture
+    if (
+      this.staticLayer.children.length === 0 ||
+      this.shared.settings.viewport
+    ) {
       return;
     }
 

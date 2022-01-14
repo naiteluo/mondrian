@@ -1,5 +1,5 @@
 import { Container, Graphics, ILineStyleOptions, MSAA_QUALITY } from "pixi.js";
-import { BrushPluginState } from "../plugin/brush-plugin";
+import { MondrianShared } from "../shared";
 import { MondrianRenderer } from "./renderer";
 
 export interface MondrianGraphicsHandlerOptions {
@@ -38,6 +38,7 @@ export class MondrianGraphicsHandler {
   constructor(
     private renderer: MondrianRenderer,
     private layer: Container,
+    private shared: MondrianShared,
     options?: MondrianGraphicsHandlerOptions
   ) {
     this.options = {
@@ -85,7 +86,7 @@ export class MondrianGraphicsHandler {
   }
 
   stop() {
-    if (this.options.canCacheAsBitmap) {
+    if (this.options.canCacheAsBitmap && !this.shared.settings.viewport) {
       this.c.children.forEach((g) => {
         if (!g.cacheAsBitmap) {
           g.cacheAsBitmapMultisample = MSAA_QUALITY.MEDIUM;

@@ -73,6 +73,10 @@ export class MondrianEventProxier extends MondrianEventEmitter {
 
     window.addEventListener("keydown", this.onKeyDown);
     window.addEventListener("keyup", this.onKeyUp);
+    // disable browser default pinch zoom behavior
+    window.addEventListener("wheel", this.onWheel, {
+      passive: false,
+    });
   }
 
   public stopSelfEventWatch() {
@@ -86,6 +90,7 @@ export class MondrianEventProxier extends MondrianEventEmitter {
 
     window.removeEventListener("keydown", this.onKeyDown);
     window.removeEventListener("keyup", this.onKeyUp);
+    window.removeEventListener("wheel", this.onWheel);
   }
 
   public destroy() {
@@ -155,6 +160,10 @@ export class MondrianEventProxier extends MondrianEventEmitter {
     const code = event.code;
     this.interactor.onKeyUp(event);
     delete this.keyDownMap[code];
+  };
+
+  private onWheel = (event: MouseEvent) => {
+    event.preventDefault();
   };
 
   private resizeEventHandler = () => {

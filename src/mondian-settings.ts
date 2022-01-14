@@ -15,6 +15,8 @@ export interface IMondrianSettings {
    * enable background
    */
   background?: boolean;
+  worldWidth?: number;
+  worldHeight?: number;
 }
 
 export const DefaultMondrianSettings: IMondrianSettings = {
@@ -28,4 +30,6 @@ export const DefaultMondrianSettings: IMondrianSettings = {
   debug: false,
   viewport: false,
   background: false,
+  worldWidth: 1280,
+  worldHeight: 760,
 };

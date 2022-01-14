@@ -104,8 +104,7 @@ export class MondrianConsumer extends MondrianPlayer {
   // todo move this coord operation together for flexibility
   // warning:  override the origin data
   private dataXyToLeftTop(data: IMondrianInteractData) {
-    const { width, height } = this.renderer.pixiApp.screen;
-    data.data.x = width / 2 + data.data.x;
-    data.data.y = height / 2 + data.data.y;
+    data.data.x = this.renderer.worldRect.width / 2 + data.data.x;
+    data.data.y = this.renderer.worldRect.height / 2 + data.data.y;
   }
 }

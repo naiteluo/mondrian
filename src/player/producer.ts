@@ -175,10 +175,9 @@ export class MondrianProducer
 
   // todo optimize
   private xyToCenter({ x, y }) {
-    const { width, height } = this.renderer.pixiApp.screen;
     return {
-      x: x - width / 2,
-      y: y - height / 2,
+      x: x - this.renderer.worldRect.width / 2,
+      y: y - this.renderer.worldRect.height / 2,
     };
   }
 }
