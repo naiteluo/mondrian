@@ -1,0 +1,36 @@
+{
+  "name": "mondrian",
+  "version": "1.0.0",
+  "description": "sketch board library",
+  "main": "index.js",
+  "exports": {
+    "./lib/mondrian": "./lib/mondian.js",
+    "./lib/plugin/brush-plugin": "./lib/plugin/brush-plugin.js"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/naiteluo/mondrian.git"
+  },
+  "keywords": [
+    "pixijs",
+    "sketch"
+  ],
+  "author": "naiteluo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/naiteluo/mondrian/issues"
+  },
+  "homepage": "https://github.com/naiteluo/mondrian#readme",
+  "dependencies": {
+    "pixi-dashed-line": "^1.2.0",
+    "pixi-filters": "^4.1.5",
+    "pixi-viewport": "^4.34.4",
+    "pixi.js": "^6.2.0",
+    "socket.io-client": "^4.4.0",
+    "web-streams-polyfill": "^3.2.0"
+  }
+}

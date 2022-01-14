@@ -1,22 +1,32 @@
 {
-  "name": "mondrian",
+  "name": "mondrian-workspace",
   "version": "1.0.0",
   "description": "mondrian",
   "main": "index.js",
   "scripts": {
-    "start": "webpack serve --open --config webpack.dev.js",
-    "start:silent": "webpack serve --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js",
     "test": "playwright test",
     "test:debug": "playwright test --debug",
-    "test:record": "playwright codegen http://localhost:8080"
+    "test:record": "playwright codegen http://localhost:8080",
+    "eslint": "eslint --ext ts,tsx ."
   },
   "author": "naiteluo",
   "license": "ISC",
+  "workspaces": [
+    "packages/mondrian",
+    "packages/mondrian-server",
+    "packages/mondrian-client"
+  ],
   "devDependencies": {
+    "@babel/cli": "^7.14.8",
+    "@babel/plugin-syntax-flow": "^7.16.7",
+    "@babel/plugin-transform-typescript": "^7.14.6",
+    "@babel/preset-react": "^7.14.5",
     "@playwright/test": "^1.17.1",
+    "@types/babel__code-frame": "^7.0.3",
+    "@types/babel__core": "^7.1.15",
     "@typescript-eslint/eslint-plugin": "^5.7.0",
     "@typescript-eslint/parser": "^5.7.0",
+    "babel-loader": "^8.2.2",
     "copy-webpack-plugin": "^9.0.1",
     "cross-env": "^7.0.2",
     "css-loader": "^6.2.0",
@@ -36,16 +46,5 @@
     "webpack-cli": "^4.8.0",
     "webpack-dev-server": "^3.11.2",
     "webpack-merge": "^5.8.0"
-  },
-  "dependencies": {
-    "axios": "^0.24.0",
-    "lil-gui": "^0.15.0",
-    "pixi-dashed-line": "^1.2.0",
-    "pixi-filters": "^4.1.5",
-    "pixi-viewport": "^4.34.4",
-    "pixi.js": "^6.2.0",
-    "reflect-metadata": "^0.1.13",
-    "socket.io-client": "^4.4.0",
-    "web-streams-polyfill": "^3.2.0"
   }
 }
