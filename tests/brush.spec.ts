@@ -66,6 +66,8 @@ test.describe("brush", () => {
     await page.selectOption('[data-test-id="brushName"] select', "Eraser");
     await page.fill('[data-test-id="brushWidth"] input[type="number"]', "10");
 
+    await mp.hideUI();
+
     for (let i = 0; i < basicLineData.length; i++) {
       const lineData = basicLineData[i];
       if (i % 2 === 0) {
@@ -83,7 +85,6 @@ test.describe("brush", () => {
       }
     }
 
-    await mp.hideUI();
     await mp.screenshotAndCompare();
   });
 
@@ -94,6 +95,7 @@ test.describe("brush", () => {
     await page.selectOption('[data-test-id="brushName"] select', "Highlighter");
     await page.fill('[data-test-id="brushWidth"] input[type="number"]', "20");
     await page.fill('[data-test-id="brushColor"] input[type="text"]', "eeff00");
+    await mp.hideUI();
 
     for (let i = 0; i < basicLineData.length; i++) {
       const lineData = basicLineData[i];
@@ -108,7 +110,7 @@ test.describe("brush", () => {
         }
       }
     }
-    await mp.hideUI();
+
     await mp.screenshotAndCompare();
   });
 });

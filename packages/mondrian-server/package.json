@@ -1,0 +1,23 @@
+{
+  "name": "@mondrian/server",
+  "version": "1.0.0",
+  "description": "mondrian live service server",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/naiteluo/mondrian.git"
+  },
+  "keywords": [
+    "ws"
+  ],
+  "author": "naiteluo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/naiteluo/mondrian/issues"
+  },
+  "homepage": "https://github.com/naiteluo/mondrian#readme"
+}

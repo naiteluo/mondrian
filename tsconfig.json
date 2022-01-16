@@ -1,19 +1,23 @@
 {
   "compilerOptions": {
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "target": "ES6",
-    "moduleResolution": "node",
-    // Required for importing 3rd-party dependencies like EventEmitter3
-    "esModuleInterop": true,
-    // Loaders needs this to use the more strict mini-signal types
+    "target": "ES2019",
+    "module": "commonjs",
+    "lib": ["esnext", "dom", "DOM.Iterable"],
+    "baseUrl": ".",
     "paths": {
-      "*": ["./src/*/"],
-      "mini-signals": [
-        "./node_modules/resource-loader/typings/mini-signals.d.ts"
-      ]
+      "*": ["./packages/*/"],
+      "mondrian/lib/*": ["./packages/mondrian/src/*"]
     },
-    "baseUrl": "./"
+    "esModuleInterop": true,
+    "strict": true,
+    "allowJs": false,
+    "resolveJsonModule": true,
+    "noImplicitOverride": true,
+    "useUnknownInCatchVariables": false,
+    "declaration": true,
+    "emitDeclarationOnly": true
   },
-  "exclude": ["node_modules", "**/dist/**"]
+  "compileOnSave": true,
+  "include": ["packages/**/src", "./global.d.ts"],
+  "exclude": ["node_modules", "packages/**/lib", "**/dist/**"]
 }

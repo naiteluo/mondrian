@@ -1,0 +1,33 @@
+{
+  "name": "@mondrian/client",
+  "version": "1.0.0",
+  "description": "mondrian client",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rimraf dist",
+    "start": "webpack serve --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/naiteluo/mondrian.git"
+  },
+  "keywords": [
+    "live",
+    "client",
+    "demo"
+  ],
+  "author": "naiteluo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/naiteluo/mondrian/issues"
+  },
+  "homepage": "https://github.com/naiteluo/mondrian#readme",
+  "dependencies": {
+    "mondrian": "^1.0.0",
+    "axios": "^0.24.0",
+    "lil-gui": "^0.15.0"
+  }
+}
