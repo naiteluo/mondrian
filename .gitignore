@@ -1,9 +1,18 @@
+# package.lock
+packages/**/package-lock.json
+
+# temp files
+.DS_Store
+Thumbs.db
+Desktop.ini
+npm-debug.log
+
+# project ignores
 *.map
 *.log
-debug/
-dist/
-node_modules/
-.DS_Store
-test-results/
-test-results/**/*.webm
+**/debug
+node_modules
+test-results
 packages/**/lib/**/*
+packages/**/types/**/*
+packages/**/dist

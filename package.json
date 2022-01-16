@@ -4,10 +4,15 @@
   "description": "mondrian",
   "main": "index.js",
   "scripts": {
+    "start": "npm run build:lib:watch & npm run start --workspace=@mondrian/client",
     "test": "playwright test",
     "test:debug": "playwright test --debug",
     "test:record": "playwright codegen http://localhost:8080",
-    "eslint": "eslint --ext ts,tsx ."
+    "eslint": "eslint --ext ts,tsx .",
+    "clean": "rimraf out && npm run clean --workspace=mondrian && npm run clean --workspace=@mondrian/client",
+    "build:types": "rimraf out && tsc -p --emitDeclarationOnly=true . --outDir out && sh ./utils/extract-types.sh && rimraf out",
+    "build:lib": "babel --extensions '.ts' ./packages/mondrian/src --out-dir ./packages/mondrian/lib && sh ./utils/copy-assets.sh",
+    "build:lib:watch": "babel --extensions '.ts' ./packages/mondrian/src --out-dir ./packages/mondrian/lib --watch"
   },
   "author": "naiteluo",
   "license": "ISC",
@@ -38,13 +43,17 @@
     "pixelmatch": "^5.2.1",
     "playwright": "^1.17.1",
     "pngjs": "^6.0.0",
+    "rimraf": "^3.0.2",
     "socket.io": "^4.4.0",
     "style-loader": "^3.2.1",
     "ts-loader": "^9.2.5",
-    "typescript": "^4.3.0",
+    "typescript": "^4.6.0-dev.20220115",
     "webpack": "^5.50.0",
     "webpack-cli": "^4.8.0",
     "webpack-dev-server": "^3.11.2",
     "webpack-merge": "^5.8.0"
+  },
+  "dependencies": {
+    "@types/offscreencanvas": "^2019.6.4"
   }
 }

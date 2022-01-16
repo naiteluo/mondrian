@@ -10,14 +10,14 @@
     },
     "esModuleInterop": true,
     "strict": true,
-    "allowJs": true,
+    "allowJs": false,
     "resolveJsonModule": true,
     "noImplicitOverride": true,
     "useUnknownInCatchVariables": false,
-    "emitDeclarationOnly": true,
-    "declaration": true
+    "declaration": true,
+    "emitDeclarationOnly": true
   },
   "compileOnSave": true,
-  "include": ["packages"],
-  "exclude": ["packages/*/lib", "**/dist/**"]
+  "include": ["packages/**/src", "./global.d.ts"],
+  "exclude": ["node_modules", "packages/**/lib", "**/dist/**"]
 }

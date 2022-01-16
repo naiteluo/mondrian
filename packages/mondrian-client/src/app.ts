@@ -1,9 +1,9 @@
+import { Mondrian } from "mondrian/lib/mondrian";
 import {
-  Mondrian,
   BrushPluginState,
   defaultBrushOptions,
   MondrianDefaultBrushPluginList,
-} from "mondrian";
+} from "mondrian/lib/plugin/brush-plugin";
 import { Controller, GUI } from "lil-gui";
 import { appSettings } from "./utils/app-settings";
 

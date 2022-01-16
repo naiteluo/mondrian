@@ -25,7 +25,7 @@ export class ShapePlugin extends BrushPlugin {
 
   protected getDrawShapeHandle(data: IMondrianData) {
     const useDash = this.brushState.dash || data.data.ctrlKey;
-    if (useDash && !this.dash) {
+    if (useDash) {
       this.dash = new DashLine(this.handler.g, {
         dash: [10, 5],
         ...this.handler.lineStyle,
