@@ -85,8 +85,7 @@ export class Mondrian extends MondrianModuleBase {
       this.start();
     }
 
-    // todo debug only
-    (window as any).mo = this;
+    window.mo = this;
   }
 
   override async start() {

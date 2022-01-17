@@ -1,4 +1,8 @@
-import { IMondrianData, IMondrianStateData } from "../data-manager";
+import {
+  IMondrianData,
+  IMondrianInteractData,
+  IMondrianStateData,
+} from "../data-manager";
 import { MondrianPlugin, PluginType } from "./plugin";
 
 import { ILineStyleOptions, LINE_CAP, LINE_JOIN } from "@pixi/graphics";
@@ -106,7 +110,7 @@ export class BrushPlugin extends MondrianPlugin {
     return true;
   }
 
-  override reactDragStart(data: IMondrianData): boolean {
+  override reactDragStart(data: IMondrianInteractData): boolean {
     // todo if we should handle isDrawing === ture here?
     const p = { x: data.data.x, y: data.data.y };
     this.isDrawing = true;
@@ -116,14 +120,15 @@ export class BrushPlugin extends MondrianPlugin {
     return true;
   }
 
-  override reactDragMove(data: IMondrianData): boolean {
+  override reactDragMove(data: IMondrianInteractData): boolean {
     if (!this.isDrawing) return false;
     const p = { x: data.data.x, y: data.data.y };
     this.currentPos = { ...p };
     return true;
   }
 
-  override reactDragEnd(data: IMondrianData): boolean {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  override reactDragEnd(_data: IMondrianInteractData): boolean {
     if (!this.isDrawing) return false;
     this.isDrawing = false;
     this.handler.stop();

@@ -46,7 +46,7 @@ export interface IMondrianInteractData extends IMondrianCommonData {
 
 export interface IMondrianState {
   player: IMondrianPlayerState;
-  [key: string]: any;
+  [key: string]: string | number | boolean | object;
 }
 
 export interface IMondrianStateData extends IMondrianCommonData {
@@ -58,7 +58,7 @@ export interface IMondrianActionData extends IMondrianCommonData {
   type: MondrianDataType.COMMAND;
   data: {
     subType: MondrianActionType;
-    [key: string]: any;
+    [key: string]: string | number | boolean | object;
   };
 }
 

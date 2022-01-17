@@ -36,6 +36,7 @@ const DefaultDynamicLevel = 20;
  * shift dynamic cache to static layer and take snapshot in
  * low freqency
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const HighCapactityDefaultDynamicLevel = 40;
 
 type Trash =
@@ -421,7 +422,8 @@ export class MondrianRenderer extends MondrianModuleBase {
    * normal prioriry
    * @returns
    */
-  private main = (dt: number) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private main = (_dt: number) => {
     this.shiftGrapicsHandlersToStatic();
 
     // nothing in static layer, no need to update texture
@@ -533,12 +535,14 @@ export class MondrianRenderer extends MondrianModuleBase {
     ) {
       this.textureMem = tmpMemSize;
       this.graphicsCount = tmpGraphicsCount;
-      this.$panel!.innerHTML = `
+      if (this.$panel) {
+        this.$panel.innerHTML = `
         <div style="display:block">tx mem: ${this.textureMem.toFixed(
           2
         )} MB | </div> 
         <div> g count: ${tmpGraphicsCount}</div>
       `;
+      }
     }
     this.__debug_checkUnfinishedHandler();
   };

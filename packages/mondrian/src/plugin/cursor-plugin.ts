@@ -1,4 +1,4 @@
-import { IMondrianData } from "../data-manager";
+import { IMondrianData, IMondrianInteractData } from "../data-manager";
 import { MondrianRenderer } from "../renderer/renderer";
 import { Sprite, Texture } from "pixi.js";
 import { MondrianPlugin, PluginType } from "./plugin";
@@ -61,7 +61,7 @@ export class CursorPlugin extends MondrianPlugin {
     this.triggerHideWhenIdle();
   }
 
-  override reactDragMove(data: IMondrianData): boolean {
+  override reactDragMove(data: IMondrianInteractData): boolean {
     this.cursor.visible = true;
     this.cursor.x = data.data.x;
     this.cursor.y = data.data.y - this.cursor.height;
@@ -83,7 +83,8 @@ export class CursorPlugin extends MondrianPlugin {
     }, 1000);
   }
 
-  override reactKeyDown(data: IMondrianData) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  override reactKeyDown(_data: IMondrianInteractData) {
     if (this.shared.settings.viewport) {
       this.cursor.texture = this.cursorDargTexture;
       return true;
@@ -91,7 +92,8 @@ export class CursorPlugin extends MondrianPlugin {
     return false;
   }
 
-  override reactKeyUp(data: IMondrianData) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  override reactKeyUp(_data: IMondrianInteractData) {
     if (this.shared.settings.viewport) {
       this.cursor.texture = this.cursorDrawTexture;
       return true;

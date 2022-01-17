@@ -78,7 +78,8 @@ export class MondrianPlayerManager extends MondrianModuleBase {
     this.consumers.set(consumerId, consumer);
   }
 
-  getConsumerByID(id: string) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getConsumerByID(_id: string) {
     console.warn("to be implemented");
   }
 

@@ -1,10 +1,8 @@
-import { MondrianUtils } from "../common/utils";
 import {
   IMondrianData,
   IMondrianStateData,
   MondrianDataType,
 } from "../data-manager";
-import { MondrianShared } from "../shared";
 import { BrushName } from "./brush-plugin";
 import { PluginType } from "./plugin";
 import { ShapePlugin } from "./shape-plugin";
@@ -14,10 +12,7 @@ export class CirclePlugin extends ShapePlugin {
 
   static override PID = Symbol("circle-plugin");
 
-  static override predicate(
-    data: IMondrianData | null,
-    shared?: MondrianShared
-  ): boolean {
+  static override predicate(data: IMondrianData | null): boolean {
     if (data === null) return false;
     if (data.type === MondrianDataType.SET_STATE) {
       if (data as IMondrianStateData) {

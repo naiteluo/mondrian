@@ -72,7 +72,10 @@ export class MondrianDataManager extends MondrianModuleBase {
   }
 
   async startRead() {
-    this.reader = this.downStream!.getReader();
+    if (!this.downStream) {
+      throw new Error("downStream is not initialized");
+    }
+    this.reader = this.downStream.getReader();
     // eslint-disable-next-line no-constant-condition
     while (true) {
       const { done, value } = await this.reader.read();
@@ -83,7 +86,10 @@ export class MondrianDataManager extends MondrianModuleBase {
   }
 
   async startWrite() {
-    this.writer = this.upStream!.getWriter();
+    if (!this.upStream) {
+      throw new Error("upStream is not initialized");
+    }
+    this.writer = this.upStream.getWriter();
   }
 
   private delayTime = 300;
@@ -114,7 +120,10 @@ export class MondrianDataManager extends MondrianModuleBase {
   }
 
   async push(datas: IMondrianData[]) {
-    await this.writer!.write(datas);
+    if (!this.writer) {
+      throw new Error("writer is not initialized");
+    }
+    await this.writer.write(datas);
   }
 
   static EVENT_RECOVER_CONSUMED = "recover:consumed";

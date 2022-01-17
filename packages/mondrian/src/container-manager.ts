@@ -8,7 +8,7 @@ export class MondrianContainerManager extends MondrianModuleBase {
    */
   private _$container: HTMLElement;
 
-  private _$panel: HTMLDivElement | undefined;
+  private _$panel?: HTMLDivElement;
 
   constructor(private shared: MondrianShared) {
     super();
@@ -76,10 +76,16 @@ export class MondrianContainerManager extends MondrianModuleBase {
   }
 
   hidePannel() {
-    this._$panel!.style.visibility = "hidden";
+    if (!this._$panel) {
+      return;
+    }
+    this._$panel.style.visibility = "hidden";
   }
 
   showPannel() {
-    this._$panel!.style.visibility = "visible";
+    if (!this._$panel) {
+      return;
+    }
+    this._$panel.style.visibility = "visible";
   }
 }

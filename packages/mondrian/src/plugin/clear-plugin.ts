@@ -1,8 +1,6 @@
 import { BLEND_MODES } from "@pixi/constants";
 import { IMondrianData } from "../data-manager";
 import { MondrianGraphicsHandler } from "../renderer/grapichs-handler";
-import { MondrianRenderer } from "../renderer/renderer";
-import { MondrianShared } from "../shared";
 import { MondrianPlugin, PluginType } from "./plugin";
 
 export class ClearPlugin extends MondrianPlugin {
@@ -10,10 +8,7 @@ export class ClearPlugin extends MondrianPlugin {
 
   static override PID = Symbol("clear-plugin");
 
-  static override predicate(
-    data: IMondrianData | null,
-    shared?: MondrianShared
-  ): boolean {
+  static override predicate(data: IMondrianData | null): boolean {
     if (data === null) {
       return true;
     }
@@ -24,7 +19,7 @@ export class ClearPlugin extends MondrianPlugin {
 
   // todo do have racing issue in this kind of command
   // todo don't react continuous clear command
-  override reactClear(event: any): boolean {
+  override reactClear(): boolean {
     this.handler = this.renderer.startGraphicsHandler();
     this.handler.config({
       enableDiscrete: false,
