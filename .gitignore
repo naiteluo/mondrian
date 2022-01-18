@@ -21,3 +21,7 @@ temp
 packages/**/lib/**/*
 packages/**/types/**/*
 packages/**/dist
+
+# demo server cache and storage dir
+packages/**/cache/**/*
+!packages/**/cache/README.md

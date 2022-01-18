@@ -4,7 +4,7 @@
   "description": "mondrian",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build:lib:watch & npm run start --workspace=@mondrian/client",
+    "start": "npm run server --workspace=@mondrian/server & npm run build:lib:watch & npm run start --workspace=@mondrian/client",
     "test": "playwright test",
     "test:debug": "playwright test --debug",
     "test:record": "playwright codegen http://localhost:8080",
@@ -15,6 +15,7 @@
     "build:api": "npm run api:extractor && rimraf temp",
     "build:lib": "babel --extensions '.ts' ./packages/mondrian/src --out-dir ./packages/mondrian/lib && sh ./utils/copy-assets.sh",
     "build:lib:watch": "babel --extensions '.ts' ./packages/mondrian/src --out-dir ./packages/mondrian/lib --watch",
+    "build:client": "npm run build --workspace=@mondrian/client",
     "build": "npm run build:types && npm run build:lib"
   },
   "author": "naiteluo",
