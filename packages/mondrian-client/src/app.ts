@@ -7,29 +7,57 @@ import {
 import {} from "mondrian/lib/plugin/brush-plugin";
 import { Controller, GUI } from "lil-gui";
 import { appSettings } from "./utils/app-settings";
+import { AutoDrawController } from "./auto-draw-controller";
 
-const BrushPluginList = MondrianDefaultBrushPluginList;
-class App {
+export class ClientApplication {
   $div: HTMLElement;
 
   mondrian!: Mondrian;
-
-  gui!: GUI;
-
-  guiAutoCtrl!: Controller;
-
-  msgCtrl!: Controller;
-
-  msg = "welcome.";
 
   appSettings = appSettings;
 
   brushConfig: BrushPluginState = DefaultMondrianBrushOptions;
 
+  gui!: GUI;
+
+  guiAutoCtrl!: Controller;
+
+  msg = "welcome.";
+
+  msgCtrl!: Controller;
+
+  autoDrawController: AutoDrawController;
+
   constructor() {
-    // reset css
+    this.resetGlobalStyle();
+
+    this.$div = document.createElement("div");
+    document.body.appendChild(this.$div);
+
+    // create mondrian instance
+    this.mondrian = new Mondrian({
+      container: this.$div,
+      ...this.appSettings.mondrianSettings,
+    });
+
+    // listen data recovered event
+    this.mondrian.on(
+      Mondrian.EVNET_RECOVER_RECEIVED,
+      ({ size }: { size: number }) => {
+        this.logMsg(`data size: ${size}`);
+        this.initialBrush();
+      }
+    );
+
+    this.autoDrawController = new AutoDrawController(this.mondrian, this);
+
+    this.initialLilGUI();
+  }
+
+  private resetGlobalStyle() {
     const html = document.getElementsByTagName("html")[0];
     const body = document.body;
+
     html.style.margin = `0px`;
     html.style.padding = `0px`;
     html.style.height = "100%";
@@ -38,28 +66,6 @@ class App {
     body.style.height = `100%`;
     body.style.lineHeight = `0px`;
     body.style.overflow = `hidden`;
-
-    this.$div = document.createElement("div");
-    document.body.appendChild(this.$div);
-
-    this.initialLilGUI();
-    this.initialMondrian();
-    this.mondrian.on(
-      Mondrian.EVNET_RECOVER_RECEIVED,
-      ({ size }: { size: number }) => {
-        this.logMsg(`data size: ${size}`);
-        this.initialBrush();
-      }
-    );
-    try {
-      this.logMsg(
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        `WebGL ${this.mondrian.pixiApp.renderer.context.webGLVersion}`
-      );
-    } catch (err) {
-      console.log("webgl version dump fails.");
-    }
   }
 
   initialLilGUI() {
@@ -67,9 +73,16 @@ class App {
       title: "Mondrian",
     });
     this.gui.add(this, "onStart").name("Start");
+    this.msgCtrl = this.gui.add(this, "msg").name("Message:");
+    this.setupSettingControls();
+    this.setupChannelControls();
+    this.setupAutomationControls();
+    this.setupCommandControls();
+    this.setupBrushControls();
+  }
 
-    const settingsFolder = this.gui.addFolder("Settings");
-    this.msgCtrl = settingsFolder.add(this, "msg").name("Message:");
+  private setupSettingControls() {
+    const settingsFolder = this.gui.addFolder("Settings").close();
     settingsFolder
       .add(this.appSettings.mondrianSettings, "resolution", 1, 3, 1)
       .listen()
@@ -130,19 +143,29 @@ class App {
       .onFinishChange(() => {
         window.location.reload();
       });
-    settingsFolder
-      .add(this, "autoStepTimeSpan", 10, 1000, 20)
+  }
+
+  private setupAutomationControls() {
+    const automationFolder = this.gui.addFolder("Automation");
+    automationFolder
+      .add(this.autoDrawController, "autoStepTimeSpan", 10, 1000, 20)
       .name("time per step (ms)");
-    this.guiAutoCtrl = settingsFolder
-      .add(this, "onAuto")
+    this.guiAutoCtrl = automationFolder
+      .add(this, "onAutoDrawToggle")
       .name("Start Auto Draw");
-    settingsFolder
+  }
+
+  private setupChannelControls() {
+    const channelFolder = this.gui.addFolder("Channel").close();
+    channelFolder
       .add(this.appSettings.mondrianSettings, "channel")
       .name("Channel Name");
-    settingsFolder.add(this, "onSwitchChannel").name("Swith Channel");
-    settingsFolder.add(this, "onClearChannelCache").name("Clear Channel Cache");
-    settingsFolder.add(this, "onResetChannel").name("Reset Channel");
+    channelFolder.add(this, "onSwitchChannel").name("Swith Channel");
+    channelFolder.add(this, "onClearChannelCache").name("Clear Channel Cache");
+    channelFolder.add(this, "onResetChannel").name("Reset Channel");
+  }
 
+  private setupCommandControls() {
     const commandFolder = this.gui.addFolder("Command");
     commandFolder.add(this, "onUndo").name("Undo");
     commandFolder.add(this, "onRedo").name("Redo");
@@ -150,27 +173,29 @@ class App {
       .add(this, "onClear")
       .name("Clear")
       .$widget.setAttribute("data-test-id", "clear");
+  }
 
+  private setupBrushControls() {
     const brushFolder = this.gui.addFolder("Brush");
     brushFolder
-      .add(this.brushConfig, "brushName", [...BrushPluginList])
-      .onChange(this._onBrushStateChange)
+      .add(this.brushConfig, "brushName", [...MondrianDefaultBrushPluginList])
+      .onChange(this.onBrushStateChange)
       .$widget.setAttribute("data-test-id", "brushName");
     brushFolder
       .add(this.brushConfig, "dash", [true, false])
-      .onChange(this._onBrushStateChange)
+      .onChange(this.onBrushStateChange)
       .$widget.setAttribute("data-test-id", "dash");
     brushFolder
       .add(this.brushConfig, "restrict", [true, false])
-      .onChange(this._onBrushStateChange)
+      .onChange(this.onBrushStateChange)
       .$widget.setAttribute("data-test-id", "restrict");
     brushFolder
       .add(this.brushConfig, "brushWidth", 1, 50)
-      .onChange(this._onBrushStateChange)
+      .onChange(this.onBrushStateChange)
       .$widget.setAttribute("data-test-id", "brushWidth");
     brushFolder
       .addColor(this.brushConfig, "brushColor")
-      .onChange(this._onBrushStateChange)
+      .onChange(this.onBrushStateChange)
       .$widget.setAttribute("data-test-id", "brushColor");
   }
 
@@ -182,19 +207,7 @@ class App {
     });
   }
 
-  initialMondrian() {
-    // create instance
-    this.mondrian = new Mondrian({
-      container: this.$div,
-      ...this.appSettings.mondrianSettings,
-    });
-  }
-
-  private _onBrushStateChange = () => {
-    this.sendBrushUpdateSignal();
-  };
-
-  sendBrushUpdateSignal() {
+  private applyBrushChanges() {
     this.mondrian.interaction.emit("state:change", {
       player: {
         brush: this.brushConfig,
@@ -202,143 +215,46 @@ class App {
     });
   }
 
-  onUndo() {
+  private onBrushStateChange = () => {
+    this.applyBrushChanges();
+  };
+
+  private onUndo() {
     this.mondrian.interaction.emit("command:undo");
   }
 
-  onRedo() {
+  private onRedo() {
     this.mondrian.interaction.emit("command:redo");
   }
 
-  onClear() {
+  private onClear() {
     this.mondrian.interaction.emit("command:clear");
   }
 
-  onStart() {
+  private onStart() {
     this.mondrian.start();
   }
 
-  private isAutoOn = false;
-
-  private lastPoint = { x: 0, y: 0 };
-
-  private autoStepLength = 80;
-
-  private autoStepIndex = 0;
-
-  private autoStepCountPerTick = 20;
-
-  private autoStepTimeSpan = 100;
-
-  private screenWidth = 0;
-
-  private screenHeight = 0;
-
-  private lt = 0;
-
-  private step = (nt: number) => {
-    if (this.isAutoOn) {
-      if (nt - this.lt > this.autoStepTimeSpan) {
-        this.lt = nt;
-        switch (this.autoStepIndex) {
-          case 0:
-            // simulate self drag
-            this.mondrian.interaction.emit("state:change", {
-              player: {
-                brush: {
-                  ...this.brushConfig,
-                  brushColor: (Math.random() * 0xffffff) << 0,
-                },
-              },
-            });
-            this.mondrian.interaction.emit("interaction:pointerdown", {
-              mock: true,
-              mockX: this.lastPoint.x,
-              mockY: this.lastPoint.y,
-            });
-            break;
-          case this.autoStepCountPerTick:
-            this.mondrian.interaction.emit("interaction:pointerup", {
-              mock: true,
-              mockX: this.lastPoint.x,
-              mockY: this.lastPoint.y,
-            });
-            break;
-          default:
-            this.randomUpdatePoint();
-            this.mondrian.interaction.emit("interaction:pointermove", {
-              mock: true,
-              mockX: this.lastPoint.x,
-              mockY: this.lastPoint.y,
-            });
-            break;
-        }
-        this.autoStepIndex =
-          this.autoStepIndex === this.autoStepCountPerTick
-            ? 0
-            : this.autoStepIndex + 1;
-      }
-    }
-    requestAnimationFrame(this.step);
-  };
-
-  private forcePointerUp() {
-    this.mondrian.interaction.emit("interaction:pointerup", {
-      mock: true,
-      mockX: this.lastPoint.x,
-      mockY: this.lastPoint.y,
-    });
-  }
-
-  private randomUpdatePoint() {
-    this.lastPoint.x +=
-      Math.random() * this.autoStepLength * 2 - this.autoStepLength;
-    this.lastPoint.y +=
-      Math.random() * this.autoStepLength * 2 - this.autoStepLength;
-    this.lastPoint.x =
-      this.lastPoint.x < 0 ? this.screenWidth / 2 : this.lastPoint.x;
-    this.lastPoint.y =
-      this.lastPoint.y < 0 ? this.screenHeight / 2 : this.lastPoint.y;
-    this.lastPoint.x =
-      this.lastPoint.x > this.screenWidth
-        ? this.screenWidth / 2
-        : this.lastPoint.x;
-    this.lastPoint.y =
-      this.lastPoint.y > this.screenHeight
-        ? this.screenHeight / 2
-        : this.lastPoint.y;
-  }
-
-  onAuto() {
-    if (this.isAutoOn) {
-      this.isAutoOn = false;
-      this.forcePointerUp();
-      this.mondrian.interaction.startPixiEventWatch();
+  private onAutoDrawToggle() {
+    if (this.autoDrawController.isAutoOn) {
       this.guiAutoCtrl.name("Start Auto Draw");
-      return;
+    } else {
+      this.guiAutoCtrl.name("Stop Auto Draw");
     }
-    this.guiAutoCtrl.name("Stop Auto Draw");
-    // update view size
-    this.screenWidth = this.mondrian.__debugPixiApp.screen.width;
-    this.screenHeight = this.mondrian.__debugPixiApp.screen.height;
-    this.lastPoint = { x: this.screenWidth / 2, y: this.screenHeight / 2 };
-    this.isAutoOn = true;
-    // stop real mouse events watching
-    this.mondrian.interaction.stopPixiEventWatch();
-    requestAnimationFrame(this.step);
+    this.autoDrawController.toggle();
   }
 
-  onClearChannelCache() {
+  private onClearChannelCache() {
     this.mondrian.dm.client.forceClear();
     window.location.reload();
   }
 
-  onResetChannel() {
+  private onResetChannel() {
     this.appSettings.mondrianSettings.channel = "guest";
     window.location.reload();
   }
 
-  async onSwitchChannel() {
+  private async onSwitchChannel() {
     try {
       window.location.reload();
     } catch (err) {
@@ -369,4 +285,4 @@ class App {
   }
 }
 
-window.moApp = new App();
+window.moApp = new ClientApplication();
