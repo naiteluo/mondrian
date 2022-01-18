@@ -1,5 +1,6 @@
 import {
   IMondrianData,
+  IMondrianInteractData,
   IMondrianStateData,
   MondrianDataType,
 } from "../data-manager";
@@ -24,7 +25,7 @@ export class CirclePlugin extends ShapePlugin {
     return false;
   }
 
-  override reactDragMove(data: IMondrianData): boolean {
+  override reactDragMove(data: IMondrianInteractData): boolean {
     if (!super.reactDragMove(data)) return false;
     this.handler.g.clear();
     this.handler.lineStyle = { ...this.handler.lineStyle };

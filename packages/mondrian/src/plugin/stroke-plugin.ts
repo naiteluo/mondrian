@@ -2,6 +2,7 @@ import {
   IMondrianData,
   IMondrianStateData,
   MondrianDataType,
+  IMondrianInteractData,
 } from "../data-manager";
 import { BrushName } from "./brush-plugin";
 import { PluginType } from "./plugin";
@@ -24,7 +25,7 @@ export class StrokePlugin extends ShapePlugin {
     return false;
   }
 
-  override reactDragMove(data: IMondrianData): boolean {
+  override reactDragMove(data: IMondrianInteractData): boolean {
     if (!super.reactDragMove(data)) return false;
     this.handler.g.clear();
     this.handler.lineStyle = { ...this.handler.lineStyle };

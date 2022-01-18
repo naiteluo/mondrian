@@ -1,6 +1,7 @@
 import { BLEND_MODES } from "pixi.js";
 import {
   IMondrianData,
+  IMondrianInteractData,
   IMondrianStateData,
   MondrianDataType,
 } from "../data-manager";
@@ -25,7 +26,7 @@ export class EraserBrushPlugin extends PencilBrushPlugin {
     return false;
   }
 
-  override reactDragStart(data: IMondrianData): boolean {
+  override reactDragStart(data: IMondrianInteractData): boolean {
     if (!super.reactDragStart(data)) return false;
     this.handler.config({
       enableDiscrete: false,

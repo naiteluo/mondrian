@@ -11,6 +11,11 @@ import { MondrianShared } from "../shared";
 import { IMondrianPlayerState } from "../player";
 import { MondrianGraphicsHandler } from "../renderer/grapichs-handler";
 
+/**
+ * brush name enum
+ *
+ * @public
+ */
 export const enum BrushName {
   Pencil = "Pencil",
   Eraser = "Eraser",
@@ -21,6 +26,15 @@ export const enum BrushName {
   Stroke = "Stroke",
 }
 
+/**
+ * brush name list
+ *
+ * @remarks
+ *
+ * for client ui
+ *
+ * @public
+ */
 export const MondrianDefaultBrushPluginList = [
   BrushName.Pencil,
   BrushName.Eraser,
@@ -31,6 +45,16 @@ export const MondrianDefaultBrushPluginList = [
   BrushName.Stroke,
 ];
 
+/**
+ * state of the brush in playerState
+ *
+ * @remarks
+ *
+ * describe current user's brush state,
+ * like which brush are selected, what color or width are set.
+ *
+ * @public
+ */
 export interface BrushPluginState {
   brushName: BrushName;
   brushColor: number;
@@ -48,7 +72,12 @@ export interface BrushPluginState {
   lineStyle: ILineStyleOptions;
 }
 
-export const defaultBrushOptions: BrushPluginState = {
+/**
+ * default brush state
+ *
+ * @public
+ */
+export const DefaultMondrianBrushOptions: BrushPluginState = {
   brushName: BrushName.Pencil,
   brushColor: 0x000000,
   brushWidth: 5,

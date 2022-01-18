@@ -2,5 +2,7 @@
   "javascript.preferences.importModuleSpecifier": "relative",
   "typescript.preferences.importModuleSpecifier": "relative",
   "eslint.alwaysShowStatus": true,
-  "eslint.lintTask.enable": true
+  "eslint.lintTask.enable": true,
+  // default enable “JSON with comments”
+  "files.associations": { "*.json": "jsonc" }
 }

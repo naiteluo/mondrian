@@ -10,9 +10,12 @@
     "test:record": "playwright codegen http://localhost:8080",
     "eslint": "eslint --ext ts,tsx .",
     "clean": "rimraf out && npm run clean --workspace=mondrian && npm run clean --workspace=@mondrian/client",
-    "build:types": "rimraf out && tsc -p --emitDeclarationOnly=true . --outDir out && sh ./utils/extract-types.sh && rimraf out",
+    "api:extractor": "api-extractor run -c ./packages/mondrian/api-extractor.json --local --verbose && api-documenter markdown --input-folder ./temp/mondrian --output-folder ./docs/mondrian",
+    "build:types": "rimraf out && tsc -p . --emitDeclarationOnly --outDir out && sh ./utils/extract-types.sh && rimraf out",
+    "build:api": "npm run api:extractor && rimraf temp",
     "build:lib": "babel --extensions '.ts' ./packages/mondrian/src --out-dir ./packages/mondrian/lib && sh ./utils/copy-assets.sh",
-    "build:lib:watch": "babel --extensions '.ts' ./packages/mondrian/src --out-dir ./packages/mondrian/lib --watch"
+    "build:lib:watch": "babel --extensions '.ts' ./packages/mondrian/src --out-dir ./packages/mondrian/lib --watch",
+    "build": "npm run build:types && npm run build:lib"
   },
   "author": "naiteluo",
   "license": "ISC",
@@ -26,6 +29,7 @@
     "@babel/plugin-syntax-flow": "^7.16.7",
     "@babel/plugin-transform-typescript": "^7.14.6",
     "@babel/preset-react": "^7.14.5",
+    "@microsoft/api-extractor": "^7.19.4",
     "@playwright/test": "^1.17.1",
     "@types/babel__code-frame": "^7.0.3",
     "@types/babel__core": "^7.1.15",

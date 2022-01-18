@@ -1,5 +1,5 @@
 import { MondrianUtils } from "../common/utils";
-import { IMondrianData } from "../data-manager";
+import { IMondrianData, IMondrianInteractData } from "../data-manager";
 import { MondrianShared } from "../shared";
 import { BrushPlugin } from "./brush-plugin";
 import { PluginType } from "./plugin";
@@ -35,7 +35,7 @@ export class ShapePlugin extends BrushPlugin {
     return useDash && this.dash ? this.dash : this.handler.g;
   }
 
-  override reactDragMove(data: IMondrianData): boolean {
+  override reactDragMove(data: IMondrianInteractData): boolean {
     if (!super.reactDragMove(data)) return false;
     const isRestricted = this.brushState.restrict || data.data.shiftKey;
     MondrianUtils.getRectByCorner(

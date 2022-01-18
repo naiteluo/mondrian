@@ -1,9 +1,10 @@
-import { Mondrian } from "mondrian/lib/mondrian";
 import {
+  Mondrian,
   BrushPluginState,
-  defaultBrushOptions,
+  DefaultMondrianBrushOptions,
   MondrianDefaultBrushPluginList,
-} from "mondrian/lib/plugin/brush-plugin";
+} from "mondrian/lib/index";
+import {} from "mondrian/lib/plugin/brush-plugin";
 import { Controller, GUI } from "lil-gui";
 import { appSettings } from "./utils/app-settings";
 
@@ -23,7 +24,7 @@ class App {
 
   appSettings = appSettings;
 
-  brushConfig: BrushPluginState = defaultBrushOptions;
+  brushConfig: BrushPluginState = DefaultMondrianBrushOptions;
 
   constructor() {
     // reset css
@@ -176,7 +177,7 @@ class App {
   initialBrush() {
     this.mondrian.interaction.emit("state:change", {
       player: {
-        brush: defaultBrushOptions,
+        brush: DefaultMondrianBrushOptions,
       },
     });
   }
@@ -368,5 +369,4 @@ class App {
   }
 }
 
-// todo only for testing
-(window as Window & typeof globalThis & { moApp: App }).moApp = new App();
+window.moApp = new App();

@@ -1,36 +1,13 @@
 import { Mondrian } from "mondrian/lib/mondrian";
-declare module "*.svg" {
-  const value: string;
-  export default value;
-}
-declare module "*.jpg" {
-  const value: string;
-  export default value;
-}
 
-declare module "*.png" {
-  const value: string;
-  export default value;
-}
-
-declare module "*.frag" {
-  const value: string;
-  export default value;
-}
-
-declare module "*.vert" {
-  const value: string;
-  export default value;
-}
-
+/**
+ * attach properties to global window for testing or hacking
+ */
 declare global {
   interface Window {
     mo: Mondrian;
     moApp: {
-      mo: Mondrian;
-      [key: string]: unknown;
+      mondrian: Mondrian;
     };
   }
 }
-
-export {};
