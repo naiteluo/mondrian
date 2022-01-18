@@ -33,11 +33,13 @@ export class ViewportPlugin extends MondrianPlugin {
     return false;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   override reactKeyDown(data: IMondrianData) {
     this.renderer.viewport.pause = false;
     return true;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   override reactKeyUp(data: IMondrianData) {
     this.renderer.viewport.pause = true;
     this.manager.restore();

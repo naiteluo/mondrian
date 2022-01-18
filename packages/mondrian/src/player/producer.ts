@@ -1,4 +1,3 @@
-import { Application, Container } from "pixi.js";
 import { MondrianShared } from "../shared";
 import {
   IMondrianInteractor,
@@ -12,7 +11,7 @@ import {
   MondrianActionType,
   IMondrianState,
 } from "../data-manager";
-import { MondrianPlayer, IMondrianPlayerState } from "./player";
+import { MondrianPlayer } from "./player";
 import { MondrianRenderer } from "../renderer/renderer";
 
 export class MondrianProducer
@@ -65,7 +64,8 @@ export class MondrianProducer
     ]);
   }
 
-  onUndo(event: any): void {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onUndo(_event: unknown): void {
     this.dataManager.push([
       {
         playerID: this.id,
@@ -75,7 +75,8 @@ export class MondrianProducer
     ]);
   }
 
-  onRedo(event: any): void {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onRedo(_event: unknown): void {
     this.dataManager.push([
       {
         playerID: this.id,
@@ -85,7 +86,8 @@ export class MondrianProducer
     ]);
   }
 
-  onClear(event: any): void {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onClear(_event: unknown): void {
     this.dataManager.push([
       {
         playerID: this.id,
@@ -129,11 +131,13 @@ export class MondrianProducer
     }
   }
 
-  onClick(event: any): void {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onClick(_event: unknown): void {
     console.log("implement it");
   }
 
-  onInput(event: any): void {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onInput(_event: unknown): void {
     console.log("implement it");
   }
 

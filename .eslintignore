@@ -5,3 +5,6 @@ dist
 .eslintrc.js
 server
 *.js
+out
+**/types/**/*
+!tests

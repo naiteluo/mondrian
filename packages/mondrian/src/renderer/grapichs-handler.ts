@@ -38,9 +38,12 @@ export class MondrianGraphicsHandler {
   constructor(
     private renderer: MondrianRenderer,
     private layer: Container | undefined,
-    private shared: MondrianShared | undefined,
+    private shared: MondrianShared,
     options?: MondrianGraphicsHandlerOptions
   ) {
+    if (layer === undefined) {
+      throw new Error("layer for graphics handler is undefined");
+    }
     this.options = {
       ...MondrianGraphicsHandler.DefaultOptions,
       ...(options || {}),
@@ -78,15 +81,18 @@ export class MondrianGraphicsHandler {
     if (this._finished) {
       throw new Error("Accessing finished handler is forbidden.");
     }
+    if (!this.layer) {
+      throw new Error("layer is not initialized");
+    }
     this._g = new Graphics();
     this.c.addChild(this._g);
-    this.layer!.addChild(this.c);
+    this.layer.addChild(this.c);
     this._g.lineStyle(this.options.lineStyle);
     return this._g;
   }
 
   stop() {
-    if (this.options.canCacheAsBitmap && !this.shared!.settings.viewport) {
+    if (this.options.canCacheAsBitmap && !this.shared.settings.viewport) {
       this.c.children.forEach((g) => {
         if (!g.cacheAsBitmap) {
           g.cacheAsBitmapMultisample = MSAA_QUALITY.MEDIUM;
@@ -99,21 +105,27 @@ export class MondrianGraphicsHandler {
   }
 
   attach() {
-    this.layer!.addChild(this.c);
+    if (!this.layer) {
+      throw new Error("layer is not initialized");
+    }
+    this.layer.addChild(this.c);
   }
 
   detach() {
+    if (!this.layer) {
+      throw new Error("layer is not initialized");
+    }
     if (!this._finished) {
       console.trace();
       throw new Error("Detaching unfinished handler is forbidden.");
     }
-    return this.layer!.removeChild(this.c);
+    return this.layer.removeChild(this.c);
   }
 
   destroy() {
     this._g = undefined;
-    this.layer = undefined;
     this._c = undefined;
+    this.layer = undefined;
   }
 
   get finished() {

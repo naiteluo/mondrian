@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test } from "@playwright/test";
 import { MondrianPage } from "./mondrian-page";
 
 test.describe("command", () => {

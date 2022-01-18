@@ -18,6 +18,6 @@
     "emitDeclarationOnly": true
   },
   "compileOnSave": true,
-  "include": ["packages/**/src", "./global.d.ts"],
+  "include": ["shim.d.ts", "global.d.ts", "packages/**/src"],
   "exclude": ["node_modules", "packages/**/lib", "**/dist/**"]
 }

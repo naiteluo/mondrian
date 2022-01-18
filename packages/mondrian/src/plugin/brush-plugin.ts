@@ -1,4 +1,8 @@
-import { IMondrianData, IMondrianStateData } from "../data-manager";
+import {
+  IMondrianData,
+  IMondrianInteractData,
+  IMondrianStateData,
+} from "../data-manager";
 import { MondrianPlugin, PluginType } from "./plugin";
 
 import { ILineStyleOptions, LINE_CAP, LINE_JOIN } from "@pixi/graphics";
@@ -7,6 +11,11 @@ import { MondrianShared } from "../shared";
 import { IMondrianPlayerState } from "../player";
 import { MondrianGraphicsHandler } from "../renderer/grapichs-handler";
 
+/**
+ * brush name enum
+ *
+ * @public
+ */
 export const enum BrushName {
   Pencil = "Pencil",
   Eraser = "Eraser",
@@ -17,6 +26,15 @@ export const enum BrushName {
   Stroke = "Stroke",
 }
 
+/**
+ * brush name list
+ *
+ * @remarks
+ *
+ * for client ui
+ *
+ * @public
+ */
 export const MondrianDefaultBrushPluginList = [
   BrushName.Pencil,
   BrushName.Eraser,
@@ -27,6 +45,16 @@ export const MondrianDefaultBrushPluginList = [
   BrushName.Stroke,
 ];
 
+/**
+ * state of the brush in playerState
+ *
+ * @remarks
+ *
+ * describe current user's brush state,
+ * like which brush are selected, what color or width are set.
+ *
+ * @public
+ */
 export interface BrushPluginState {
   brushName: BrushName;
   brushColor: number;
@@ -44,7 +72,12 @@ export interface BrushPluginState {
   lineStyle: ILineStyleOptions;
 }
 
-export const defaultBrushOptions: BrushPluginState = {
+/**
+ * default brush state
+ *
+ * @public
+ */
+export const DefaultMondrianBrushOptions: BrushPluginState = {
   brushName: BrushName.Pencil,
   brushColor: 0x000000,
   brushWidth: 5,
@@ -106,7 +139,7 @@ export class BrushPlugin extends MondrianPlugin {
     return true;
   }
 
-  override reactDragStart(data: IMondrianData): boolean {
+  override reactDragStart(data: IMondrianInteractData): boolean {
     // todo if we should handle isDrawing === ture here?
     const p = { x: data.data.x, y: data.data.y };
     this.isDrawing = true;
@@ -116,14 +149,15 @@ export class BrushPlugin extends MondrianPlugin {
     return true;
   }
 
-  override reactDragMove(data: IMondrianData): boolean {
+  override reactDragMove(data: IMondrianInteractData): boolean {
     if (!this.isDrawing) return false;
     const p = { x: data.data.x, y: data.data.y };
     this.currentPos = { ...p };
     return true;
   }
 
-  override reactDragEnd(data: IMondrianData): boolean {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  override reactDragEnd(_data: IMondrianInteractData): boolean {
     if (!this.isDrawing) return false;
     this.isDrawing = false;
     this.handler.stop();

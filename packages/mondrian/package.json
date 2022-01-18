@@ -2,12 +2,12 @@
   "name": "mondrian",
   "version": "1.0.0",
   "description": "sketch board library",
-  "main": "./lib/mondrian.js",
-  "typings": "./types/mondrian.d.ts",
+  "main": "./lib/index.js",
+  "typings": "./types/index.d.ts",
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "clean": "rimraf types && rimraf lib"
+    "clean": "rimraf types && rimraf lib && rimraf dist"
   },
   "repository": {
     "type": "git",

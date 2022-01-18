@@ -13,6 +13,9 @@ import { MondrianLoading } from "./common/loading";
 import { DefaultMondrianSettings, IMondrianSettings } from "./mondian-settings";
 import { PERF_LOAD, PERF_PROCESS } from "./common/constants";
 
+/**
+ * @public
+ */
 export class Mondrian extends MondrianModuleBase {
   /**
    * self's props
@@ -85,8 +88,7 @@ export class Mondrian extends MondrianModuleBase {
       this.start();
     }
 
-    // todo debug only
-    (window as any).mo = this;
+    window.mo = this;
   }
 
   override async start() {

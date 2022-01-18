@@ -13,6 +13,15 @@ npm-debug.log
 **/debug
 node_modules
 test-results
+dist
+out
+temp
+
+# package ignores
 packages/**/lib/**/*
 packages/**/types/**/*
 packages/**/dist
+
+# demo server cache and storage dir
+packages/**/cache/**/*
+!packages/**/cache/README.md

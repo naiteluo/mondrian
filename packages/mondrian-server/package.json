@@ -2,10 +2,19 @@
   "name": "@mondrian/server",
   "version": "1.0.0",
   "description": "mondrian live service server",
-  "main": "index.js",
-  "devDependencies": {},
+  "main": "./src/app.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "4",
+    "socket.io": "^4.4.0"
+  },
+  "devDependencies": {
+    "pm2": "^5.1.2"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/app.js",
+    "server": "pm2 start ecosystem.config.js"
   },
   "repository": {
     "type": "git",

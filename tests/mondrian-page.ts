@@ -1,4 +1,4 @@
-import { expect, Locator, Page, TestInfo, JSHandle } from "@playwright/test";
+import { expect, Locator, Page, TestInfo } from "@playwright/test";
 
 const TEST_URL = "http://localhost:8080";
 const API_URL = "http://localhost:3000";
@@ -41,12 +41,14 @@ export class MondrianPage {
 
   async getMondrianHandle() {
     return await this.page.evaluateHandle(() => {
-      return (window as any).mo;
+      return window.mo;
     });
   }
 
   async getDynamicLayerLength() {
     const mo = await this.getMondrianHandle();
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     return await mo.evaluate((mo) => mo.renderer.dynamicLayer.children.length);
   }
 
@@ -88,13 +90,15 @@ export class MondrianPage {
 
   async getWebGLVersion() {
     return await this.page.evaluate(() => {
-      return (window as any).mo.renderer.pixiApp.renderer.context.webGLVersion;
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      return window.mo.renderer.pixiApp.renderer.context.webGLVersion;
     });
   }
 
   async isRunning() {
     return await this.page.evaluate(() => {
-      return (window as any).mo.running;
+      return window.mo.running;
     });
   }
 
@@ -104,7 +108,7 @@ export class MondrianPage {
    */
   async showUI() {
     return await this.page.evaluate(() => {
-      return (window as any).moApp.showUI();
+      return (window.moApp.showUI as () => void)();
     });
   }
 
@@ -115,7 +119,7 @@ export class MondrianPage {
    */
   async hideUI() {
     return await this.page.evaluate(() => {
-      return (window as any).moApp.hideUI();
+      return (window.moApp.hideUI as () => void)();
     });
   }
 

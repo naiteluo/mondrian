@@ -82,11 +82,11 @@ export class MondrianPlugin
     return true;
   }
 
-  reactUndo(event: any): boolean {
+  reactUndo(event: unknown): boolean {
     return true;
   }
 
-  reactRedo(event: any): boolean {
+  reactRedo(event: unknown): boolean {
     return true;
   }
 
@@ -98,15 +98,15 @@ export class MondrianPlugin
     return true;
   }
 
-  reactClear(event: any): boolean {
+  reactClear(event: unknown): boolean {
     return true;
   }
 
-  reactClick(event: any): boolean {
+  reactClick(event: unknown): boolean {
     return true;
   }
 
-  reactInput(event: any): boolean {
+  reactInput(event: unknown): boolean {
     return true;
   }
 }

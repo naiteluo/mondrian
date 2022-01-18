@@ -62,12 +62,10 @@ export class MondrianPluginManager {
       pluginClassRef.Type === PluginType.ConsumerExcludesive ||
       pluginClassRef.Type === PluginType.ConsumerTemp
     ) {
-      if (this._instanceRecordMap[PluginType.ConsumerExcludesive]) {
+      const record = this._instanceRecordMap[PluginType.ConsumerExcludesive];
+      if (record) {
         const i = this._instanceRecordList.findIndex((instanceRecord) => {
-          return (
-            instanceRecord.classRef ===
-            this._instanceRecordMap[PluginType.ConsumerExcludesive]!.classRef
-          );
+          return instanceRecord.classRef === record.classRef;
         });
         const [removed] = this._instanceRecordList.splice(i, 1);
         this._instanceRecordMap[PluginType.ConsumerExcludesive] = undefined;
@@ -100,10 +98,7 @@ export class MondrianPluginManager {
       const current = this._instanceRecordMap[PluginType.ConsumerExcludesive];
       if (current) {
         const i = this._instanceRecordList.findIndex((instanceRecord) => {
-          return (
-            instanceRecord.classRef ===
-            this._instanceRecordMap[PluginType.ConsumerExcludesive]!.classRef
-          );
+          return instanceRecord.classRef === current.classRef;
         });
         this._instanceRecordList.splice(i, 1, this._suspendedInstanceRecord);
         this._instanceRecordMap[PluginType.ConsumerExcludesive] =

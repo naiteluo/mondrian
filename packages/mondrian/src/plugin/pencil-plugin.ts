@@ -1,14 +1,11 @@
 import { IPointData } from "@pixi/math";
-import { ILineStyleOptions } from "pixi.js";
 import { MondrianUtils } from "../common/utils";
 import {
   IMondrianData,
+  IMondrianInteractData,
   IMondrianStateData,
   MondrianDataType,
 } from "../data-manager";
-import { IMondrianPlayerState } from "../player";
-import { MondrianGraphicsHandler } from "../renderer/grapichs-handler";
-import { MondrianShared } from "../shared";
 import { BrushName, BrushPlugin } from "./brush-plugin";
 import { PluginType } from "./plugin";
 
@@ -17,10 +14,7 @@ export class PencilBrushPlugin extends BrushPlugin {
 
   static override PID = Symbol("pencil-plugin");
 
-  static override predicate(
-    data: IMondrianData | null,
-    shared?: MondrianShared
-  ): boolean {
+  static override predicate(data: IMondrianData | null): boolean {
     if (data === null) return false;
     if (data.type === MondrianDataType.SET_STATE) {
       if (data as IMondrianStateData) {
@@ -34,14 +28,14 @@ export class PencilBrushPlugin extends BrushPlugin {
 
   private pointCache: IPointData[] = [];
 
-  override reactDragStart(data: IMondrianData): boolean {
+  override reactDragStart(data: IMondrianInteractData): boolean {
     if (!super.reactDragStart(data)) return false;
     const p = { x: data.data.x, y: data.data.y };
     this.pointCache = [p];
     return true;
   }
 
-  override reactDragMove(data: IMondrianData): boolean {
+  override reactDragMove(data: IMondrianInteractData): boolean {
     if (!super.reactDragMove(data)) return false;
     const p = { x: data.data.x, y: data.data.y };
     const l = this.pointCache.length;
@@ -58,7 +52,7 @@ export class PencilBrushPlugin extends BrushPlugin {
   }
 
   // todo handle unclosed drag event properly
-  override reactDragEnd(data: IMondrianData): boolean {
+  override reactDragEnd(data: IMondrianInteractData): boolean {
     this.pointCache = [];
     if (!super.reactDragEnd(data)) return false;
     return true;

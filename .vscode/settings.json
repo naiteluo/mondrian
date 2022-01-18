@@ -1,5 +1,8 @@
 {
   "javascript.preferences.importModuleSpecifier": "relative",
   "typescript.preferences.importModuleSpecifier": "relative",
-  "yarn.enableTouchbar": true
+  "eslint.alwaysShowStatus": true,
+  "eslint.lintTask.enable": true,
+  // default enable “JSON with comments”
+  "files.associations": { "*.json": "jsonc" }
 }

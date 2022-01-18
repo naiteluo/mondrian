@@ -2,8 +2,8 @@ import {
   IMondrianData,
   IMondrianStateData,
   MondrianDataType,
+  IMondrianInteractData,
 } from "../data-manager";
-import { MondrianShared } from "../shared";
 import { BrushName } from "./brush-plugin";
 import { PluginType } from "./plugin";
 import { ShapePlugin } from "./shape-plugin";
@@ -13,10 +13,7 @@ export class StrokePlugin extends ShapePlugin {
 
   static override PID = Symbol("stroke-plugin");
 
-  static override predicate(
-    data: IMondrianData | null,
-    shared?: MondrianShared
-  ): boolean {
+  static override predicate(data: IMondrianData | null): boolean {
     if (data === null) return false;
     if (data.type === MondrianDataType.SET_STATE) {
       if (data as IMondrianStateData) {
@@ -28,7 +25,7 @@ export class StrokePlugin extends ShapePlugin {
     return false;
   }
 
-  override reactDragMove(data: IMondrianData): boolean {
+  override reactDragMove(data: IMondrianInteractData): boolean {
     if (!super.reactDragMove(data)) return false;
     this.handler.g.clear();
     this.handler.lineStyle = { ...this.handler.lineStyle };
