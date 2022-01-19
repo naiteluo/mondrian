@@ -1,13 +1,16 @@
 import { test } from "@playwright/test";
 import { MondrianPage } from "./mondrian-page";
 
-test.describe("blend", () => {
+const testTitle = "blend";
+
+test.describe(testTitle, () => {
+  const channelName = MondrianPage.setTestOptions(test, testTitle);
   /**
    * multi lines blend test
    */
   test("brushes blend", async ({ page }, testInfo) => {
     const mp = new MondrianPage(page, testInfo);
-    await mp.init();
+    await mp.init(channelName);
 
     const sx = 300;
     const sy = 300;

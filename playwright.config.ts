@@ -50,7 +50,7 @@ const config: PlaywrightTestConfig = {
       ],
     },
   },
-  workers: 1,
+  // workers: 1,
 };
 
 export default config;

@@ -1,10 +1,13 @@
 import { test } from "@playwright/test";
 import { MondrianPage } from "./mondrian-page";
 
-test.describe("command", () => {
+const testTitle = "command";
+
+test.describe(testTitle, () => {
+  const channelName = MondrianPage.setTestOptions(test, testTitle);
   test("simple undo", async ({ page }, testInfo) => {
     const mp = new MondrianPage(page, testInfo);
-    await mp.init();
+    await mp.init(channelName);
     await mp.quickFill(10);
     for (let i = 0; i < 5; i++) {
       // Click button:has-text("Undo")
@@ -17,7 +20,7 @@ test.describe("command", () => {
 
   test("simple redo", async ({ page }, testInfo) => {
     const mp = new MondrianPage(page, testInfo);
-    await mp.init();
+    await mp.init(channelName);
     await mp.quickFill(10);
     for (let i = 0; i < 5; i++) {
       // Click button:has-text("Undo")
@@ -35,7 +38,7 @@ test.describe("command", () => {
 
   test("simple clear", async ({ page }, testInfo) => {
     const mp = new MondrianPage(page, testInfo);
-    await mp.init();
+    await mp.init(channelName);
     await mp.quickFill(10);
 
     // Click [data-test-id="clear"] button:has-text("Clear")

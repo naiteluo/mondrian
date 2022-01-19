@@ -1,4 +1,5 @@
 import { Mondrian } from "mondrian/lib/mondrian";
+import { ClientApplication } from "mondrian-client/app";
 
 /**
  * attach properties to global window for testing or hacking
@@ -6,8 +7,6 @@ import { Mondrian } from "mondrian/lib/mondrian";
 declare global {
   interface Window {
     mo: Mondrian;
-    moApp: {
-      mondrian: Mondrian;
-    };
+    moApp: ClientApplication;
   }
 }

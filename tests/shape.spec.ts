@@ -64,10 +64,13 @@ const drawShapes = async (mp: MondrianPage) => {
   }
 };
 
-test.describe("shape", () => {
+const testTitle = "shape";
+
+test.describe(testTitle, () => {
+  const channelName = MondrianPage.setTestOptions(test, testTitle);
   test("rectangle", async ({ page }, testInfo) => {
     const mp = new MondrianPage(page, testInfo);
-    await mp.init();
+    await mp.init(channelName);
 
     await page.selectOption('[data-test-id="brushName"] select', "Rectangle");
     await mp.hideUI();
@@ -79,7 +82,7 @@ test.describe("shape", () => {
 
   test("circle", async ({ page }, testInfo) => {
     const mp = new MondrianPage(page, testInfo);
-    await mp.init();
+    await mp.init(channelName);
 
     await page.selectOption('[data-test-id="brushName"] select', "Circle");
     await mp.hideUI();
@@ -91,7 +94,7 @@ test.describe("shape", () => {
 
   test("triangle", async ({ page }, testInfo) => {
     const mp = new MondrianPage(page, testInfo);
-    await mp.init();
+    await mp.init(channelName);
 
     await page.selectOption('[data-test-id="brushName"] select', "Triangle");
     await mp.hideUI();
@@ -103,7 +106,7 @@ test.describe("shape", () => {
 
   test("stroke", async ({ page }, testInfo) => {
     const mp = new MondrianPage(page, testInfo);
-    await mp.init();
+    await mp.init(channelName);
 
     await page.selectOption('[data-test-id="brushName"] select', "Stroke");
     await mp.hideUI();

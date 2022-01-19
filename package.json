@@ -16,7 +16,7 @@
     "build:lib": "babel --extensions '.ts' ./packages/mondrian/src --out-dir ./packages/mondrian/lib && sh ./utils/copy-assets.sh",
     "build:lib:watch": "babel --extensions '.ts' ./packages/mondrian/src --out-dir ./packages/mondrian/lib --watch",
     "build:client": "npm run build --workspace=@mondrian/client",
-    "build": "npm run build:types && npm run build:lib"
+    "build": "npm run build:types && npm run build:lib && npm run build:client"
   },
   "author": "naiteluo",
   "license": "ISC",
