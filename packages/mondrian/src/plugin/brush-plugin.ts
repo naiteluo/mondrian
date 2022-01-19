@@ -140,7 +140,9 @@ export class BrushPlugin extends MondrianPlugin {
   }
 
   override reactDragStart(data: IMondrianInteractData): boolean {
-    // todo if we should handle isDrawing === ture here?
+    if (this.isDrawing) {
+      return false;
+    }
     const p = { x: data.data.x, y: data.data.y };
     this.isDrawing = true;
     this.startPos = this.currentPos = { ...p };
