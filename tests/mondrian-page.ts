@@ -1,4 +1,4 @@
-import { expect, Locator, Page, TestInfo } from "@playwright/test";
+import { expect, Locator, Page, TestInfo, TestType } from "@playwright/test";
 
 const TEST_URL = "http://localhost:8080";
 const API_URL = "http://localhost:3000";
@@ -32,8 +32,8 @@ export class MondrianPage {
     );
   }
 
-  async init() {
-    await this.resetChannel();
+  async init(channelName: string) {
+    await this.resetChannel(channelName);
     await this.goto();
     await this.start();
     await this.page.waitForTimeout(1000);
@@ -52,17 +52,14 @@ export class MondrianPage {
     return await mo.evaluate((mo) => mo.renderer.dynamicLayer.children.length);
   }
 
-  async resetChannel() {
+  async resetChannel(channelName: string) {
     const response = await this.page.evaluate(
-      async ([API_URL, DEFAULT_CHANNEL_NAME]) => {
-        return await fetch(
-          `${API_URL}/clearChannel?mark=${DEFAULT_CHANNEL_NAME}`,
-          {
-            method: "GET",
-          }
-        ).then((res) => (res.ok ? res.json() : Promise.reject(res)));
+      async ([API_URL, channelName]) => {
+        return await fetch(`${API_URL}/clearChannel?mark=${channelName}`, {
+          method: "GET",
+        }).then((res) => (res.ok ? res.json() : Promise.reject(res)));
       },
-      [API_URL, DEFAULT_CHANNEL_NAME]
+      [API_URL, channelName]
     );
     if (!response.success) {
       throw new Error("reset channel fails.");
@@ -157,6 +154,55 @@ export class MondrianPage {
       await this.page.mouse.move(sx + length, sy + i * span, { steps: 10 });
       await this.page.mouse.up();
     }
+  }
+
+  static setTestOptions(
+    test: TestType<unknown, unknown>,
+    title: string
+  ): string {
+    const channelName = `playwright_test_${title}`;
+    test.use({
+      storageState: {
+        cookies: [],
+        origins: [
+          {
+            origin: "http://localhost:8080/",
+            localStorage: [
+              {
+                name: "__mo_config_auto_start",
+                value: "false",
+              },
+              {
+                name: "__mo_config_channel",
+                value: `playwright_test_${title}`,
+              },
+              {
+                name: "__mo_config_disable_cursor",
+                value: "true",
+              },
+            ],
+          },
+          {
+            origin: "http://naiteluo.cc",
+            localStorage: [
+              {
+                name: "__mo_config_auto_start",
+                value: "false",
+              },
+              {
+                name: "__mo_config_channel",
+                value: `playwright_test_${title}`,
+              },
+              {
+                name: "__mo_config_disable_cursor",
+                value: "true",
+              },
+            ],
+          },
+        ],
+      },
+    });
+    return channelName;
   }
 }
 

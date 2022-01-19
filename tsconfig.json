@@ -6,7 +6,8 @@
     "baseUrl": ".",
     "paths": {
       "*": ["./packages/*/"],
-      "mondrian/lib/*": ["./packages/mondrian/src/*"]
+      "mondrian/lib/*": ["./packages/mondrian/src/*"],
+      "mondrian-client/*": ["./packages/mondrian-client/src/*"]
     },
     "esModuleInterop": true,
     "strict": true,

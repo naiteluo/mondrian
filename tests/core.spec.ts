@@ -2,10 +2,13 @@ import { test, expect } from "@playwright/test";
 import { expectSome, hasColor, MondrianPage } from "./mondrian-page";
 import { PNG } from "pngjs";
 
-test.describe("core", () => {
+const testTitle = "core";
+
+test.describe(testTitle, () => {
+  const channelName = MondrianPage.setTestOptions(test, testTitle);
   test("initialization check", async ({ page }) => {
     const mp = new MondrianPage(page);
-    await mp.resetChannel();
+    await mp.resetChannel(channelName);
     await mp.goto();
 
     // should not have contianer before start
@@ -16,15 +19,15 @@ test.describe("core", () => {
 
     // check channel name
     const storageHandle = await page.evaluateHandle(() => window.localStorage);
-    const channelName = await storageHandle.evaluate((storage) => {
+    const _channelName = await storageHandle.evaluate((storage) => {
       return storage.getItem("__mo_config_channel");
     });
-    expect(channelName).toEqual("playwright_test");
+    expect(_channelName).toEqual(channelName);
   });
 
   test("webgl detect", async ({ page }, { outputPath }) => {
     const mp = new MondrianPage(page);
-    await mp.init();
+    await mp.init(channelName);
     expect(await mp.getWebGLVersion()).toEqual(2);
 
     // take a snapshot of gpu info
@@ -37,7 +40,7 @@ test.describe("core", () => {
 
   test("draw lines", async ({ page }, { outputPath }) => {
     const mp = new MondrianPage(page);
-    await mp.init();
+    await mp.init(channelName);
     // Click button:has-text("Start Auto Draw")
     await mp.startAutoDraw();
     await page.waitForTimeout(2 * 1000);

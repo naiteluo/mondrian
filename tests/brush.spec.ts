@@ -23,10 +23,13 @@ const basicLineData = [
   ],
 ];
 
-test.describe("brush", () => {
+const testTitle = "brush";
+
+test.describe(testTitle, () => {
+  const channelName = MondrianPage.setTestOptions(test, testTitle);
   test("draw simple line", async ({ page }, testInfo) => {
     const mp = new MondrianPage(page, testInfo);
-    await mp.init();
+    await mp.init(channelName);
 
     for (let i = 0; i < basicLineData.length; i++) {
       const lineData = basicLineData[i];
@@ -47,7 +50,7 @@ test.describe("brush", () => {
 
   test("draw eraser", async ({ page }, testInfo) => {
     const mp = new MondrianPage(page, testInfo);
-    await mp.init();
+    await mp.init(channelName);
 
     for (let i = 0; i < basicLineData.length; i++) {
       const lineData = basicLineData[i];
@@ -90,7 +93,7 @@ test.describe("brush", () => {
 
   test("draw highlighter line", async ({ page }, testInfo) => {
     const mp = new MondrianPage(page, testInfo);
-    await mp.init();
+    await mp.init(channelName);
 
     await page.selectOption('[data-test-id="brushName"] select', "Highlighter");
     await page.fill('[data-test-id="brushWidth"] input[type="number"]', "20");
