@@ -41,7 +41,7 @@ export class Mondrian extends MondrianModuleBase {
 
   private _settings: IMondrianSettings;
 
-  // todo better settings handling
+  // todo #10 better settings handling
   constructor(_settings: Partial<IMondrianSettings>) {
     super();
     this._settings = { ...DefaultMondrianSettings, ..._settings };

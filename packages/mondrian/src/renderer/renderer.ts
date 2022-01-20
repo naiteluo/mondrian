@@ -258,7 +258,7 @@ export class MondrianRenderer extends MondrianModuleBase {
      * https://bugs.chromium.org/p/chromium/issues/detail?id=934823
      * https://github.com/pixijs/pixijs/issues/7899
      */
-    // todo add version detect to set webgl1 as prefer_env before chrome 75
+    // todo #7 add version detect to set webgl1 as prefer_env before chrome 75
     settings.PREFER_ENV = ENV.WEBGL2;
     // Create a Pixi Application
 
@@ -282,7 +282,7 @@ export class MondrianRenderer extends MondrianModuleBase {
   }
 
   resize() {
-    // todo resize should handle static sprite resizing too
+    // todo #8 resize should handle static sprite resizing too
     const wh = MondrianUtils.getScreenWH();
     this.app.view.style.width = `${wh.w}px`;
     this.app.view.style.height = `${wh.h}px`;
@@ -294,9 +294,6 @@ export class MondrianRenderer extends MondrianModuleBase {
      * add perf ticker
      */
     this.pixiApp.ticker.add(this.perf, undefined, UPDATE_PRIORITY.LOW);
-    // todo delete
-    // expose base texture cache for debug
-    // (window as any).BaseTextureCache = BaseTextureCache;
   }
 
   /**
@@ -467,7 +464,7 @@ export class MondrianRenderer extends MondrianModuleBase {
    */
   private gc = () => {
     // todo disable discrete handler
-    // todo we are having idempotent issue, stop this feature temporarily
+    // todo #13 we are having idempotent issue, stop this feature temporarily
     // this.dynamicCache.forEach((v) => {
     //   v.refresh();
     // });
