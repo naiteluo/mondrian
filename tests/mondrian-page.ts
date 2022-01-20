@@ -4,7 +4,8 @@ const TEST_URL = "http://localhost:8080";
 const API_URL = "http://localhost:3000";
 // const TEST_URL = "http://naiteluo.cc/mondrian/";
 // const API_URL = "http://naiteluo.cc:3000";
-const DEFAULT_CHANNEL_NAME = "playwright_test";
+
+import { MondrianTestSettings } from "./mondrian-test-settings";
 
 export class MondrianPage {
   readonly page: Page;
@@ -169,16 +170,11 @@ export class MondrianPage {
             origin: "http://localhost:8080/",
             localStorage: [
               {
-                name: "__mo_config_auto_start",
-                value: "false",
-              },
-              {
-                name: "__mo_config_channel",
-                value: `playwright_test_${title}`,
-              },
-              {
-                name: "__mo_config_disable_cursor",
-                value: "true",
+                name: "__mo_config_mondrian_settings",
+                value: JSON.stringify({
+                  ...MondrianTestSettings,
+                  channel: `playwright_test_${title}`,
+                }),
               },
             ],
           },
@@ -186,16 +182,11 @@ export class MondrianPage {
             origin: "http://naiteluo.cc",
             localStorage: [
               {
-                name: "__mo_config_auto_start",
-                value: "false",
-              },
-              {
-                name: "__mo_config_channel",
-                value: `playwright_test_${title}`,
-              },
-              {
-                name: "__mo_config_disable_cursor",
-                value: "true",
+                name: "__mo_config_mondrian_settings",
+                value: JSON.stringify({
+                  ...MondrianTestSettings,
+                  channel: `playwright_test_${title}`,
+                }),
               },
             ],
           },

@@ -1,5 +1,7 @@
 import { PlaywrightTestConfig } from "@playwright/test";
 
+import { MondrianTestSettings } from "./tests/mondrian-test-settings";
+
 const config: PlaywrightTestConfig = {
   use: {
     actionTimeout: 100 * 1000,
@@ -17,16 +19,8 @@ const config: PlaywrightTestConfig = {
           origin: "http://localhost:8080/",
           localStorage: [
             {
-              name: "__mo_config_auto_start",
-              value: "false",
-            },
-            {
-              name: "__mo_config_channel",
-              value: "playwright_test",
-            },
-            {
-              name: "__mo_config_disable_cursor",
-              value: "true",
+              name: "__mo_config_mondrian_settings",
+              value: JSON.stringify(MondrianTestSettings),
             },
           ],
         },
@@ -34,16 +28,8 @@ const config: PlaywrightTestConfig = {
           origin: "http://naiteluo.cc",
           localStorage: [
             {
-              name: "__mo_config_auto_start",
-              value: "false",
-            },
-            {
-              name: "__mo_config_channel",
-              value: "playwright_test",
-            },
-            {
-              name: "__mo_config_disable_cursor",
-              value: "true",
+              name: "__mo_config_mondrian_settings",
+              value: JSON.stringify(MondrianTestSettings),
             },
           ],
         },
