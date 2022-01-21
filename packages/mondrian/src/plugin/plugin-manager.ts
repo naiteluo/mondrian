@@ -53,7 +53,7 @@ export class MondrianPluginManager {
 
   private _pluginClassRefList: IMondrianPluginConstructor[] = [];
 
-  // todo if priority do matters, replace array with link list
+  // todo #12 if priority do matters, replace array with link list
   private _instanceRecordList: IMondrianPluginInstanceRecord[] = [];
 
   load(pluginClassRef: IMondrianPluginConstructor) {

@@ -4,17 +4,18 @@ import {
   DefaultMondrianBrushOptions,
   MondrianDefaultBrushPluginList,
 } from "mondrian/lib/index";
-import {} from "mondrian/lib/plugin/brush-plugin";
 import { Controller, GUI } from "lil-gui";
-import { appSettings } from "./utils/app-settings";
 import { AutoDrawController } from "./auto-draw-controller";
+import { getMondrianSettings, setMondrianSettings } from "./utils/app-helper";
 
 export class ClientApplication {
   $div: HTMLElement;
 
   mondrian!: Mondrian;
 
-  appSettings = appSettings;
+  appSettings = {
+    mondrianSettings: getMondrianSettings(),
+  };
 
   brushConfig: BrushPluginState = DefaultMondrianBrushOptions;
 
@@ -36,8 +37,8 @@ export class ClientApplication {
 
     // create mondrian instance
     this.mondrian = new Mondrian({
-      container: this.$div,
       ...this.appSettings.mondrianSettings,
+      container: this.$div,
     });
 
     // listen data recovered event
@@ -87,9 +88,7 @@ export class ClientApplication {
       .add(this.appSettings.mondrianSettings, "resolution", 1, 3, 1)
       .listen()
       .name("resolution")
-      .onFinishChange(() => {
-        window.location.reload();
-      });
+      .onFinishChange(this.onMondrianSettingsChange);
     settingsFolder
       .add(
         this.appSettings.mondrianSettings,
@@ -98,51 +97,37 @@ export class ClientApplication {
       )
       .listen()
       .name("chunkLimit")
-      .onFinishChange(() => {
-        window.location.reload();
-      });
+      .onFinishChange(this.onMondrianSettingsChange);
     settingsFolder
       .add(this.appSettings.mondrianSettings, "isProducer", [true, false])
       .listen()
       .name("isProducer")
-      .onFinishChange(() => {
-        window.location.reload();
-      });
+      .onFinishChange(this.onMondrianSettingsChange);
     settingsFolder
       .add(this.appSettings.mondrianSettings, "autoStart", [true, false])
       .listen()
       .name("autoStart")
-      .onFinishChange(() => {
-        window.location.reload();
-      });
+      .onFinishChange(this.onMondrianSettingsChange);
     settingsFolder
       .add(this.appSettings.mondrianSettings, "disableCursor", [true, false])
       .listen()
       .name("disableCursor")
-      .onFinishChange(() => {
-        window.location.reload();
-      });
+      .onFinishChange(this.onMondrianSettingsChange);
     settingsFolder
       .add(this.appSettings.mondrianSettings, "debug", [true, false])
       .listen()
       .name("debug")
-      .onFinishChange(() => {
-        window.location.reload();
-      });
+      .onFinishChange(this.onMondrianSettingsChange);
     settingsFolder
       .add(this.appSettings.mondrianSettings, "viewport", [true, false])
       .listen()
       .name("useViewport")
-      .onFinishChange(() => {
-        window.location.reload();
-      });
+      .onFinishChange(this.onMondrianSettingsChange);
     settingsFolder
       .add(this.appSettings.mondrianSettings, "background", [true, false])
       .listen()
       .name("showBackground")
-      .onFinishChange(() => {
-        window.location.reload();
-      });
+      .onFinishChange(this.onMondrianSettingsChange);
   }
 
   private setupAutomationControls() {
@@ -214,6 +199,11 @@ export class ClientApplication {
       },
     });
   }
+
+  private onMondrianSettingsChange = () => {
+    setMondrianSettings(this.appSettings.mondrianSettings);
+    window.location.reload();
+  };
 
   private onBrushStateChange = () => {
     this.applyBrushChanges();

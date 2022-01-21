@@ -20,7 +20,8 @@ test.describe(testTitle, () => {
     // check channel name
     const storageHandle = await page.evaluateHandle(() => window.localStorage);
     const _channelName = await storageHandle.evaluate((storage) => {
-      return storage.getItem("__mo_config_channel");
+      return JSON.parse(storage.getItem("__mo_config_mondrian_settings"))
+        .channel;
     });
     expect(_channelName).toEqual(channelName);
   });

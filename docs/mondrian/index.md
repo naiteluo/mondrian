@@ -8,5 +8,5 @@
 
 |  Package | Description |
 |  --- | --- |
-|  [mondrian](./mondrian.md) |  |
+|  [@mondrian/mondrian](./mondrian.md) |  |
 

@@ -37,6 +37,7 @@ export class MondrianDataManager extends MondrianModuleBase {
 
   override async start() {
     super.start();
+    // todo #5 client should be inject outside mondrian
     this.client = new IoClient({
       // todo remote make channel safe
       channel: this.shared.settings.channel || "guest",

@@ -21,7 +21,7 @@ export interface IoClientSettings {
   channel: string;
 }
 
-// todo refactor
+// todo #11 client module should be redesing and refactor
 export class IoClient {
   private socket: Socket;
 
