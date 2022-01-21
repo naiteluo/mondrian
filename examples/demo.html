@@ -16,6 +16,14 @@
       viewport: true,
       background: true,
       debug: false,
+      useBuiltinClient: true,
+      builtintClientUrl: "ws://localhost:3000",
+    });
+
+    mondrian.interaction.emit("state:change", {
+      player: {
+        brush: Mondrian.DefaultMondrianBrushOptions,
+      },
     });
   </script>
 </html>

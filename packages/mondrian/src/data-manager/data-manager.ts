@@ -4,16 +4,18 @@ import { MondrianPlayerManager } from "../player";
 import { IMondrianData } from "./data";
 import { MondrianWsDownStreamSource } from "./down-stream";
 import { MondrianWsUpStreamSink } from "./up-stream";
-import { IoClient } from "./ws-client";
 import { MondrianSharedBuffer } from "./shared-buffer";
 import { MondrianRenderer } from "../renderer/renderer";
+import { IMondrianDataClient } from "./data-client";
+import { MondrianBuiltinWsClient } from "../builtin-ws-client";
+import { MondrianDataClient } from ".";
 
 export * from "./data";
 
 export class MondrianDataManager extends MondrianModuleBase {
   sharedBuffer: MondrianSharedBuffer = new MondrianSharedBuffer();
 
-  client!: IoClient;
+  client!: IMondrianDataClient;
 
   private upStream!: WritableStream;
 
@@ -37,14 +39,19 @@ export class MondrianDataManager extends MondrianModuleBase {
 
   override async start() {
     super.start();
-    // todo #5 client should be inject outside mondrian
-    this.client = new IoClient({
-      // todo remote make channel safe
-      channel: this.shared.settings.channel || "guest",
-    });
+    if (this.shared.settings.useBuiltinClient) {
+      // todo might have circle refer issue here
+      this.client = new MondrianBuiltinWsClient(this.shared);
+    } else {
+      if (this.shared.settings.client) {
+        this.client = this.shared.settings.client;
+      } else {
+        this.client = new MondrianDataClient();
+      }
+    }
+
     this.upStream = new WritableStream(
       new MondrianWsUpStreamSink(this.sharedBuffer, this.client)
-      // new LocalUpStreamSink(this.buffer)
     );
     this.downStream = new ReadableStream<IMondrianData>(
       new MondrianWsDownStreamSource(
@@ -53,16 +60,15 @@ export class MondrianDataManager extends MondrianModuleBase {
         this.renderer,
         this.shared
       )
-      // new LocalDownStreamSource(this.buffer)
     );
     return new Promise((resolve) => {
       if (!this.client) {
         throw new Error("client had not been bind!");
       }
-      this.client.start();
-      this.client.onRecovered((success) => {
+      this.client.bindRecoveredListener((success) => {
         resolve(success);
       });
+      this.client.start();
       this.startRead();
       this.startWrite();
     });

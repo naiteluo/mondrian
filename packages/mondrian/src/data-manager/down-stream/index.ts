@@ -1,7 +1,7 @@
 import { MondrianSharedBuffer } from "../shared-buffer";
-import { IoClient } from "../ws-client";
 import { MondrianShared } from "../../shared";
 import { MondrianRenderer } from "../../renderer/renderer";
+import { IMondrianDataClient } from "..";
 
 export class MondrianWsDownStreamSource implements UnderlyingSource {
   startTimeStamp?: number;
@@ -10,11 +10,11 @@ export class MondrianWsDownStreamSource implements UnderlyingSource {
 
   constructor(
     private sharedBuffer: MondrianSharedBuffer,
-    private client: IoClient,
+    private client: IMondrianDataClient,
     private renderer: MondrianRenderer,
     private shared: MondrianShared
   ) {
-    this.client.on((datas) => {
+    this.client.bindReceivedListener((datas) => {
       this.sharedBuffer.append(datas);
     });
   }
