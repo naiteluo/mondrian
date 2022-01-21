@@ -8,7 +8,10 @@
     <script src="../packages/mondrian/dist/index.umd.js"></script>
   </head>
   <body>
-    <div id="draw-container"></div>
+    <div
+      id="draw-container"
+      style="width: 600px; height: 500px; border: red solid 1px"
+    ></div>
   </body>
   <script type="module">
     const mondrian = new Mondrian.Mondrian({
@@ -17,6 +20,8 @@
       background: true,
       debug: false,
       useBuiltinClient: true,
+      worldWidth: 600,
+      worldHeight: 500,
       builtintClientUrl: "ws://localhost:3000",
     });
 

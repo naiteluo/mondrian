@@ -37,6 +37,9 @@ export class ClientApplication {
     this.$div = document.createElement("div");
     document.body.appendChild(this.$div);
 
+    this.$div.style.width = `${window.innerWidth}px`;
+    this.$div.style.height = `${window.innerHeight}px`;
+
     // create mondrian instance
     this.mondrian = new Mondrian({
       ...this.appSettings.mondrianSettings,

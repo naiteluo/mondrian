@@ -28,9 +28,9 @@ export class MondrianContainerManager extends MondrianModuleBase {
   }
 
   resize() {
-    const wh = MondrianUtils.getScreenWH();
-    this.$container.style.width = `${wh.w}px`;
-    this.$container.style.height = `${wh.h}px`;
+    // const wh = MondrianUtils.getScreenWH();
+    // this.$container.style.width = `${wh.w}px`;
+    // this.$container.style.height = `${wh.h}px`;
   }
 
   private initializeContainer() {
