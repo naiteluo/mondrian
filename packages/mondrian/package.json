@@ -1,9 +1,8 @@
 {
-  "name": "mondrian",
-  "version": "0.0.1",
+  "name": "@mondrian/mondrian",
+  "version": "0.0.3-beta",
   "description": "sketch board library",
   "main": "lib/index.js",
-  "module": "lib/index.js",
   "browser": "dist/index.umd.js",
   "typings": "types/index.d.ts",
   "namespace": "Mondrian",

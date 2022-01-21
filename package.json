@@ -1,6 +1,6 @@
 {
   "name": "mondrian-workspace",
-  "version": "1.0.0",
+  "version": "0.0.1-beta",
   "description": "mondrian",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "test:debug": "playwright test --debug",
     "test:record": "playwright codegen http://localhost:8080",
     "eslint": "eslint --ext ts,tsx .",
-    "clean": "rimraf out && npm run clean --workspace=mondrian && npm run clean --workspace=@mondrian/client",
+    "clean": "rimraf out && npm run clean --workspace=@mondrian/mondrian && npm run clean --workspace=@mondrian/client",
     "api:extractor": "api-extractor run -c ./packages/mondrian/api-extractor.json --local --verbose && api-documenter markdown --input-folder ./temp/mondrian --output-folder ./docs/mondrian",
     "build:types": "rimraf out && tsc -p . --emitDeclarationOnly --outDir out && sh ./utils/extract-types.sh && rimraf out",
     "build:api": "npm run api:extractor && rimraf temp",
@@ -31,6 +31,7 @@
     "@babel/plugin-syntax-flow": "^7.16.7",
     "@babel/plugin-transform-typescript": "^7.14.6",
     "@babel/preset-react": "^7.14.5",
+    "@microsoft/api-documenter": "^7.15.0",
     "@microsoft/api-extractor": "^7.19.4",
     "@playwright/test": "^1.17.1",
     "@rollup/plugin-commonjs": "^21.0.1",

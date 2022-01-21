@@ -34,11 +34,10 @@ export default [
   // an array for the `output` option, where we can specify
   // `file` and `format` for each target)
   //   {
-  //     input: "src/main.js",
-  //     external: ["ms"],
+  //     input: path.join(mondrianProjectPath, "lib/index.js"),
   //     output: [
-  //       { file: pkg.main, format: "cjs" },
-  //       { file: pkg.module, format: "es" },
+  //       { file: path.join(mondrianProjectPath, pkg.main), format: "cjs" },
+  //       { file: path.join(mondrianProjectPath, pkg.module), format: "es" },
   //     ],
   //   },
 ];
