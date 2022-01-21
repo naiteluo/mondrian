@@ -9,19 +9,29 @@
 |  Class | Description |
 |  --- | --- |
 |  [Mondrian](./mondrian.mondrian.md) |  |
+|  [MondrianDataClient](./mondrian.mondriandataclient.md) |  |
+|  [MondrianDataManager](./mondrian.mondriandatamanager.md) |  |
 
 ## Enumerations
 
 |  Enumeration | Description |
 |  --- | --- |
 |  [BrushName](./mondrian.brushname.md) | brush name enum |
+|  [MondrianActionType](./mondrian.mondrianactiontype.md) |  |
+|  [MondrianDataType](./mondrian.mondriandatatype.md) |  |
+|  [MondrianInteractType](./mondrian.mondrianinteracttype.md) |  |
 
 ## Interfaces
 
 |  Interface | Description |
 |  --- | --- |
 |  [BrushPluginState](./mondrian.brushpluginstate.md) | state of the brush in playerState |
+|  [IMondrianActionData](./mondrian.imondrianactiondata.md) |  |
+|  [IMondrianDataClient](./mondrian.imondriandataclient.md) |  |
+|  [IMondrianInteractData](./mondrian.imondrianinteractdata.md) |  |
 |  [IMondrianSettings](./mondrian.imondriansettings.md) | Mondrian Settings |
+|  [IMondrianState](./mondrian.imondrianstate.md) |  |
+|  [IMondrianStateData](./mondrian.imondrianstatedata.md) |  |
 
 ## Variables
 
@@ -30,4 +40,11 @@
 |  [DefaultMondrianBrushOptions](./mondrian.defaultmondrianbrushoptions.md) | default brush state |
 |  [DefaultMondrianSettings](./mondrian.defaultmondriansettings.md) | default mondrian settings |
 |  [MondrianDefaultBrushPluginList](./mondrian.mondriandefaultbrushpluginlist.md) | brush name list |
+
+## Type Aliases
+
+|  Type Alias | Description |
+|  --- | --- |
+|  [IMondrianData](./mondrian.imondriandata.md) |  |
+|  [MondrianDataClientReceivedListener](./mondrian.mondriandataclientreceivedlistener.md) |  |
 

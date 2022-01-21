@@ -54,15 +54,69 @@ export const DefaultMondrianBrushOptions: BrushPluginState;
 // @public
 export const DefaultMondrianSettings: IMondrianSettings;
 
+// Warning: (ae-forgotten-export) The symbol "IMondrianCommonData" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export interface IMondrianActionData extends IMondrianCommonData {
+    // (undocumented)
+    data: {
+        subType: MondrianActionType;
+        [key: string]: string | number | boolean | object;
+    };
+    // (undocumented)
+    type: MondrianDataType.COMMAND;
+}
+
+// @public (undocumented)
+export type IMondrianData = IMondrianInteractData | IMondrianStateData | IMondrianActionData;
+
+// @public (undocumented)
+export interface IMondrianDataClient {
+    // (undocumented)
+    bindReceivedListener(listener: MondrianDataClientReceivedListener): void;
+    // (undocumented)
+    bindRecoveredListener(listener: MondrianDataClientRecoveredListener): void;
+    // (undocumented)
+    receivedFromRemote: MondrianDataClientReceivedListener;
+    // Warning: (ae-forgotten-export) The symbol "MondrianDataClientRecoveredListener" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    recoveredFromRemote: MondrianDataClientRecoveredListener;
+    // (undocumented)
+    sendToRemote(datasToSend: IMondrianData[]): void;
+    // (undocumented)
+    start(): void;
+}
+
+// @public (undocumented)
+export interface IMondrianInteractData extends IMondrianCommonData {
+    // (undocumented)
+    data: {
+        subType: MondrianInteractType;
+        x: number;
+        y: number;
+        code?: string;
+        shiftKey?: boolean;
+        altKey?: boolean;
+        ctrlKey?: boolean;
+        spaceKey?: boolean;
+    };
+    // (undocumented)
+    type: MondrianDataType.INTERACT;
+}
+
 // @public
 export interface IMondrianSettings {
     // (undocumented)
     autoStart?: boolean;
     background?: boolean;
     // (undocumented)
+    builtintClientUrl: string;
+    // (undocumented)
     channel?: string;
     // (undocumented)
     chunkLimit?: number;
+    client?: IMondrianDataClient;
     container: HTMLElement | null;
     // (undocumented)
     debug?: boolean;
@@ -76,6 +130,24 @@ export interface IMondrianSettings {
     worldWidth: number;
 }
 
+// @public (undocumented)
+export interface IMondrianState {
+    // (undocumented)
+    [key: string]: string | number | boolean | object;
+    // Warning: (ae-forgotten-export) The symbol "IMondrianPlayerState" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    player: IMondrianPlayerState;
+}
+
+// @public (undocumented)
+export interface IMondrianStateData extends IMondrianCommonData {
+    // (undocumented)
+    data: IMondrianState;
+    // (undocumented)
+    type: MondrianDataType.SET_STATE;
+}
+
 // Warning: (ae-forgotten-export) The symbol "MondrianModuleBase" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
@@ -87,8 +159,6 @@ export class Mondrian extends MondrianModuleBase {
     //
     // (undocumented)
     get __debugShared(): MondrianShared;
-    // Warning: (ae-forgotten-export) The symbol "MondrianDataManager" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     get dm(): MondrianDataManager;
     // (undocumented)
@@ -115,8 +185,88 @@ export class Mondrian extends MondrianModuleBase {
     start(): Promise<boolean>;
 }
 
+// @public (undocumented)
+export const enum MondrianActionType {
+    // (undocumented)
+    CLEAR = "cl",
+    // (undocumented)
+    REDO = "rd",
+    // (undocumented)
+    SYSTEM = "sy",
+    // (undocumented)
+    UNDO = "ud"
+}
+
+// @public (undocumented)
+export class MondrianDataClient {
+    // (undocumented)
+    bindReceivedListener(listener: MondrianDataClientReceivedListener): void;
+    // (undocumented)
+    bindRecoveredListener(listener: MondrianDataClientRecoveredListener): void;
+    // (undocumented)
+    protected generateLastData(): IMondrianData;
+    get receivedFromRemote(): MondrianDataClientReceivedListener;
+    get recoveredFromRemote(): MondrianDataClientRecoveredListener;
+    sendToRemote(datasToSend: IMondrianData[]): void;
+    start(): void;
+}
+
+// @public (undocumented)
+export type MondrianDataClientReceivedListener = (datas: IMondrianData[], isRecover?: boolean) => void;
+
+// @public (undocumented)
+export class MondrianDataManager extends MondrianModuleBase {
+    // Warning: (ae-forgotten-export) The symbol "MondrianPlayerManager" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "MondrianRenderer" needs to be exported by the entry point index.d.ts
+    constructor(playerManager: MondrianPlayerManager, renderer: MondrianRenderer, shared: MondrianShared);
+    // (undocumented)
+    client: IMondrianDataClient;
+    // (undocumented)
+    dispatch(datas: IMondrianData[]): void;
+    // (undocumented)
+    static EVENT_RECOVER_CONSUMED: string;
+    // (undocumented)
+    push(datas: IMondrianData[]): Promise<void>;
+    // Warning: (ae-forgotten-export) The symbol "MondrianSharedBuffer" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    sharedBuffer: MondrianSharedBuffer;
+    // (undocumented)
+    start(): Promise<unknown>;
+    // (undocumented)
+    startRead(): Promise<void>;
+    // (undocumented)
+    startWrite(): Promise<void>;
+    // (undocumented)
+    stop(): void;
+}
+
+// @public (undocumented)
+export const enum MondrianDataType {
+    // (undocumented)
+    COMMAND = "a",
+    // (undocumented)
+    INTERACT = "i",
+    // (undocumented)
+    SET_STATE = "s"
+}
+
 // @public
 export const MondrianDefaultBrushPluginList: BrushName[];
+
+// @public (undocumented)
+export const enum MondrianInteractType {
+    // (undocumented)
+    KEY_DOWN = "kd",
+    // (undocumented)
+    KEY_UP = "ku",
+    // (undocumented)
+    POINTER_DOWN = "pd",
+    // (undocumented)
+    POINTER_MOVE = "pm",
+    // (undocumented)
+    POINTER_UP = "pu"
+}
 
 // (No @packageDocumentation comment for this package)
 

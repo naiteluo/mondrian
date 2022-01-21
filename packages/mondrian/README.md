@@ -17,6 +17,11 @@ This is a out-of-box drawing board library based on PIXI.js. (Piet Mondrian, one
 - Easy to use, easy to extends.
 - Extendable.
 
+## Demos
+
+- [simple cdn codepen](https://codepen.io/naiteluo/pen/abLgqpG)
+- [online mondrian client](http://naiteluo.cc/mondrian-dev/)
+
 ## Setup
 
 ### NPM Install
@@ -34,6 +39,18 @@ import { Mondrian } from "@mondrian/mondrian";
 Learn more about Mondrian's APIs, check the [api docs](https://github.com/naiteluo/mondrian/blob/master/docs/mondrian/index.md) out.
 
 ### CDN Install
+
+```html
+<script src="https://unpkg.com/@mondrian/mondrian@0.0.3/dist/index.umd.js"></script>
+<script>
+  const mondrian = new Mondrian.Mondrian({
+    container: document.getElementById("draw-container"),
+    viewport: true,
+    background: true,
+    debug: false,
+  });
+</script>
+```
 
 ## More about this lib
 

@@ -22,13 +22,16 @@ main settings of Mondrian instance
 |  --- | --- | --- |
 |  [autoStart?](./mondrian.imondriansettings.autostart.md) | boolean | <i>(Optional)</i> |
 |  [background?](./mondrian.imondriansettings.background.md) | boolean | <i>(Optional)</i> enable background of stage |
+|  [builtintClientUrl](./mondrian.imondriansettings.builtintclienturl.md) | string |  |
 |  [channel?](./mondrian.imondriansettings.channel.md) | string | <i>(Optional)</i> |
 |  [chunkLimit?](./mondrian.imondriansettings.chunklimit.md) | number | <i>(Optional)</i> |
+|  [client?](./mondrian.imondriansettings.client.md) | [IMondrianDataClient](./mondrian.imondriandataclient.md) | <i>(Optional)</i> user defined client for data manager |
 |  [container](./mondrian.imondriansettings.container.md) | HTMLElement \| null | mondrian container |
 |  [debug?](./mondrian.imondriansettings.debug.md) | boolean | <i>(Optional)</i> |
 |  [disableCursor?](./mondrian.imondriansettings.disablecursor.md) | boolean | <i>(Optional)</i> |
 |  [isProducer?](./mondrian.imondriansettings.isproducer.md) | boolean | <i>(Optional)</i> is producer role enable |
 |  [resolution?](./mondrian.imondriansettings.resolution.md) | number | <i>(Optional)</i> resolution to use |
+|  [useBuiltinClient](./mondrian.imondriansettings.usebuiltinclient.md) | boolean | determine if use builtin client instances |
 |  [viewport?](./mondrian.imondriansettings.viewport.md) | boolean | <i>(Optional)</i> enable viewport |
 |  [worldHeight](./mondrian.imondriansettings.worldheight.md) | number | height of the world |
 |  [worldWidth](./mondrian.imondriansettings.worldwidth.md) | number | width of the world |
