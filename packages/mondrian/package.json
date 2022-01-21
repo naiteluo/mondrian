@@ -1,10 +1,12 @@
 {
   "name": "mondrian",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "sketch board library",
-  "main": "./lib/index.js",
-  "typings": "./types/index.d.ts",
-  "devDependencies": {},
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "browser": "dist/index.umd.js",
+  "typings": "types/index.d.ts",
+  "namespace": "Mondrian",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rimraf types && rimraf lib && rimraf dist"
@@ -30,5 +32,6 @@
     "pixi.js": "^6.2.0",
     "socket.io-client": "^4.4.0",
     "web-streams-polyfill": "^3.2.0"
-  }
+  },
+  "devDependencies": {}
 }
