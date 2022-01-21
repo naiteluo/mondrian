@@ -1,3 +1,5 @@
+import { IMondrianDataClient } from "./data-manager";
+
 /**
  * Mondrian Settings
  *
@@ -74,6 +76,68 @@ export interface IMondrianSettings {
    * @defaultValue 720
    */
   worldHeight: number;
+
+  /**
+   * determine if use builtin client instances
+   *
+   * @remarks use builtin ws client service
+   *
+   * @defaultValue false
+   */
+  useBuiltinClient: boolean;
+
+  builtintClientUrl: string;
+
+  /**
+   * user defined client for data manager
+   *
+   * @remarks
+   *
+   * data manager only handle data flow inside mondrian
+   * when you need to handle data flow between mondrian and out-of mondrian likes: sync draw data with server,
+   * client will do the job.
+   * client implements {@link IMondrianDataClient} interface, and extends base data client class {@link MondrianDataClient}, bind event to handle data in and do send data out.
+   *
+   * @example
+   *
+   * ```
+   * export class CustomizedDataClient extends * MondrianDataClient {
+   *   constructor() {
+   *     super();
+   *     // do something like create websocket * client instance
+   *     console.log("my data client init");
+   *   }
+   *
+   *   override start() {
+   *     // do something like start websocket c lient
+   *     console.log("my data client start");
+   *
+   *     // mock send data to let data manager * knows the last one of the first batch of * data recovered, and it is ready to tell * that recover process is finished, so * mondrian can do things likes removing * loading modal.
+   *     this.receivedFromRemote([this.* generateLastData()]);
+   *     this.recoveredFromRemote({ success: t rue, *size: 0 });
+   *
+   *     // mock received data synchronously
+   *     setInterval(() => {
+   *       // tell data manager to handle new * arrived data
+   *       console.log("new data arrivied");
+   *       this.receivedFromRemote([
+   *         // data from remote
+   *       ]);
+   *     }, 3000);
+   *   }
+   *
+   *   override sendToRemote(datasToSend: * IMondrianData[]) {
+   *     // do something like emit data or do * request
+   *     datasToSend.forEach((data) => {
+   *       console.log("data to send", data);
+   *     });
+   *   }
+   * }
+   *
+   * ```
+   *
+   */
+  client?: IMondrianDataClient;
 }
 
 /**
@@ -95,4 +159,6 @@ export const DefaultMondrianSettings: IMondrianSettings = {
   background: false,
   worldWidth: 1280,
   worldHeight: 760,
+  useBuiltinClient: false,
+  builtintClientUrl: "ws://localhost:3000",
 };

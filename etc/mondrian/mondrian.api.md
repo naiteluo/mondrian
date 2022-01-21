@@ -70,6 +70,7 @@ export interface IMondrianSettings {
     disableCursor?: boolean;
     isProducer?: boolean;
     resolution?: number;
+    useBuiltinClient: boolean;
     viewport?: boolean;
     worldHeight: number;
     worldWidth: number;

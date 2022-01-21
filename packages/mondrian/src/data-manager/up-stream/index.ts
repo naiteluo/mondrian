@@ -1,6 +1,6 @@
 import { MondrianSharedBuffer } from "../shared-buffer";
 import { IMondrianData } from "../data-manager";
-import { IoClient } from "../ws-client";
+import { IMondrianDataClient } from "..";
 
 export class MondrianLocalUpStreamSink implements UnderlyingSink {
   constructor(private sharedBuffer: MondrianSharedBuffer) {}
@@ -28,7 +28,7 @@ export class MondrianLocalUpStreamSink implements UnderlyingSink {
 export class MondrianWsUpStreamSink implements UnderlyingSink {
   constructor(
     private sharedBuffer: MondrianSharedBuffer,
-    private client: IoClient
+    private client: IMondrianDataClient
   ) {}
 
   start() {
@@ -42,7 +42,7 @@ export class MondrianWsUpStreamSink implements UnderlyingSink {
       return !data.local;
     });
     if (toSend.length > 0) {
-      this.client.send(chunk);
+      this.client.sendToRemote(chunk);
     }
     await new Promise((resolve) => {
       resolve(undefined);

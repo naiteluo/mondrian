@@ -284,9 +284,16 @@ export class MondrianRenderer extends MondrianModuleBase {
   resize() {
     // todo #8 resize should handle static sprite resizing too
     const wh = MondrianUtils.getScreenWH();
-    this.app.view.style.width = `${wh.w}px`;
-    this.app.view.style.height = `${wh.h}px`;
-    this.app.renderer.resize(wh.w, wh.h);
+    this.containerManager.$container.clientWidth;
+    this.app.view.style.width = `${this.containerManager.$container.clientWidth}px`;
+    this.app.view.style.height = `${this.containerManager.$container.clientHeight}px`;
+    // this.app.view.style.width = `${wh.w}px`;
+    // this.app.view.style.height = `${wh.h}px`;
+    // this.app.renderer.resize(wh.w, wh.h);
+    this.app.renderer.resize(
+      this.containerManager.$container.clientWidth,
+      this.containerManager.$container.clientHeight
+    );
   }
 
   private initialPerfTool() {

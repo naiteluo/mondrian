@@ -7,6 +7,8 @@ import {
 import { Controller, GUI } from "lil-gui";
 import { AutoDrawController } from "./auto-draw-controller";
 import { getMondrianSettings, setMondrianSettings } from "./utils/app-helper";
+import { MondrianBuiltinWsClient } from "../../mondrian/src/builtin-ws-client";
+import { CustomizedDataClient } from "./customized-data-client";
 
 export class ClientApplication {
   $div: HTMLElement;
@@ -35,10 +37,16 @@ export class ClientApplication {
     this.$div = document.createElement("div");
     document.body.appendChild(this.$div);
 
+    this.$div.style.width = `${window.innerWidth}px`;
+    this.$div.style.height = `${window.innerHeight}px`;
+
     // create mondrian instance
     this.mondrian = new Mondrian({
       ...this.appSettings.mondrianSettings,
       container: this.$div,
+      useBuiltinClient: true,
+      builtintClientUrl: "ws://localhost:3000",
+      // client: new CustomizedDataClient(),
     });
 
     // listen data recovered event
@@ -235,7 +243,7 @@ export class ClientApplication {
   }
 
   private onClearChannelCache() {
-    this.mondrian.dm.client.forceClear();
+    (this.mondrian.dm.client as MondrianBuiltinWsClient).forceClear();
     window.location.reload();
   }
 
