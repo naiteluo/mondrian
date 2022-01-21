@@ -21,7 +21,9 @@ export class MondrianContainerManager extends MondrianModuleBase {
   override start() {
     super.start();
     this.initializeContainer();
-    this.initialzieDebugPanel();
+    if (this.shared.settings.debug) {
+      this.initialzieDebugPanel();
+    }
     this.setCursorVisible(false);
   }
 

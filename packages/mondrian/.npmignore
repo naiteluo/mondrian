@@ -7,6 +7,9 @@
 
 !lib/**/*.png
 
+# include bundles
+!dist
+
 # Include generated types and entrypoint.
 !types/*
 
