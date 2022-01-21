@@ -1,4 +1,4 @@
-[![LISCENSE](https://img.shields.io/github/license/naiteluo/mondrian)](https://github.com/naiteluo/mondrian/LISCENSE)
+[![LICENSE](https://img.shields.io/github/license/naiteluo/mondrian)](https://github.com/naiteluo/mondrian/blob/master/LICENSE)
 [![libera manifesto](https://img.shields.io/badge/libera-manifesto-lightgrey.svg)](https://liberamanifesto.com)
 
 # @mondrian/mondrian
