@@ -4,11 +4,17 @@
 
 ## MondrianDataClient class
 
+base class of data client
+
 <b>Signature:</b>
 
 ```typescript
 export declare class MondrianDataClient 
 ```
+
+## Remarks
+
+implements [IMondrianDataClient](./mondrian.imondriandataclient.md)<!-- -->. Do default binding job. Beding default empty data client, it implements empty in/out APIs.
 
 ## Properties
 
@@ -21,8 +27,8 @@ export declare class MondrianDataClient
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [bindReceivedListener(listener)](./mondrian.mondriandataclient.bindreceivedlistener.md) |  |  |
-|  [bindRecoveredListener(listener)](./mondrian.mondriandataclient.bindrecoveredlistener.md) |  |  |
+|  [bindReceivedListener(listener)](./mondrian.mondriandataclient.bindreceivedlistener.md) |  | bind received listener |
+|  [bindRecoveredListener(listener)](./mondrian.mondriandataclient.bindrecoveredlistener.md) |  | bind received listener |
 |  [generateLastData()](./mondrian.mondriandataclient.generatelastdata.md) |  |  |
 |  [sendToRemote(datasToSend)](./mondrian.mondriandataclient.sendtoremote.md) |  | called when DataManager need to send data to remote |
 |  [start()](./mondrian.mondriandataclient.start.md) |  | called when DataManager is ready |

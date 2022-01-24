@@ -14,15 +14,13 @@ export interface IMondrianDataClient
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [receivedFromRemote](./mondrian.imondriandataclient.receivedfromremote.md) | [MondrianDataClientReceivedListener](./mondrian.mondriandataclientreceivedlistener.md) |  |
-|  [recoveredFromRemote](./mondrian.imondriandataclient.recoveredfromremote.md) | MondrianDataClientRecoveredListener |  |
+|  [receivedFromRemote](./mondrian.imondriandataclient.receivedfromremote.md) | [MondrianDataClientReceivedListener](./mondrian.mondriandataclientreceivedlistener.md) | tell data manager data received and send data to data manager |
+|  [recoveredFromRemote](./mondrian.imondriandataclient.recoveredfromremote.md) | MondrianDataClientRecoveredListener | tell data manager data recovered and send data to data manager |
 
 ## Methods
 
 |  Method | Description |
 |  --- | --- |
-|  [bindReceivedListener(listener)](./mondrian.imondriandataclient.bindreceivedlistener.md) |  |
-|  [bindRecoveredListener(listener)](./mondrian.imondriandataclient.bindrecoveredlistener.md) |  |
-|  [sendToRemote(datasToSend)](./mondrian.imondriandataclient.sendtoremote.md) |  |
-|  [start()](./mondrian.imondriandataclient.start.md) |  |
+|  [sendToRemote(datasToSend)](./mondrian.imondriandataclient.sendtoremote.md) | called by data manager when new data had been created. |
+|  [start()](./mondrian.imondriandataclient.start.md) | start the data client |
 

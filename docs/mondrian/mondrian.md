@@ -9,7 +9,8 @@
 |  Class | Description |
 |  --- | --- |
 |  [Mondrian](./mondrian.mondrian.md) |  |
-|  [MondrianDataClient](./mondrian.mondriandataclient.md) |  |
+|  [MondrianBuiltinWsClient](./mondrian.mondrianbuiltinwsclient.md) | builtin websocket based data client |
+|  [MondrianDataClient](./mondrian.mondriandataclient.md) | base class of data client |
 |  [MondrianDataManager](./mondrian.mondriandatamanager.md) |  |
 
 ## Enumerations
@@ -32,6 +33,7 @@
 |  [IMondrianSettings](./mondrian.imondriansettings.md) | Mondrian Settings |
 |  [IMondrianState](./mondrian.imondrianstate.md) |  |
 |  [IMondrianStateData](./mondrian.imondrianstatedata.md) |  |
+|  [IoClientSettings](./mondrian.ioclientsettings.md) |  |
 
 ## Variables
 
@@ -46,5 +48,5 @@
 |  Type Alias | Description |
 |  --- | --- |
 |  [IMondrianData](./mondrian.imondriandata.md) |  |
-|  [MondrianDataClientReceivedListener](./mondrian.mondriandataclientreceivedlistener.md) |  |
+|  [MondrianDataClientReceivedListener](./mondrian.mondriandataclientreceivedlistener.md) | data received listener type |
 

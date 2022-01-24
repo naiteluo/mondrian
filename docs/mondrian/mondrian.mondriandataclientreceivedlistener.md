@@ -4,6 +4,8 @@
 
 ## MondrianDataClientReceivedListener type
 
+data received listener type
+
 <b>Signature:</b>
 
 ```typescript
