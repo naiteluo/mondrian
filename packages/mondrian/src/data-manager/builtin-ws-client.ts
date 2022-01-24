@@ -1,16 +1,18 @@
 import { io, Socket } from "socket.io-client";
-import { IMondrianData } from "./data-manager";
-import { MondrianDataClient } from "./data-manager/data-client";
-import { MondrianShared } from "./shared";
-
-// const hostname = '161.117.225.178'
-const hostname = window.location.hostname;
+import { IMondrianData } from ".";
+import { MondrianDataClient } from "./data-client";
+import { MondrianShared } from "../shared";
 
 export interface IoClientSettings {
   channel: string;
 }
 
-// todo #11 client module should be redesing and refactor
+/**
+ * builtin websocket based data client
+ *
+ * @remarks default websocket based data client, auto sync data from/to remote ws server.
+ *
+ */
 export class MondrianBuiltinWsClient extends MondrianDataClient {
   private socket: Socket;
 
@@ -21,6 +23,13 @@ export class MondrianBuiltinWsClient extends MondrianDataClient {
 
   private _recovered = false;
 
+  /**
+   *
+   * @param shared.settings.builtintClientUrl ws server url
+   *
+   * todo describe default ws data protocals
+   *
+   */
   constructor(private shared: MondrianShared) {
     super();
     this.socket = io(shared.settings.builtintClientUrl, {
@@ -29,6 +38,7 @@ export class MondrianBuiltinWsClient extends MondrianDataClient {
         channel: this.shared.settings.channel || "guest",
       },
     });
+    // handle recovered data
     this.socket.on("r", (datas: IMondrianData[]) => {
       let last: IMondrianData | undefined;
       // insert extra msg in data
@@ -59,6 +69,7 @@ export class MondrianBuiltinWsClient extends MondrianDataClient {
       this._tempBuffer = [];
       this._recovered = true;
     });
+    // handle recovered data
     this.socket.on("d", (datas) => {
       if (!this._recovered) {
         this._tempBuffer.push(...datas);

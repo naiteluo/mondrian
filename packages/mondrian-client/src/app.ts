@@ -7,7 +7,7 @@ import {
 import { Controller, GUI } from "lil-gui";
 import { AutoDrawController } from "./auto-draw-controller";
 import { getMondrianSettings, setMondrianSettings } from "./utils/app-helper";
-import { MondrianBuiltinWsClient } from "../../mondrian/src/builtin-ws-client";
+import { MondrianBuiltinWsClient } from "mondrian/src/data-manager/builtin-ws-client";
 import { CustomizedDataClient } from "./customized-data-client";
 
 export class ClientApplication {

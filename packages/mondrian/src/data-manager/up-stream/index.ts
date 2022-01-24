@@ -1,5 +1,5 @@
 import { MondrianSharedBuffer } from "../shared-buffer";
-import { IMondrianData } from "../data-manager";
+import { IMondrianData } from "../data";
 import { IMondrianDataClient } from "..";
 
 export class MondrianLocalUpStreamSink implements UnderlyingSink {

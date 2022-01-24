@@ -7,10 +7,8 @@ import { MondrianWsUpStreamSink } from "./up-stream";
 import { MondrianSharedBuffer } from "./shared-buffer";
 import { MondrianRenderer } from "../renderer/renderer";
 import { IMondrianDataClient } from "./data-client";
-import { MondrianBuiltinWsClient } from "../builtin-ws-client";
-import { MondrianDataClient } from ".";
-
-export * from "./data";
+import { MondrianBuiltinWsClient } from "./builtin-ws-client";
+import { MondrianDataClient } from "./data-client";
 
 export class MondrianDataManager extends MondrianModuleBase {
   sharedBuffer: MondrianSharedBuffer = new MondrianSharedBuffer();
