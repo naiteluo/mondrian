@@ -138,6 +138,15 @@ export interface IMondrianSettings {
    *
    */
   client?: IMondrianDataClient;
+  /**
+   * Set true to auto fit container to fullscreen size
+   * and be automatically reponsive to window's resize event
+   *
+   * By default, user handle container's size. When container's size changed, resize api should be manually trigger to tell mondrian resize the pixi renderer.
+   *
+   * @defaultValue false
+   */
+  fullscreen?: boolean;
 }
 
 /**
@@ -161,4 +170,5 @@ export const DefaultMondrianSettings: IMondrianSettings = {
   worldHeight: 760,
   useBuiltinClient: false,
   builtintClientUrl: "ws://localhost:3000",
+  fullscreen: false,
 };
