@@ -3,6 +3,7 @@ import {
   BrushPluginState,
   DefaultMondrianBrushOptions,
   MondrianDefaultBrushPluginList,
+  MondrianEvents,
 } from "mondrian/lib/index";
 import { Controller, GUI } from "lil-gui";
 import { AutoDrawController } from "./auto-draw-controller";
@@ -31,27 +32,36 @@ export class ClientApplication {
 
   autoDrawController: AutoDrawController;
 
+  stageOptions = { width: 500, height: 400 };
+
   constructor() {
     this.resetGlobalStyle();
 
     this.$div = document.createElement("div");
     document.body.appendChild(this.$div);
 
-    this.$div.style.width = `${window.innerWidth}px`;
-    this.$div.style.height = `${window.innerHeight}px`;
+    // do nothing when set fullscreen, mondrian will do the job
+    if (this.appSettings.mondrianSettings.fullscreen) {
+      // do nothing
+    } else {
+      this.$div.style.width = `${this.stageOptions.width}px`;
+      this.$div.style.height = `${this.stageOptions.height}px`;
+    }
+
+    if (!this.appSettings.mondrianSettings.useBuiltinClient) {
+      this.appSettings.mondrianSettings.client = new CustomizedDataClient();
+    }
 
     // create mondrian instance
     this.mondrian = new Mondrian({
       ...this.appSettings.mondrianSettings,
       container: this.$div,
-      useBuiltinClient: true,
       builtintClientUrl: "ws://localhost:3000",
-      // client: new CustomizedDataClient(),
     });
 
     // listen data recovered event
     this.mondrian.on(
-      Mondrian.EVNET_RECOVER_RECEIVED,
+      MondrianEvents.EVNET_RECOVER_RECEIVED,
       ({ size }: { size: number }) => {
         this.logMsg(`data size: ${size}`);
         this.initialBrush();
@@ -85,6 +95,10 @@ export class ClientApplication {
     this.msgCtrl = this.gui.add(this, "msg").name("Message:");
     this.setupSettingControls();
     this.setupChannelControls();
+    // enable stage size pannel when fullscreen is disabled
+    if (!this.appSettings.mondrianSettings.fullscreen) {
+      this.setupStageControls();
+    }
     this.setupAutomationControls();
     this.setupCommandControls();
     this.setupBrushControls();
@@ -136,6 +150,29 @@ export class ClientApplication {
       .listen()
       .name("showBackground")
       .onFinishChange(this.onMondrianSettingsChange);
+    settingsFolder
+      .add(this.appSettings.mondrianSettings, "fullscreen", [true, false])
+      .listen()
+      .name("fullscreen")
+      .onFinishChange(this.onMondrianSettingsChange);
+  }
+
+  private setupStageControls() {
+    const stageFolder = this.gui.addFolder("Stage");
+    const onStageOptionsChanged = () => {
+      this.$div.style.width = `${+this.stageOptions.width}px`;
+      this.$div.style.height = `${+this.stageOptions.height}px`;
+      this.mondrian.resize();
+      this.mondrian.fitCenter();
+    };
+    stageFolder
+      .add(this.stageOptions, "width")
+      .name("width")
+      .onChange(onStageOptionsChanged);
+    stageFolder
+      .add(this.stageOptions, "height")
+      .name("height")
+      .onChange(onStageOptionsChanged);
   }
 
   private setupAutomationControls() {
@@ -151,11 +188,21 @@ export class ClientApplication {
   private setupChannelControls() {
     const channelFolder = this.gui.addFolder("Channel").close();
     channelFolder
-      .add(this.appSettings.mondrianSettings, "channel")
-      .name("Channel Name");
-    channelFolder.add(this, "onSwitchChannel").name("Swith Channel");
-    channelFolder.add(this, "onClearChannelCache").name("Clear Channel Cache");
-    channelFolder.add(this, "onResetChannel").name("Reset Channel");
+      .add(this.appSettings.mondrianSettings, "useBuiltinClient", [true, false])
+      .listen()
+      .name("useBuiltinClient")
+      .onFinishChange(this.onMondrianSettingsChange);
+    // hide channel settings when builtin client disabled
+    if (this.appSettings.mondrianSettings.useBuiltinClient) {
+      channelFolder
+        .add(this.appSettings.mondrianSettings, "channel")
+        .name("Channel Name");
+      channelFolder.add(this, "onSwitchChannel").name("Swith Channel");
+      channelFolder
+        .add(this, "onClearChannelCache")
+        .name("Clear Channel Cache");
+      channelFolder.add(this, "onResetChannel").name("Reset Channel");
+    }
   }
 
   private setupCommandControls() {

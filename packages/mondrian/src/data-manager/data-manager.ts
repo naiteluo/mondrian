@@ -9,6 +9,7 @@ import { MondrianRenderer } from "../renderer/renderer";
 import { IMondrianDataClient } from "./data-client";
 import { MondrianBuiltinWsClient } from "./builtin-ws-client";
 import { MondrianDataClient } from "./data-client";
+import { MondrianEvents } from "../common/events";
 
 export class MondrianDataManager extends MondrianModuleBase {
   sharedBuffer: MondrianSharedBuffer = new MondrianSharedBuffer();
@@ -115,11 +116,11 @@ export class MondrianDataManager extends MondrianModuleBase {
       if (v.extra?.last) {
         this.lastCount++;
         setTimeout(() => {
-          this.emit(MondrianDataManager.EVENT_RECOVER_CONSUMED);
+          this.emit(MondrianEvents.EVENT_RECOVER_CONSUMED);
         }, this.delayTime);
       }
       if (this.lastCount > 1) {
-        throw new Error("Double last error!!!");
+        throw new Error("Double lasFt error!!!");
       }
     });
   }
@@ -130,6 +131,4 @@ export class MondrianDataManager extends MondrianModuleBase {
     }
     await this.writer.write(datas);
   }
-
-  static EVENT_RECOVER_CONSUMED = "recover:consumed";
 }

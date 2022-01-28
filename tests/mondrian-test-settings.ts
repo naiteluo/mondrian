@@ -3,4 +3,5 @@ export const MondrianTestSettings = {
   channel: "playwright_test",
   disableCursor: true,
   useBuiltinClient: true,
+  fullscreen: true,
 };
