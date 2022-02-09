@@ -13,7 +13,7 @@ const shapesList = [
   "Triangle",
   "RightAngleTriangle",
   "Parallelogram",
-  //   "RightAngleTrapezoid",
+  "RightAngleTrapezoid",
   //   "Trapezoid",
   //   "SemiCircle",
 
