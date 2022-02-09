@@ -59,6 +59,7 @@ export const MondrianDefaultBrushPluginList = [
   BrushName.Triangle,
   BrushName.Stroke,
   BrushName.RightAngleTriangle,
+  BrushName.Parallelogram,
 ];
 
 /**

@@ -1,6 +1,30 @@
 import { test } from "@playwright/test";
 import { MondrianPage } from "./mondrian-page";
 
+const shapesList = [
+  "Pencil",
+  "Eraser",
+  "Highlighter",
+  "Stroke",
+
+  // 2d shape brush
+  "Rectangle",
+  "Circle",
+  "Triangle",
+  "RightAngleTriangle",
+  "Parallelogram",
+  //   "RightAngleTrapezoid",
+  //   "Trapezoid",
+  //   "SemiCircle",
+
+  // 3d shape brush
+  //   "Cube",
+  //   "Cuboid",
+  //   "Sphere",
+  //   "Cylinder",
+  //   "Cone",
+];
+
 const ox = 1280 / 2;
 const oy = 720 / 2;
 const space = 20;
@@ -63,30 +87,6 @@ const drawShapes = async (mp: MondrianPage) => {
     }
   }
 };
-
-const shapesList = [
-  "Pencil",
-  "Eraser",
-  "Highlighter",
-  "Stroke",
-
-  // 2d shape brush
-  "Rectangle",
-  "Circle",
-  "Triangle",
-  "RightAngleTriangle",
-//   "Parallelogram",
-//   "RightAngleTrapezoid",
-//   "Trapezoid",
-//   "SemiCircle",
-
-  // 3d shape brush
-//   "Cube",
-//   "Cuboid",
-//   "Sphere",
-//   "Cylinder",
-//   "Cone",
-];
 
 const testTitle = "shapes";
 

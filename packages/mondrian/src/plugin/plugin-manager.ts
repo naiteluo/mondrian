@@ -18,6 +18,7 @@ import { TrianglePlugin } from "./triangle-plugin";
 import { StrokePlugin } from "./stroke-plugin";
 import { ViewportPlugin } from "./viewport-plugin";
 import { RightAngleTrianglePlugin } from "./right-angle-trianle-plugin";
+import { ParallelogramPlugin } from "./parallelogram-plugin";
 
 interface IMondrianPluginInstanceRecord {
   classRef: IMondrianPluginConstructor;
@@ -41,6 +42,7 @@ export class MondrianPluginManager {
     this.register(StrokePlugin);
     this.register(ViewportPlugin);
     this.register(RightAngleTrianglePlugin);
+    this.register(ParallelogramPlugin);
   }
 
   private _instanceRecordMap: {
