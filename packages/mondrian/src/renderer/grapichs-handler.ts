@@ -135,6 +135,12 @@ export class MondrianGraphicsHandler {
   set lineStyle(style: ILineStyleOptions) {
     this.options.lineStyle = { ...style };
     this.g.lineStyle(this.options.lineStyle);
+    this.c.children.forEach((obj) => {
+      const g = obj as Graphics;
+      if (g.lineStyle) {
+        g.lineStyle(this.options.lineStyle);
+      }
+    });
   }
 
   get lineStyle() {

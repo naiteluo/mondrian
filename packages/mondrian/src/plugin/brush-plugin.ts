@@ -62,6 +62,7 @@ export const MondrianDefaultBrushPluginList = [
   BrushName.Parallelogram,
   BrushName.RightAngleTrapezoid,
   BrushName.Trapezoid,
+  BrushName.SemiCircle,
 ];
 
 /**

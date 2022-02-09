@@ -21,6 +21,7 @@ import { RightAngleTrianglePlugin } from "./right-angle-trianle-plugin";
 import { ParallelogramPlugin } from "./parallelogram-plugin";
 import { RightAngleTrapezoidPlugin } from "./right-angle-trapezoid-plugin";
 import { TrapezoidPlugin } from "./trapezoid-plugin";
+import { SemiCirclePlugin } from "./semi-circle-plugin";
 
 interface IMondrianPluginInstanceRecord {
   classRef: IMondrianPluginConstructor;
@@ -47,6 +48,7 @@ export class MondrianPluginManager {
     this.register(ParallelogramPlugin);
     this.register(RightAngleTrapezoidPlugin);
     this.register(TrapezoidPlugin);
+    this.register(SemiCirclePlugin);
   }
 
   private _instanceRecordMap: {

@@ -15,7 +15,7 @@ const shapesList = [
   "Parallelogram",
   "RightAngleTrapezoid",
   "Trapezoid",
-  //   "SemiCircle",
+  "SemiCircle",
 
   // 3d shape brush
   //   "Cube",
