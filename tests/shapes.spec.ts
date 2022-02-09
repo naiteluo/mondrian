@@ -18,8 +18,8 @@ const shapesList = [
   "SemiCircle",
 
   // 3d shape brush
-  //   "Cube",
-  //   "Cuboid",
+  "Cube",
+  "Cuboid",
   //   "Sphere",
   //   "Cylinder",
   //   "Cone",

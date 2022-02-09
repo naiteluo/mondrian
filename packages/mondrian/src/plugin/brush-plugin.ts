@@ -63,6 +63,8 @@ export const MondrianDefaultBrushPluginList = [
   BrushName.RightAngleTrapezoid,
   BrushName.Trapezoid,
   BrushName.SemiCircle,
+  BrushName.Cube,
+  BrushName.Cuboid,
 ];
 
 /**
@@ -150,7 +152,7 @@ export class BrushPlugin extends MondrianPlugin {
 
   override reactStateChange(data: IMondrianData): boolean {
     this.playerState = (data as IMondrianStateData).data.player;
-    this.brushState = this.playerState.brush || {};
+    this.brushState = { ...this.playerState.brush } || {};
     this.lineStyle = {
       ...(this.brushState.lineStyle || {}),
       width: this.brushState.brushWidth,

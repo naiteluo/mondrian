@@ -70,6 +70,9 @@ export class MondrianGraphicsHandler {
   get c() {
     if (!this._c) {
       this._c = new Container();
+      if (!this.g) {
+        // do nothing
+      }
     }
     return this._c;
   }
