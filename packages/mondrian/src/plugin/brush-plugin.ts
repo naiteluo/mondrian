@@ -17,13 +17,28 @@ import { MondrianGraphicsHandler } from "../renderer/grapichs-handler";
  * @public
  */
 export const enum BrushName {
+  // lines brush
   Pencil = "Pencil",
   Eraser = "Eraser",
   Highlighter = "Highlighter",
+  Stroke = "Stroke",
+
+  // 2d shape brush
   Rectangle = "Rectangle",
   Circle = "Circle",
   Triangle = "Triangle",
-  Stroke = "Stroke",
+  RightAngleTriangle = "RightAngleTriangle",
+  Parallelogram = "Parallelogram",
+  RightAngleTrapezoid = "RightAngleTrapezoid",
+  Trapezoid = "Trapezoid",
+  SemiCircle = "SemiCircle",
+
+  // 3d shape brush
+  Cube = "Cube",
+  Cuboid = "Cuboid",
+  Sphere = "Sphere",
+  Cylinder = "Cylinder",
+  Cone = "Cone",
 }
 
 /**
@@ -43,6 +58,7 @@ export const MondrianDefaultBrushPluginList = [
   BrushName.Circle,
   BrushName.Triangle,
   BrushName.Stroke,
+  BrushName.RightAngleTriangle,
 ];
 
 /**
