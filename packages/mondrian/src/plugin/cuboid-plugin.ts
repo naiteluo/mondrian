@@ -1,5 +1,4 @@
 import { Graphics } from "@pixi/graphics";
-import { DashLine } from "pixi-dashed-line";
 import {
   IMondrianData,
   IMondrianInteractData,
@@ -34,15 +33,8 @@ export class CuboidPlugin extends ShapePlugin {
       this.handler.c.addChild(g);
       this.handler.children.dashGraphics = g;
     }
-    // dashline instance need to be recreate when start draw new stuff
-    // but graphic can be reused
-    this.handler.dashlines.dashline0 = new DashLine(
-      this.handler.children.dashGraphics,
-      {
-        dash: [10, 5],
-        ...this.handler.lineStyle,
-        useTexture: true,
-      }
+    this.handler.dashlines.dashline0 = this.handler.createDashLine(
+      this.handler.children.dashGraphics
     );
 
     return this.handler.dashlines.dashline0;

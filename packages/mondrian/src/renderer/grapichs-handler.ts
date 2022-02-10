@@ -1,4 +1,4 @@
-import { DashLine } from "pixi-dashed-line";
+import { DashLine, DashLineOptions } from "pixi-dashed-line";
 import { Container, Graphics, ILineStyleOptions, MSAA_QUALITY } from "pixi.js";
 import { MondrianShared } from "../shared";
 import { MondrianRenderer } from "./renderer";
@@ -170,4 +170,15 @@ export class MondrianGraphicsHandler {
   public dashlines: {
     [name: string]: DashLine;
   } = {};
+
+  public createDashLine(g: Graphics, options?: DashLineOptions) {
+    // dashline instance need to be recreate when start draw new stuff
+    // but graphic can be reused
+    return new DashLine(g, {
+      ...(options || {}),
+      dash: [10, 5],
+      ...this.lineStyle,
+      useTexture: true,
+    });
+  }
 }
