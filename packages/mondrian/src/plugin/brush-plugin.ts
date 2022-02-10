@@ -67,6 +67,7 @@ export const MondrianDefaultBrushPluginList = [
   BrushName.Cuboid,
   BrushName.Sphere,
   BrushName.Cylinder,
+  BrushName.Cone,
 ];
 
 /**

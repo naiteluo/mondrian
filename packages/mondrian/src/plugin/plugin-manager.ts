@@ -25,6 +25,7 @@ import { SemiCirclePlugin } from "./semi-circle-plugin";
 import { CuboidPlugin } from "./cuboid-plugin";
 import { CubePlugin } from "./cube-plugin";
 import { SpherePlugin } from "./sphere-plugin";
+import { CylinderPlugin } from "./cylinder-plugin";
 
 interface IMondrianPluginInstanceRecord {
   classRef: IMondrianPluginConstructor;
@@ -55,6 +56,7 @@ export class MondrianPluginManager {
     this.register(CubePlugin);
     this.register(CuboidPlugin);
     this.register(SpherePlugin);
+    this.register(CylinderPlugin);
   }
 
   private _instanceRecordMap: {

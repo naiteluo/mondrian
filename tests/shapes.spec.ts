@@ -21,7 +21,7 @@ const shapesList = [
   "Cube",
   "Cuboid",
   "Sphere",
-  //   "Cylinder",
+  "Cylinder",
   //   "Cone",
 ];
 
