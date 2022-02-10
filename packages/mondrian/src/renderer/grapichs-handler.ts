@@ -1,3 +1,4 @@
+import { DashLine } from "pixi-dashed-line";
 import { Container, Graphics, ILineStyleOptions, MSAA_QUALITY } from "pixi.js";
 import { MondrianShared } from "../shared";
 import { MondrianRenderer } from "./renderer";
@@ -122,10 +123,16 @@ export class MondrianGraphicsHandler {
       console.trace();
       throw new Error("Detaching unfinished handler is forbidden.");
     }
+    // remove references
+    this.children = {};
+    this.dashlines = {};
     return this.layer.removeChild(this.c);
   }
 
   destroy() {
+    // remove references
+    this.children = {};
+    this.dashlines = {};
     this._g = undefined;
     this._c = undefined;
     this.layer = undefined;
@@ -149,4 +156,18 @@ export class MondrianGraphicsHandler {
   get lineStyle() {
     return this.options.lineStyle;
   }
+
+  /**
+   * references to children graphics
+   */
+  public children: {
+    [name: string]: Graphics;
+  } = {};
+
+  /**
+   *  references to  dashline instances
+   */
+  public dashlines: {
+    [name: string]: DashLine;
+  } = {};
 }

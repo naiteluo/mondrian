@@ -28,13 +28,24 @@ export class CuboidPlugin extends ShapePlugin {
   }
 
   private get customizedDash() {
-    const g = new Graphics();
-    this.handler.c.addChild(g);
-    return new DashLine(g, {
-      dash: [10, 5],
-      ...this.handler.lineStyle,
-      useTexture: true,
-    });
+    // reuse graphics
+    if (!this.handler.children.dashGraphics) {
+      const g = new Graphics();
+      this.handler.c.addChild(g);
+      this.handler.children.dashGraphics = g;
+    }
+    // dashline instance need to be recreate when start draw new stuff
+    // but graphic can be reused
+    this.handler.dashlines.dashline0 = new DashLine(
+      this.handler.children.dashGraphics,
+      {
+        dash: [10, 5],
+        ...this.handler.lineStyle,
+        useTexture: true,
+      }
+    );
+
+    return this.handler.dashlines.dashline0;
   }
 
   override reactDragMove(data: IMondrianInteractData): boolean {

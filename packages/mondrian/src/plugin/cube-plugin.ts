@@ -1,5 +1,3 @@
-import { Graphics } from "@pixi/graphics";
-import { DashLine } from "pixi-dashed-line";
 import {
   IMondrianData,
   IMondrianInteractData,
