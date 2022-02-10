@@ -186,7 +186,8 @@ export class ClientApplication {
   }
 
   private setupChannelControls() {
-    const channelFolder = this.gui.addFolder("Channel").close();
+    const channelFolder = this.gui.addFolder("Channel");
+    // const channelFolder = this.gui.addFolder("Channel").close();
     channelFolder
       .add(this.appSettings.mondrianSettings, "useBuiltinClient", [true, false])
       .listen()

@@ -20,7 +20,7 @@ const shapesList = [
   // 3d shape brush
   "Cube",
   "Cuboid",
-  //   "Sphere",
+  "Sphere",
   //   "Cylinder",
   //   "Cone",
 ];
