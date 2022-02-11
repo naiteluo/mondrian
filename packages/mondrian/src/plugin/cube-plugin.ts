@@ -4,7 +4,7 @@ import {
   IMondrianStateData,
   MondrianDataType,
 } from "../data-manager";
-import { BrushName } from "./brush-plugin";
+import { BrushName } from "./brush-common";
 import { CuboidPlugin } from "./cuboid-plugin";
 import { PluginType } from "./plugin";
 

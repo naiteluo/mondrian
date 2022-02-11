@@ -6,7 +6,8 @@ import {
   IMondrianStateData,
   MondrianDataType,
 } from "../data-manager";
-import { BrushName, BrushPlugin } from "./brush-plugin";
+import { BrushPlugin } from "./brush-plugin";
+import { BrushName } from "./brush-common";
 import { PluginType } from "./plugin";
 
 export class PencilBrushPlugin extends BrushPlugin {
