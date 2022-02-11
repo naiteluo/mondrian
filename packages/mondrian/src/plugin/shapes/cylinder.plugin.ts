@@ -5,21 +5,21 @@ import {
   IMondrianInteractData,
   IMondrianStateData,
   MondrianDataType,
-} from "../data-manager";
-import { BrushName } from "./brush-common";
-import { PluginType } from "./plugin";
-import { ShapePlugin } from "./shape-plugin";
+} from "../../data-manager";
+import { BrushName } from "../base/brush-common";
+import { PluginType } from "../base/plugin";
+import { ShapePlugin } from "../base/shape.plugin";
 
-export class ConePlugin extends ShapePlugin {
+export class CylinderPlugin extends ShapePlugin {
   static override Type = PluginType.ConsumerExcludesive;
 
-  static override PID = Symbol("cone-plugin");
+  static override PID = Symbol("cylinder-plugin");
 
   static override predicate(data: IMondrianData | null): boolean {
     if (data === null) return false;
     if (data.type === MondrianDataType.SET_STATE) {
       if (data as IMondrianStateData) {
-        if (data.data.player.brush.brushName === BrushName.Cone) {
+        if (data.data.player.brush.brushName === BrushName.Cylinder) {
           return true;
         }
       }
@@ -53,7 +53,7 @@ export class ConePlugin extends ShapePlugin {
     const rx = this.shapeRect.w / 2;
     const ry = this.shapeRect.w / 2 / 3;
 
-    if (Math.abs(this.shapeRect.dy) < ry * 3) {
+    if (Math.abs(this.shapeRect.dy) < ry * 2) {
       return false;
     }
 
@@ -62,9 +62,12 @@ export class ConePlugin extends ShapePlugin {
       x:
         this.shapeRect.ox +
         (this.shapeRect.dx / Math.abs(this.shapeRect.dx)) * rx,
-      y: this.shapeRect.oy,
+      y:
+        this.shapeRect.oy +
+        (this.shapeRect.dy / Math.abs(this.shapeRect.dy)) * ry,
     };
 
+    // set up points
     const poOfFar = {
       x:
         this.shapeRect.ox +
@@ -77,13 +80,22 @@ export class ConePlugin extends ShapePlugin {
 
     // draw straight line
     this.handler.g
-      .moveTo(poOfNear.x, poOfNear.y)
-      .lineTo(poOfFar.x + rx, poOfFar.y);
+      .moveTo(this.shapeRect.ox, poOfNear.y)
+      .lineTo(this.shapeRect.ox, poOfFar.y);
     this.handler.g
-      .moveTo(poOfNear.x, poOfNear.y)
-      .lineTo(poOfFar.x - rx, poOfFar.y);
+      .moveTo(this.shapeRect.ox + this.shapeRect.dx, poOfNear.y)
+      .lineTo(this.shapeRect.ox + this.shapeRect.dx, poOfFar.y);
 
     const needReverseY = this.shapeRect.dy < 0;
+
+    // draw visible ellipse
+    const poOfVisibleEllipse = poOfNear;
+    this.handler.g.drawEllipse(
+      poOfVisibleEllipse.x,
+      poOfVisibleEllipse.y,
+      rx,
+      ry
+    );
 
     const ellipsePoints = 80;
 

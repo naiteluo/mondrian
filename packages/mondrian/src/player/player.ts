@@ -1,4 +1,4 @@
-import { BrushPluginState } from "../plugin/brush-common";
+import { BrushPluginState } from "../plugin";
 import { IMondrianData } from "../data-manager";
 
 export interface IMondrianPlayerState {

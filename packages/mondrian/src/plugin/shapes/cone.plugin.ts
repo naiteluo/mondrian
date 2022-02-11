@@ -5,21 +5,21 @@ import {
   IMondrianInteractData,
   IMondrianStateData,
   MondrianDataType,
-} from "../data-manager";
-import { BrushName } from "./brush-common";
-import { PluginType } from "./plugin";
-import { ShapePlugin } from "./shape-plugin";
+} from "../../data-manager";
+import { BrushName } from "../base/brush-common";
+import { PluginType } from "../base/plugin";
+import { ShapePlugin } from "../base/shape.plugin";
 
-export class SpherePlugin extends ShapePlugin {
+export class ConePlugin extends ShapePlugin {
   static override Type = PluginType.ConsumerExcludesive;
 
-  static override PID = Symbol("sphere-plugin");
+  static override PID = Symbol("cone-plugin");
 
   static override predicate(data: IMondrianData | null): boolean {
     if (data === null) return false;
     if (data.type === MondrianDataType.SET_STATE) {
       if (data as IMondrianStateData) {
-        if (data.data.player.brush.brushName === BrushName.Sphere) {
+        if (data.data.player.brush.brushName === BrushName.Cone) {
           return true;
         }
       }
@@ -50,27 +50,49 @@ export class SpherePlugin extends ShapePlugin {
     });
     this.handler.lineStyle = { ...this.handler.lineStyle };
 
-    // set up points
-    const po = {
-      x: this.shapeRect.ox + this.shapeRect.dx / 2,
-      y: this.shapeRect.oy + this.shapeRect.dy / 2,
-    };
     const rx = this.shapeRect.w / 2;
-    const ry = this.shapeRect.h / 2;
+    const ry = this.shapeRect.w / 2 / 3;
 
-    this.handler.g.drawEllipse(po.x, po.y, rx, ry);
+    if (Math.abs(this.shapeRect.dy) < ry * 3) {
+      return false;
+    }
 
-    const ryOfEllipse = ry / 3;
-    const ellipsePoints = 80;
+    // set up points
+    const poOfNear = {
+      x:
+        this.shapeRect.ox +
+        (this.shapeRect.dx / Math.abs(this.shapeRect.dx)) * rx,
+      y: this.shapeRect.oy,
+    };
+
+    const poOfFar = {
+      x:
+        this.shapeRect.ox +
+        (this.shapeRect.dx / Math.abs(this.shapeRect.dx)) * rx,
+      y:
+        this.shapeRect.oy +
+        this.shapeRect.dy -
+        (this.shapeRect.dy / Math.abs(this.shapeRect.dy)) * ry,
+    };
+
+    // draw straight line
+    this.handler.g
+      .moveTo(poOfNear.x, poOfNear.y)
+      .lineTo(poOfFar.x + rx, poOfFar.y);
+    this.handler.g
+      .moveTo(poOfNear.x, poOfNear.y)
+      .lineTo(poOfFar.x - rx, poOfFar.y);
 
     const needReverseY = this.shapeRect.dy < 0;
+
+    const ellipsePoints = 80;
 
     const interval = (Math.PI * 2) / ellipsePoints;
     const dashline = this.customizedDash;
     let isInUpperTail = true;
     for (let i = 0; i < Math.PI * 2; i += interval) {
-      const x0 = po.x - rx * Math.cos(i);
-      const y0 = po.y - ryOfEllipse * Math.sin(i);
+      const x0 = poOfFar.x - rx * Math.cos(i);
+      const y0 = poOfFar.y - ry * Math.sin(i);
       let g: Graphics | DashLine = this.handler.g;
       // toggle g object between dashline and normal grahpic based on radius and drag direction in Y-axis.
       if (i > Math.PI) {

@@ -4,10 +4,10 @@ import {
   IMondrianInteractData,
   IMondrianStateData,
   MondrianDataType,
-} from "../data-manager";
-import { BrushName } from "./brush-common";
-import { PluginType } from "./plugin";
-import { ShapePlugin } from "./shape-plugin";
+} from "../../data-manager";
+import { BrushName } from "../base/brush-common";
+import { PluginType } from "../base/plugin";
+import { ShapePlugin } from "../base/shape.plugin";
 
 export class CuboidPlugin extends ShapePlugin {
   static override Type = PluginType.ConsumerExcludesive;

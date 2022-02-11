@@ -3,4 +3,4 @@ export {
   BrushPluginState,
   DefaultMondrianBrushOptions,
   MondrianDefaultBrushPluginList,
-} from "./brush-common";
+} from "./base";

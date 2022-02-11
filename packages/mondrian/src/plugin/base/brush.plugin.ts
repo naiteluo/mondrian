@@ -2,14 +2,14 @@ import {
   IMondrianData,
   IMondrianInteractData,
   IMondrianStateData,
-} from "../data-manager";
+} from "../../data-manager";
 import { MondrianPlugin, PluginType } from "./plugin";
 
 import { ILineStyleOptions } from "@pixi/graphics";
 import { filters, IPointData } from "pixi.js";
-import { MondrianShared } from "../shared";
-import { IMondrianPlayerState } from "../player";
-import { MondrianGraphicsHandler } from "../renderer/grapichs-handler";
+import { MondrianShared } from "../../shared";
+import { IMondrianPlayerState } from "../../player";
+import { MondrianGraphicsHandler } from "../../renderer/grapichs-handler";
 import { BrushPluginState } from "./brush-common";
 
 /**

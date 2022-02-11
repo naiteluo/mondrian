@@ -1,32 +1,41 @@
 import { IMondrianData } from "../data-manager";
 import { MondrianRenderer } from "../renderer/renderer";
 import { MondrianShared } from "../shared";
-import {
-  IMondrianPluginConstructor,
-  MondrianPlugin,
-  PluginType,
-} from "./plugin";
-import { CirclePlugin } from "./circle-plugin";
-import { ClearPlugin } from "./clear-plugin";
-import { CursorPlugin } from "./cursor-plugin";
-import { EraserBrushPlugin } from "./eraser-plugin";
-import { HighlighterBrushPlugin } from "./highlighter-plugin";
-import { HistoryPlugin } from "./history-plugin";
-import { PencilBrushPlugin } from "./pencil-plugin";
-import { RectanglePlugin } from "./rectangle-plugin";
-import { TrianglePlugin } from "./triangle-plugin";
-import { StrokePlugin } from "./stroke-plugin";
-import { ViewportPlugin } from "./viewport-plugin";
-import { RightAngleTrianglePlugin } from "./right-angle-trianle-plugin";
-import { ParallelogramPlugin } from "./parallelogram-plugin";
-import { RightAngleTrapezoidPlugin } from "./right-angle-trapezoid-plugin";
-import { TrapezoidPlugin } from "./trapezoid-plugin";
-import { SemiCirclePlugin } from "./semi-circle-plugin";
-import { CuboidPlugin } from "./cuboid-plugin";
-import { CubePlugin } from "./cube-plugin";
-import { SpherePlugin } from "./sphere-plugin";
-import { CylinderPlugin } from "./cylinder-plugin";
-import { ConePlugin } from "./cone-plugin";
+import { IMondrianPluginConstructor, MondrianPlugin, PluginType } from "./base";
+
+/**
+ * import global plugins
+ */
+import { CursorPlugin } from "./global/cursor.plugin";
+import { ViewportPlugin } from "./global/viewport.plugin";
+/**
+ * import commands plugins
+ */
+import { ClearPlugin } from "./commands/clear.plugin";
+import { HistoryPlugin } from "./commands/history.plugin";
+/**
+ * import shapes plugins
+ */
+import { RectanglePlugin } from "./shapes/rectangle-plugin";
+import { StrokePlugin } from "./shapes/stroke-plugin";
+import { CirclePlugin } from "./shapes/circle.plugin";
+import { TrianglePlugin } from "./shapes/triangle.plugin";
+import { RightAngleTrianglePlugin } from "./shapes/right-angle-trianle.plugin";
+import { ParallelogramPlugin } from "./shapes/parallelogram.plugin";
+import { RightAngleTrapezoidPlugin } from "./shapes/right-angle-trapezoid.plugin";
+import { TrapezoidPlugin } from "./shapes/trapezoid.plugin";
+import { SemiCirclePlugin } from "./shapes/semi-circle.plugin";
+import { CuboidPlugin } from "./shapes/cuboid.plugin";
+import { CubePlugin } from "./shapes/cube.plugin";
+import { SpherePlugin } from "./shapes/sphere.plugin";
+import { CylinderPlugin } from "./shapes/cylinder.plugin";
+import { ConePlugin } from "./shapes/cone.plugin";
+/**
+ * import brushwork plugins
+ */
+import { EraserBrushPlugin } from "./brushworks/eraser.plugin";
+import { HighlighterBrushPlugin } from "./brushworks/highlighter.plugin";
+import { PencilBrushPlugin } from "./brushworks/pencil.plugin";
 
 interface IMondrianPluginInstanceRecord {
   classRef: IMondrianPluginConstructor;

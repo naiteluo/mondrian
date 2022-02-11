@@ -1,7 +1,7 @@
-import { MondrianUtils } from "../common/utils";
-import { IMondrianData, IMondrianInteractData } from "../data-manager";
-import { MondrianShared } from "../shared";
-import { BrushPlugin } from "./brush-plugin";
+import { MondrianUtils } from "../../common/utils";
+import { IMondrianData, IMondrianInteractData } from "../../data-manager";
+import { MondrianShared } from "../../shared";
+import { BrushPlugin } from "./brush.plugin";
 import { PluginType } from "./plugin";
 import { DashLine } from "pixi-dashed-line";
 

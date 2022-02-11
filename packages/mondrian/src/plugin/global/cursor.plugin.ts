@@ -1,13 +1,13 @@
-import { IMondrianData, IMondrianInteractData } from "../data-manager";
-import { MondrianRenderer } from "../renderer/renderer";
+import { IMondrianData, IMondrianInteractData } from "../../data-manager";
+import { MondrianRenderer } from "../../renderer/renderer";
 import { Sprite, Texture } from "pixi.js";
-import { MondrianPlugin, PluginType } from "./plugin";
+import { MondrianPlugin, PluginType } from "../base/plugin";
 
-import cursorImg from "../assets/cursor.png";
-import drawImg from "../assets/cursor-draw.png";
-import dragImg from "../assets/cursor-drag.png";
-import { MondrianShared } from "../shared";
-import { MondrianPluginManager } from "./plugin-manager";
+import cursorImg from "../../assets/cursor.png";
+import drawImg from "../../assets/cursor-draw.png";
+import dragImg from "../../assets/cursor-drag.png";
+import { MondrianShared } from "../../shared";
+import { MondrianPluginManager } from "../plugin-manager";
 import { DropShadowFilter } from "@pixi/filter-drop-shadow";
 
 export class CursorPlugin extends MondrianPlugin {

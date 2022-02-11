@@ -3,21 +3,21 @@ import {
   IMondrianInteractData,
   IMondrianStateData,
   MondrianDataType,
-} from "../data-manager";
-import { BrushName } from "./brush-common";
-import { PluginType } from "./plugin";
-import { ShapePlugin } from "./shape-plugin";
+} from "../../data-manager";
+import { BrushName } from "../base/brush-common";
+import { PluginType } from "../base/plugin";
+import { ShapePlugin } from "../base/shape.plugin";
 
-export class TrianglePlugin extends ShapePlugin {
+export class SemiCirclePlugin extends ShapePlugin {
   static override Type = PluginType.ConsumerExcludesive;
 
-  static override PID = Symbol("triangle-plugin");
+  static override PID = Symbol("semi-circle-plugin");
 
   static override predicate(data: IMondrianData | null): boolean {
     if (data === null) return false;
     if (data.type === MondrianDataType.SET_STATE) {
       if (data as IMondrianStateData) {
-        if (data.data.player.brush.brushName === BrushName.Triangle) {
+        if (data.data.player.brush.brushName === BrushName.SemiCircle) {
           return true;
         }
       }
@@ -29,20 +29,15 @@ export class TrianglePlugin extends ShapePlugin {
     if (!super.reactDragMove(data)) return false;
     this.handler.g.clear();
     this.handler.lineStyle = { ...this.handler.lineStyle };
-    this.getDrawShapeHandle(data).drawPolygon([
-      // point 1
+    this.handler.g.arc(
       this.shapeRect.ox + this.shapeRect.dx / 2,
-      this.shapeRect.oy,
-      // point 2
-      this.shapeRect.ox,
       this.shapeRect.oy + this.shapeRect.dy,
-      // point 3
-      this.shapeRect.ox + this.shapeRect.dx,
-      this.shapeRect.oy + this.shapeRect.dy,
-      // point 1
-      this.shapeRect.ox + this.shapeRect.dx / 2,
-      this.shapeRect.oy,
-    ]);
+      Math.abs(this.shapeRect.dx / 2),
+      Math.PI,
+      Math.PI * 2,
+      !(this.shapeRect.dy > 0)
+    );
+    this.handler.g.closePath();
     return true;
   }
 }

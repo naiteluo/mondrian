@@ -1,7 +1,7 @@
 import { BLEND_MODES } from "@pixi/constants";
-import { IMondrianData } from "../data-manager";
-import { MondrianGraphicsHandler } from "../renderer/grapichs-handler";
-import { MondrianPlugin, PluginType } from "./plugin";
+import { IMondrianData } from "../../data-manager";
+import { MondrianGraphicsHandler } from "../../renderer/grapichs-handler";
+import { MondrianPlugin, PluginType } from "../base";
 
 export class ClearPlugin extends MondrianPlugin {
   static Type = PluginType.Global;
@@ -25,7 +25,7 @@ export class ClearPlugin extends MondrianPlugin {
       enableDiscrete: false,
       canCacheAsBitmap: false,
     });
-    this.handler.g.beginFill(0x000000);   
+    this.handler.g.beginFill(0x000000);
     this.handler.g.blendMode = BLEND_MODES.ERASE;
     let padding = 0;
     if (this.shared.settings.background) {

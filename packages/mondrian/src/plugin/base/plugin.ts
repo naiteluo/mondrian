@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { IMondrianReactor } from "../common/reactor";
-import { IMondrianData } from "../data-manager";
-import { MondrianRenderer } from "../renderer/renderer";
-import { MondrianShared } from "../shared";
-import { MondrianPluginManager } from "./plugin-manager";
+import { IMondrianReactor } from "../../common/reactor";
+import { IMondrianData } from "../../data-manager";
+import { MondrianRenderer } from "../../renderer/renderer";
+import { MondrianShared } from "../../shared";
+import { MondrianPluginManager } from "../plugin-manager";
 
 export enum PluginType {
   Global = 0,
