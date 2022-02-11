@@ -26,6 +26,7 @@ import { CuboidPlugin } from "./cuboid-plugin";
 import { CubePlugin } from "./cube-plugin";
 import { SpherePlugin } from "./sphere-plugin";
 import { CylinderPlugin } from "./cylinder-plugin";
+import { ConePlugin } from "./cone-plugin";
 
 interface IMondrianPluginInstanceRecord {
   classRef: IMondrianPluginConstructor;
@@ -57,6 +58,7 @@ export class MondrianPluginManager {
     this.register(CuboidPlugin);
     this.register(SpherePlugin);
     this.register(CylinderPlugin);
+    this.register(ConePlugin);
   }
 
   private _instanceRecordMap: {

@@ -22,7 +22,7 @@ const shapesList = [
   "Cuboid",
   "Sphere",
   "Cylinder",
-  //   "Cone",
+  "Cone",
 ];
 
 const ox = 1280 / 2;
@@ -89,6 +89,13 @@ const drawShapes = async (mp: MondrianPage) => {
 };
 
 const testTitle = "shapes";
+
+/**
+ * left-bottom to right-top
+ *
+ * this data will not properly draw "Cone",
+ * because the delta distance in y-axis is smaller.
+ */
 
 test.describe(testTitle, () => {
   const channelName = MondrianPage.setTestOptions(test, testTitle);
