@@ -1,6 +1,6 @@
 {
   "name": "mondrian-workspace",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "mondrian",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,8 @@
     "build:lib:watch": "babel --extensions '.ts' ./packages/mondrian/src --out-dir ./packages/mondrian/lib --watch",
     "build:client": "npm run build --workspace=@mondrian/client",
     "build:rollup": "rollup -c",
-    "build": "npm run build:types && npm run build:lib && npm run build:rollup && npm run build:client"
+    "build:mondrian": "npm run build:types && npm run build:lib && npm run build:rollup",
+    "build": "npm run build:mondrian && npm run build:client"
   },
   "author": "naiteluo",
   "license": "MIT",

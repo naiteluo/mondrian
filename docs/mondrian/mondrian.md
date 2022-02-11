@@ -12,6 +12,7 @@
 |  [MondrianBuiltinWsClient](./mondrian.mondrianbuiltinwsclient.md) | builtin websocket based data client |
 |  [MondrianDataClient](./mondrian.mondriandataclient.md) | base class of data client |
 |  [MondrianDataManager](./mondrian.mondriandatamanager.md) |  |
+|  [MondrianEvents](./mondrian.mondrianevents.md) | mondrian events' names collection |
 
 ## Enumerations
 

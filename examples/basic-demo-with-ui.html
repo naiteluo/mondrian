@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mondrian example - basic brush and shapes</title>
+    <script src="../packages/mondrian/dist/index.umd.js"></script>
+    <style>
+      .description p {
+        font-size: 10px;
+      }
+      .control-panel {
+        font-size: 12px;
+      }
+      .control-panel .control-item {
+        display: flex;
+        padding-bottom: 10px;
+      }
+      .control-panel .control-item label {
+        display: block;
+        width: 60px;
+      }
+      .control-panel .control-item button {
+        margin-right: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div style="display: flex">
+      <div style="width: 200px">
+        <h2>Mondrain demo</h2>
+        <div class="heading">Description</div>
+        <div class="description">
+          <p>Press 'space' key to pinch, wheel, and drag viewport.</p>
+          <p>
+            Press 'shift' to draw square shape, press 'ctrl' to draw dashed
+            Shape
+          </p>
+        </div>
+        <div class="heading">Control Panel</div>
+        <div class="control-panel" style="padding: 10px">
+          <div class="control-item">
+            <label for="brush-name-select"> Name: </label>
+            <select name="brush-name-select" id="brush-name-select">
+              <option value="Pencil">Pencil</option>
+              <option value="Eraser">Eraser</option>
+              <option value="Stroke">Stroke</option>
+              <option value="Rectangle">Rectangle</option>
+              <option value="Triangle">Triangle</option>
+              <option value="Circle">Circle</option>
+              <option value="Cuboid">Cuboid</option>
+            </select>
+          </div>
+          <div class="control-item">
+            <label for="brush-width-select"> Width: </label>
+            <select name="brush-width-select" id="brush-width-select">
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="20">20</option>
+            </select>
+          </div>
+          <div class="control-item">
+            <label for="brush-color-select"> Color: </label>
+            <select name="brush-color-select" id="brush-color-select">
+              <option value="0x000000">black</option>
+              <option value="0xdd0000">red</option>
+              <option value="0x00dd00">green</option>
+              <option value="0x0000dd">blue</option>
+            </select>
+          </div>
+          <div class="control-item">
+            <button id="btn-undo">Undo</button>
+            <button id="btn-redo">Redo</button>
+            <button id="btn-clear">Clear</button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div
+          id="draw-container"
+          style="width: 500px; height: 400px; border: red solid 1px"
+        ></div>
+      </div>
+    </div>
+  </body>
+  <script type="module">
+    const mondrian = new Mondrian.Mondrian({
+      container: document.getElementById("draw-container"),
+      viewport: true,
+      background: true,
+      debug: false,
+      useBuiltinClient: false,
+      worldWidth: 600,
+      worldHeight: 500,
+    });
+
+    // set default brush as default brush (pencil)
+    let currentPlayerState = {
+      player: {
+        brush: { ...Mondrian.DefaultMondrianBrushOptions },
+      },
+    };
+    mondrian.interaction.emit("state:change", currentPlayerState);
+
+    // helper function to change brush type
+    function changeBrush(name) {
+      currentPlayerState.player.brush = {
+        ...currentPlayerState.player.brush,
+        brushName: name,
+      };
+      // apply changes
+      mondrian.interaction.emit("state:change", currentPlayerState);
+    }
+
+    // helper function to change brush width
+    function changeWidth(width) {
+      currentPlayerState.player.brush = {
+        ...currentPlayerState.player.brush,
+        brushWidth: width,
+      };
+      // apply changes
+      mondrian.interaction.emit("state:change", currentPlayerState);
+    }
+
+    // helper function to change brush color
+    function changeColor(color) {
+      currentPlayerState.player.brush = {
+        ...currentPlayerState.player.brush,
+        brushColor: color,
+      };
+      // apply changes
+      mondrian.interaction.emit("state:change", currentPlayerState);
+    }
+
+    /**
+     * bind events to control panels
+     */
+    document
+      .getElementById("brush-name-select")
+      .addEventListener("change", (e) => {
+        changeBrush(e.target.value);
+      });
+    document
+      .getElementById("brush-width-select")
+      .addEventListener("change", (e) => {
+        changeWidth(+e.target.value);
+      });
+    document
+      .getElementById("brush-color-select")
+      .addEventListener("change", (e) => {
+        changeColor(+e.target.value);
+      });
+    document.getElementById("btn-undo").addEventListener("click", (e) => {
+      mondrian.interaction.emit("command:undo");
+    });
+    document.getElementById("btn-redo").addEventListener("click", (e) => {
+      mondrian.interaction.emit("command:redo");
+    });
+    document.getElementById("btn-clear").addEventListener("click", (e) => {
+      mondrian.interaction.emit("command:clear");
+    });
+  </script>
+</html>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Mondrian example - init</title>
     <script src="../packages/mondrian/dist/index.umd.js"></script>
   </head>
   <body>
@@ -19,10 +19,10 @@
       viewport: true,
       background: true,
       debug: false,
-      useBuiltinClient: true,
+      useBuiltinClient: false,
       worldWidth: 600,
       worldHeight: 500,
-      builtintClientUrl: "ws://localhost:3000",
+      // builtintClientUrl: "ws://localhost:3000",
     });
 
     mondrian.interaction.emit("state:change", {

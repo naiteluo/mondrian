@@ -17,10 +17,20 @@ export declare const enum BrushName
 |  Member | Value | Description |
 |  --- | --- | --- |
 |  Circle | <code>&quot;Circle&quot;</code> |  |
+|  Cone | <code>&quot;Cone&quot;</code> |  |
+|  Cube | <code>&quot;Cube&quot;</code> |  |
+|  Cuboid | <code>&quot;Cuboid&quot;</code> |  |
+|  Cylinder | <code>&quot;Cylinder&quot;</code> |  |
 |  Eraser | <code>&quot;Eraser&quot;</code> |  |
 |  Highlighter | <code>&quot;Highlighter&quot;</code> |  |
+|  Parallelogram | <code>&quot;Parallelogram&quot;</code> |  |
 |  Pencil | <code>&quot;Pencil&quot;</code> |  |
 |  Rectangle | <code>&quot;Rectangle&quot;</code> |  |
+|  RightAngleTrapezoid | <code>&quot;RightAngleTrapezoid&quot;</code> |  |
+|  RightAngleTriangle | <code>&quot;RightAngleTriangle&quot;</code> |  |
+|  SemiCircle | <code>&quot;SemiCircle&quot;</code> |  |
+|  Sphere | <code>&quot;Sphere&quot;</code> |  |
 |  Stroke | <code>&quot;Stroke&quot;</code> |  |
+|  Trapezoid | <code>&quot;Trapezoid&quot;</code> |  |
 |  Triangle | <code>&quot;Triangle&quot;</code> |  |
 

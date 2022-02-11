@@ -29,6 +29,7 @@ main settings of Mondrian instance
 |  [container](./mondrian.imondriansettings.container.md) | HTMLElement \| null | mondrian container |
 |  [debug?](./mondrian.imondriansettings.debug.md) | boolean | <i>(Optional)</i> |
 |  [disableCursor?](./mondrian.imondriansettings.disablecursor.md) | boolean | <i>(Optional)</i> |
+|  [fullscreen?](./mondrian.imondriansettings.fullscreen.md) | boolean | <i>(Optional)</i> Set true to auto fit container to fullscreen size and be automatically reponsive to window's resize event<!-- -->By default, user handle container's size. When container's size changed, resize api should be manually trigger to tell mondrian resize the pixi renderer. |
 |  [isProducer?](./mondrian.imondriansettings.isproducer.md) | boolean | <i>(Optional)</i> is producer role enable |
 |  [resolution?](./mondrian.imondriansettings.resolution.md) | number | <i>(Optional)</i> resolution to use |
 |  [useBuiltinClient](./mondrian.imondriansettings.usebuiltinclient.md) | boolean | determine if use builtin client instances |

@@ -22,7 +22,6 @@ export declare class MondrianDataManager extends MondrianModuleBase
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [client](./mondrian.mondriandatamanager.client.md) |  | [IMondrianDataClient](./mondrian.imondriandataclient.md) |  |
-|  [EVENT\_RECOVER\_CONSUMED](./mondrian.mondriandatamanager.event_recover_consumed.md) | <code>static</code> | string |  |
 |  [sharedBuffer](./mondrian.mondriandatamanager.sharedbuffer.md) |  | MondrianSharedBuffer |  |
 
 ## Methods

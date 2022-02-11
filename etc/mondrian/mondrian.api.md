@@ -8,6 +8,8 @@ import { Application } from '@pixi/app';
 import { Application as Application_2 } from 'pixi.js';
 import { Container } from '@pixi/display';
 import { Container as Container_2 } from 'pixi.js';
+import { DashLine } from 'pixi-dashed-line';
+import { DashLineOptions } from 'pixi-dashed-line';
 import { Graphics } from 'pixi.js';
 import { ILineStyleOptions } from '@pixi/graphics';
 import { ILineStyleOptions as ILineStyleOptions_2 } from 'pixi.js';
@@ -21,15 +23,35 @@ export const enum BrushName {
     // (undocumented)
     Circle = "Circle",
     // (undocumented)
+    Cone = "Cone",
+    // (undocumented)
+    Cube = "Cube",
+    // (undocumented)
+    Cuboid = "Cuboid",
+    // (undocumented)
+    Cylinder = "Cylinder",
+    // (undocumented)
     Eraser = "Eraser",
     // (undocumented)
     Highlighter = "Highlighter",
+    // (undocumented)
+    Parallelogram = "Parallelogram",
     // (undocumented)
     Pencil = "Pencil",
     // (undocumented)
     Rectangle = "Rectangle",
     // (undocumented)
+    RightAngleTrapezoid = "RightAngleTrapezoid",
+    // (undocumented)
+    RightAngleTriangle = "RightAngleTriangle",
+    // (undocumented)
+    SemiCircle = "SemiCircle",
+    // (undocumented)
+    Sphere = "Sphere",
+    // (undocumented)
     Stroke = "Stroke",
+    // (undocumented)
+    Trapezoid = "Trapezoid",
     // (undocumented)
     Triangle = "Triangle"
 }
@@ -117,6 +139,7 @@ export interface IMondrianSettings {
     debug?: boolean;
     // (undocumented)
     disableCursor?: boolean;
+    fullscreen?: boolean;
     isProducer?: boolean;
     resolution?: number;
     useBuiltinClient: boolean;
@@ -162,10 +185,7 @@ export class Mondrian extends MondrianModuleBase {
     get __debugShared(): MondrianShared;
     // (undocumented)
     get dm(): MondrianDataManager;
-    // (undocumented)
-    static EVENT_RECOVER_CONSUMED: string;
-    // (undocumented)
-    static EVNET_RECOVER_RECEIVED: string;
+    fitCenter(): void;
     // (undocumented)
     hidePannel(): void;
     // (undocumented)
@@ -178,6 +198,7 @@ export class Mondrian extends MondrianModuleBase {
     //
     // (undocumented)
     get player(): MondrianProducer;
+    resize(): void;
     // (undocumented)
     get settings(): IMondrianSettings;
     // (undocumented)
@@ -234,8 +255,6 @@ export class MondrianDataManager extends MondrianModuleBase {
     // (undocumented)
     dispatch(datas: IMondrianData[]): void;
     // (undocumented)
-    static EVENT_RECOVER_CONSUMED: string;
-    // (undocumented)
     push(datas: IMondrianData[]): Promise<void>;
     // Warning: (ae-forgotten-export) The symbol "MondrianSharedBuffer" needs to be exported by the entry point index.d.ts
     //
@@ -263,6 +282,13 @@ export const enum MondrianDataType {
 
 // @public
 export const MondrianDefaultBrushPluginList: BrushName[];
+
+// @public
+export class MondrianEvents {
+    static readonly EVENT_RECOVER_CONSUMED = "recover:consumed";
+    static readonly EVENT_RESIZE = "resize";
+    static readonly EVNET_RECOVER_RECEIVED = "recover:received";
+}
 
 // @public (undocumented)
 export const enum MondrianInteractType {
