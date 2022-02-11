@@ -1,4 +1,4 @@
-import { IMondrianSettings, DefaultMondrianSettings } from "@mondrian/mondrian";
+import { IMondrianSettings, DefaultMondrianSettings } from "mondrian/lib/index";
 
 export const __localMondrianSettingsKey = "__mo_config_mondrian_settings";
 

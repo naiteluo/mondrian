@@ -5,7 +5,7 @@ import {
   MondrianDefaultBrushPluginList,
   MondrianEvents,
   MondrianBuiltinWsClient,
-} from "@mondrian/mondrian";
+} from "mondrian/lib/index";
 import { Controller, GUI } from "lil-gui";
 import { AutoDrawController } from "./auto-draw-controller";
 import { getMondrianSettings, setMondrianSettings } from "./utils/app-helper";

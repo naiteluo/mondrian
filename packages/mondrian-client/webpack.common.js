@@ -49,6 +49,10 @@ module.exports = {
   },
   resolve: {
     extensions: [".js", ".json", ".ts"],
+    alias: {
+      // ts config path mapping do not work using babel-loader, add alias in webpack config
+      "mondrian/lib": path.resolve(__dirname, "../mondrian/src"),
+    },
   },
   context: __dirname,
   target: "web",

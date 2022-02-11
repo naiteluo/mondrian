@@ -1,4 +1,4 @@
-import { Mondrian } from "@mondrian/mondrian";
+import { Mondrian } from "mondrian/lib/index";
 import { ClientApplication } from "./app";
 
 export class AutoDrawController {
