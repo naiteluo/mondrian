@@ -5,6 +5,10 @@
 
 Yet another drawing board. Piet Mondrian, one of the greatest abstract style artists of the 20th century.
 
+## How to use?
+
+Install the main package: [@mondrian/mondrian](https://www.npmjs.com/package/@mondrian/mondrian), check out the [package main page](./packages/mondrian) here for more documentations.
+
 ## Background
 
 We had make more than one broken drawing board, having problems like:
