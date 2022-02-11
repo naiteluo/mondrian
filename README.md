@@ -1,3 +1,6 @@
+[![LICENSE](https://img.shields.io/github/license/naiteluo/mondrian)](https://github.com/naiteluo/mondrian/blob/master/LICENSE)
+[![libera manifesto](https://img.shields.io/badge/libera-manifesto-lightgrey.svg)](https://liberamanifesto.com)
+
 # Mondrian
 
 Yet another drawing board. Piet Mondrian, one of the greatest abstract style artists of the 20th century.
@@ -31,11 +34,3 @@ yarn
 yarn dev
 yarn build
 ```
-
-## TODOs
-
-- transform display objects to new center after resize
-- ~~pay attention to blur issue~~
-- ~~handle unfinished handler in dynamicBufferingCache~~
-- ~~if recover data and new data dump in the same time, pipe seem to be block.~~
-- ~~add docs~~

@@ -1,6 +1,6 @@
 {
   "name": "@mondrian/server",
-  "version": "1.0.0",
+  "version": "0.0.5",
   "description": "mondrian live service server",
   "main": "./src/app.js",
   "dependencies": {
