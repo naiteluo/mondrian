@@ -1,4 +1,4 @@
-import { IMondrianData, MondrianDataClient } from "mondrian/lib/index";
+import { IMondrianData, MondrianDataClient } from "@mondrian/mondrian";
 
 export class CustomizedDataClient extends MondrianDataClient {
   constructor() {

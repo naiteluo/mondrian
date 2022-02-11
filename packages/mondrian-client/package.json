@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/naiteluo/mondrian#readme",
   "dependencies": {
-    "mondrian": "^1.0.0",
+    "@mondrian/mondrian": "^0.0.5",
     "axios": "^0.24.0",
     "lil-gui": "^0.15.0"
   }
