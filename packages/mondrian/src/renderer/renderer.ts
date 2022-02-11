@@ -88,14 +88,23 @@ export class MondrianRenderer extends MondrianModuleBase {
 
   private trash: Trash[] = [];
 
+  /**
+   * pixi app instance
+   */
   get pixiApp() {
     return this.app;
   }
 
+  /**
+   * pixi app ticker
+   */
   get ticker() {
     return this.app.ticker;
   }
 
+  /**
+   * current viewport scale
+   */
   get scale() {
     if (this.viewport) {
       return this.viewport.scale;
@@ -104,18 +113,14 @@ export class MondrianRenderer extends MondrianModuleBase {
     }
   }
 
+  /**
+   * current bounding rect size of world
+   */
   get worldRect() {
-    if (this.viewport) {
-      return {
-        width: this.viewport.worldWidth,
-        height: this.viewport.worldHeight,
-      };
-    } else {
-      return {
-        width: this.pixiApp.screen.width,
-        height: this.pixiApp.screen.height,
-      };
-    }
+    return {
+      width: this.viewport.worldWidth,
+      height: this.viewport.worldHeight,
+    };
   }
 
   private get $panel() {
@@ -166,8 +171,7 @@ export class MondrianRenderer extends MondrianModuleBase {
       rootLayerMask,
       this.fixedSprite,
       this.staticLayer,
-      this.dynamicLayer,
-      this.uiLayer
+      this.dynamicLayer
     );
 
     this.viewport = new Viewport({
@@ -195,7 +199,7 @@ export class MondrianRenderer extends MondrianModuleBase {
         );
     }
     this.pixiApp.stage.addChild(this.viewport);
-    this.viewport.addChild(this.rootLayer);
+    this.viewport.addChild(this.rootLayer, this.uiLayer);
     this.viewport.clamp({
       left: -this.viewport.worldWidth / 2,
       right: (this.viewport.worldWidth * 3) / 2,
@@ -205,6 +209,30 @@ export class MondrianRenderer extends MondrianModuleBase {
     this.viewport.clampZoom({ minScale: 0.5, maxScale: 20 });
     this.viewport.drag().pinch().wheel().decelerate();
 
+    this.fitViewportToCenter();
+
+    this.viewport.pause = true;
+
+    this.pixiApp.ticker.minFPS = 30;
+    this.pixiApp.ticker.maxFPS = 60;
+    /**
+     * add main loop ticker
+     */
+    this.pixiApp.ticker.add(this.main);
+    /**
+     * add gc ticker
+     */
+    this.pixiApp.ticker.add(this.gc, undefined, UPDATE_PRIORITY.LOW);
+    // show perf info
+    this.initialPerfTool();
+
+    this.pixiApp.start();
+  }
+
+  /**
+   * reset viewport position and scale to fit container's center
+   */
+  public fitViewportToCenter() {
     if (this.shared.settings.viewport) {
       this.viewport.fit();
     } else {
@@ -229,23 +257,6 @@ export class MondrianRenderer extends MondrianModuleBase {
       this.viewport.worldWidth / 2,
       this.viewport.worldHeight / 2
     );
-
-    this.viewport.pause = true;
-
-    this.pixiApp.ticker.minFPS = 30;
-    this.pixiApp.ticker.maxFPS = 60;
-    /**
-     * add main loop ticker
-     */
-    this.pixiApp.ticker.add(this.main);
-    /**
-     * add gc ticker
-     */
-    this.pixiApp.ticker.add(this.gc, undefined, UPDATE_PRIORITY.LOW);
-    // show perf info
-    this.initialPerfTool();
-
-    this.pixiApp.start();
   }
 
   override stop() {
@@ -282,18 +293,24 @@ export class MondrianRenderer extends MondrianModuleBase {
   }
 
   resize() {
-    // todo #8 resize should handle static sprite resizing too
-    const wh = MondrianUtils.getScreenWH();
-    this.containerManager.$container.clientWidth;
     this.app.view.style.width = `${this.containerManager.$container.clientWidth}px`;
     this.app.view.style.height = `${this.containerManager.$container.clientHeight}px`;
-    // this.app.view.style.width = `${wh.w}px`;
-    // this.app.view.style.height = `${wh.h}px`;
-    // this.app.renderer.resize(wh.w, wh.h);
     this.app.renderer.resize(
       this.containerManager.$container.clientWidth,
       this.containerManager.$container.clientHeight
     );
+    if (this.viewport) {
+      this.viewport.resize(
+        this.pixiApp.screen.width,
+        this.pixiApp.screen.height,
+        this.shared.settings.worldWidth,
+        this.shared.settings.worldHeight
+      );
+      this.viewport.moveCenter(
+        this.viewport.worldWidth / 2,
+        this.viewport.worldHeight / 2
+      );
+    }
   }
 
   private initialPerfTool() {

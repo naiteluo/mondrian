@@ -4,8 +4,15 @@
 
 ## IMondrianDataClient.receivedFromRemote property
 
+tell data manager data received and send data to data manager
+
 <b>Signature:</b>
 
 ```typescript
 receivedFromRemote: MondrianDataClientReceivedListener;
 ```
+
+## Remarks
+
+will be called by data client itself
+

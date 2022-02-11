@@ -12,6 +12,7 @@ import { MondrianContainerManager } from "./container-manager";
 import { MondrianLoading } from "./common/loading";
 import { DefaultMondrianSettings, IMondrianSettings } from "./mondian-settings";
 import { PERF_LOAD, PERF_PROCESS } from "./common/constants";
+import { MondrianEvents } from "./common/events";
 
 /**
  * @public
@@ -104,10 +105,9 @@ export class Mondrian extends MondrianModuleBase {
     this.renderer.start();
     this.eventProxier.start();
     this.playerManager.start();
-    this.dataManager.once(MondrianDataManager.EVENT_RECOVER_CONSUMED, () => {
+    this.dataManager.once(MondrianEvents.EVENT_RECOVER_CONSUMED, () => {
       this.loading.hide();
-
-      this.emit(Mondrian.EVENT_RECOVER_CONSUMED);
+      this.emit(MondrianEvents.EVENT_RECOVER_CONSUMED);
       this.shared.time(PERF_PROCESS);
       this.shared.printTimes();
     });
@@ -120,7 +120,7 @@ export class Mondrian extends MondrianModuleBase {
     this.loading.setText(`${size} Data received. Processing...`);
     if (success) {
       console.log(`Start success, recovered data size: ${size}`);
-      this.emit(Mondrian.EVNET_RECOVER_RECEIVED, {
+      this.emit(MondrianEvents.EVNET_RECOVER_RECEIVED, {
         size,
       });
     } else {
@@ -165,7 +165,22 @@ export class Mondrian extends MondrianModuleBase {
     this.containerManager.hidePannel();
   }
 
-  static EVENT_RECOVER_CONSUMED = "recover:consumed";
+  /**
+   *
+   * resize mondrian stage manually.
+   *
+   *
+   * @public
+   *
+   */
+  public resize() {
+    this.interaction.resize();
+  }
 
-  static EVNET_RECOVER_RECEIVED = "recover:received";
+  /**
+   * reset viewport's postion and scale to container's center
+   */
+  public fitCenter() {
+    this.renderer.fitViewportToCenter();
+  }
 }

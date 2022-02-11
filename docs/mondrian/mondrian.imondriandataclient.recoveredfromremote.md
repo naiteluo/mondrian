@@ -4,8 +4,15 @@
 
 ## IMondrianDataClient.recoveredFromRemote property
 
+tell data manager data recovered and send data to data manager
+
 <b>Signature:</b>
 
 ```typescript
 recoveredFromRemote: MondrianDataClientRecoveredListener;
 ```
+
+## Remarks
+
+will be called by data client itself
+

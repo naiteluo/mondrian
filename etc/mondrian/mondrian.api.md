@@ -72,19 +72,14 @@ export type IMondrianData = IMondrianInteractData | IMondrianStateData | IMondri
 
 // @public (undocumented)
 export interface IMondrianDataClient {
-    // (undocumented)
+    // @internal (undocumented)
     bindReceivedListener(listener: MondrianDataClientReceivedListener): void;
-    // (undocumented)
+    // @internal (undocumented)
     bindRecoveredListener(listener: MondrianDataClientRecoveredListener): void;
-    // (undocumented)
     receivedFromRemote: MondrianDataClientReceivedListener;
     // Warning: (ae-forgotten-export) The symbol "MondrianDataClientRecoveredListener" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
     recoveredFromRemote: MondrianDataClientRecoveredListener;
-    // (undocumented)
     sendToRemote(datasToSend: IMondrianData[]): void;
-    // (undocumented)
     start(): void;
 }
 
@@ -148,6 +143,12 @@ export interface IMondrianStateData extends IMondrianCommonData {
     type: MondrianDataType.SET_STATE;
 }
 
+// @public (undocumented)
+export interface IoClientSettings {
+    // (undocumented)
+    channel: string;
+}
+
 // Warning: (ae-forgotten-export) The symbol "MondrianModuleBase" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
@@ -197,11 +198,20 @@ export const enum MondrianActionType {
     UNDO = "ud"
 }
 
-// @public (undocumented)
+// @public
+export class MondrianBuiltinWsClient extends MondrianDataClient {
+    constructor(shared: MondrianShared);
+    // (undocumented)
+    forceClear(): void;
+    // (undocumented)
+    sendToRemote(datas: IMondrianData[]): void;
+    // (undocumented)
+    start(): void;
+}
+
+// @public
 export class MondrianDataClient {
-    // (undocumented)
     bindReceivedListener(listener: MondrianDataClientReceivedListener): void;
-    // (undocumented)
     bindRecoveredListener(listener: MondrianDataClientRecoveredListener): void;
     // (undocumented)
     protected generateLastData(): IMondrianData;
@@ -211,7 +221,7 @@ export class MondrianDataClient {
     start(): void;
 }
 
-// @public (undocumented)
+// @public
 export type MondrianDataClientReceivedListener = (datas: IMondrianData[], isRecover?: boolean) => void;
 
 // @public (undocumented)

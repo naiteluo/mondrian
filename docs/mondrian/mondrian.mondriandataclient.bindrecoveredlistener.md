@@ -4,6 +4,8 @@
 
 ## MondrianDataClient.bindRecoveredListener() method
 
+bind received listener
+
 <b>Signature:</b>
 
 ```typescript
@@ -19,4 +21,8 @@ bindRecoveredListener(listener: MondrianDataClientRecoveredListener): void;
 <b>Returns:</b>
 
 void
+
+## Remarks
+
+should not be override or called outside mondrian
 

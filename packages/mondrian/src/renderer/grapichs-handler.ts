@@ -1,3 +1,4 @@
+import { DashLine, DashLineOptions } from "pixi-dashed-line";
 import { Container, Graphics, ILineStyleOptions, MSAA_QUALITY } from "pixi.js";
 import { MondrianShared } from "../shared";
 import { MondrianRenderer } from "./renderer";
@@ -70,6 +71,9 @@ export class MondrianGraphicsHandler {
   get c() {
     if (!this._c) {
       this._c = new Container();
+      if (!this.g) {
+        // do nothing
+      }
     }
     return this._c;
   }
@@ -119,10 +123,16 @@ export class MondrianGraphicsHandler {
       console.trace();
       throw new Error("Detaching unfinished handler is forbidden.");
     }
+    // remove references
+    this.children = {};
+    this.dashlines = {};
     return this.layer.removeChild(this.c);
   }
 
   destroy() {
+    // remove references
+    this.children = {};
+    this.dashlines = {};
     this._g = undefined;
     this._c = undefined;
     this.layer = undefined;
@@ -135,9 +145,40 @@ export class MondrianGraphicsHandler {
   set lineStyle(style: ILineStyleOptions) {
     this.options.lineStyle = { ...style };
     this.g.lineStyle(this.options.lineStyle);
+    this.c.children.forEach((obj) => {
+      const g = obj as Graphics;
+      if (g.lineStyle) {
+        g.lineStyle(this.options.lineStyle);
+      }
+    });
   }
 
   get lineStyle() {
     return this.options.lineStyle;
+  }
+
+  /**
+   * references to children graphics
+   */
+  public children: {
+    [name: string]: Graphics;
+  } = {};
+
+  /**
+   *  references to  dashline instances
+   */
+  public dashlines: {
+    [name: string]: DashLine;
+  } = {};
+
+  public createDashLine(g: Graphics, options?: DashLineOptions) {
+    // dashline instance need to be recreate when start draw new stuff
+    // but graphic can be reused
+    return new DashLine(g, {
+      ...(options || {}),
+      dash: [10, 5],
+      ...this.lineStyle,
+      useTexture: true,
+    });
   }
 }

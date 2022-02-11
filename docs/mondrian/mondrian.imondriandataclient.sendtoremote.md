@@ -4,6 +4,8 @@
 
 ## IMondrianDataClient.sendToRemote() method
 
+called by data manager when new data had been created.
+
 <b>Signature:</b>
 
 ```typescript
@@ -19,4 +21,8 @@ sendToRemote(datasToSend: IMondrianData[]): void;
 <b>Returns:</b>
 
 void
+
+## Remarks
+
+need to be override
 
