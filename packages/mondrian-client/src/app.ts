@@ -58,6 +58,7 @@ export class ClientApplication {
       container: this.$div,
       builtintClientUrl: "ws://localhost:3000",
     });
+    console.log(this.appSettings.mondrianSettings);
 
     // listen data recovered event
     this.mondrian.on(
@@ -186,7 +187,8 @@ export class ClientApplication {
   }
 
   private setupChannelControls() {
-    const channelFolder = this.gui.addFolder("Channel").close();
+    const channelFolder = this.gui.addFolder("Channel");
+    // const channelFolder = this.gui.addFolder("Channel").close();
     channelFolder
       .add(this.appSettings.mondrianSettings, "useBuiltinClient", [true, false])
       .listen()
@@ -296,11 +298,13 @@ export class ClientApplication {
 
   private onResetChannel() {
     this.appSettings.mondrianSettings.channel = "guest";
+    this.onMondrianSettingsChange();
     window.location.reload();
   }
 
   private async onSwitchChannel() {
     try {
+      this.onMondrianSettingsChange();
       window.location.reload();
     } catch (err) {
       this.logMsg("cache fails to save.", true);

@@ -3,9 +3,9 @@ import {
   MondrianDataType,
   IMondrianInteractData,
   MondrianInteractType,
-} from "../data-manager";
-import { MondrianShared } from "../shared";
-import { MondrianPlugin, PluginType } from "./plugin";
+} from "../../data-manager";
+import { MondrianShared } from "../../shared";
+import { MondrianPlugin, PluginType } from "../base/plugin";
 
 export class ViewportPlugin extends MondrianPlugin {
   static Type = PluginType.ConsumerTemp;

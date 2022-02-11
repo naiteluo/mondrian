@@ -1,13 +1,14 @@
 import { IPointData } from "@pixi/math";
-import { MondrianUtils } from "../common/utils";
+import { MondrianUtils } from "../../common/utils";
 import {
   IMondrianData,
   IMondrianInteractData,
   IMondrianStateData,
   MondrianDataType,
-} from "../data-manager";
-import { BrushName, BrushPlugin } from "./brush-plugin";
-import { PluginType } from "./plugin";
+} from "../../data-manager";
+import { BrushPlugin } from "../base/brush.plugin";
+import { BrushName } from "../base/brush-common";
+import { PluginType } from "../base/plugin";
 
 export class PencilBrushPlugin extends BrushPlugin {
   static override Type = PluginType.ConsumerExcludesive;

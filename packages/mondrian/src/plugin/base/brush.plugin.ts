@@ -2,93 +2,15 @@ import {
   IMondrianData,
   IMondrianInteractData,
   IMondrianStateData,
-} from "../data-manager";
+} from "../../data-manager";
 import { MondrianPlugin, PluginType } from "./plugin";
 
-import { ILineStyleOptions, LINE_CAP, LINE_JOIN } from "@pixi/graphics";
+import { ILineStyleOptions } from "@pixi/graphics";
 import { filters, IPointData } from "pixi.js";
-import { MondrianShared } from "../shared";
-import { IMondrianPlayerState } from "../player";
-import { MondrianGraphicsHandler } from "../renderer/grapichs-handler";
-
-/**
- * brush name enum
- *
- * @public
- */
-export const enum BrushName {
-  Pencil = "Pencil",
-  Eraser = "Eraser",
-  Highlighter = "Highlighter",
-  Rectangle = "Rectangle",
-  Circle = "Circle",
-  Triangle = "Triangle",
-  Stroke = "Stroke",
-}
-
-/**
- * brush name list
- *
- * @remarks
- *
- * for client ui
- *
- * @public
- */
-export const MondrianDefaultBrushPluginList = [
-  BrushName.Pencil,
-  BrushName.Eraser,
-  BrushName.Highlighter,
-  BrushName.Rectangle,
-  BrushName.Circle,
-  BrushName.Triangle,
-  BrushName.Stroke,
-];
-
-/**
- * state of the brush in playerState
- *
- * @remarks
- *
- * describe current user's brush state,
- * like which brush are selected, what color or width are set.
- *
- * @public
- */
-export interface BrushPluginState {
-  brushName: BrushName;
-  brushColor: number;
-  brushWidth: 5;
-
-  /**
-   * apply dash line
-   */
-  dash?: boolean;
-  /**
-   * restrict shape bounding to square
-   */
-  restrict?: boolean;
-
-  lineStyle: ILineStyleOptions;
-}
-
-/**
- * default brush state
- *
- * @public
- */
-export const DefaultMondrianBrushOptions: BrushPluginState = {
-  brushName: BrushName.Pencil,
-  brushColor: 0x000000,
-  brushWidth: 5,
-  dash: false,
-  restrict: false,
-  lineStyle: {
-    cap: LINE_CAP.ROUND,
-    join: LINE_JOIN.ROUND,
-    native: false,
-  },
-};
+import { MondrianShared } from "../../shared";
+import { IMondrianPlayerState } from "../../player";
+import { MondrianGraphicsHandler } from "../../renderer/grapichs-handler";
+import { BrushPluginState } from "./brush-common";
 
 /**
  * this brush plugin class is a base class of brushes
@@ -130,7 +52,7 @@ export class BrushPlugin extends MondrianPlugin {
 
   override reactStateChange(data: IMondrianData): boolean {
     this.playerState = (data as IMondrianStateData).data.player;
-    this.brushState = this.playerState.brush || {};
+    this.brushState = { ...this.playerState.brush } || {};
     this.lineStyle = {
       ...(this.brushState.lineStyle || {}),
       width: this.brushState.brushWidth,

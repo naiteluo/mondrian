@@ -1,7 +1,7 @@
 import { BLEND_MODES } from "@pixi/constants";
-import { IMondrianData } from "../data-manager";
-import { MondrianGraphicsHandler } from "../renderer/grapichs-handler";
-import { MondrianPlugin, PluginType } from "./plugin";
+import { IMondrianData } from "../../data-manager";
+import { MondrianGraphicsHandler } from "../../renderer/grapichs-handler";
+import { MondrianPlugin, PluginType } from "../base";
 
 export class ClearPlugin extends MondrianPlugin {
   static Type = PluginType.Global;
@@ -27,11 +27,15 @@ export class ClearPlugin extends MondrianPlugin {
     });
     this.handler.g.beginFill(0x000000);
     this.handler.g.blendMode = BLEND_MODES.ERASE;
+    let padding = 0;
+    if (this.shared.settings.background) {
+      padding = 1;
+    }
     this.handler.g.drawRect(
-      0,
-      0,
-      this.renderer.pixiApp.screen.width,
-      this.renderer.pixiApp.screen.height
+      padding,
+      padding,
+      this.renderer.viewport.worldWidth - 2 * padding,
+      this.renderer.viewport.worldHeight - 2 * padding
     );
     this.handler.stop();
     return true;

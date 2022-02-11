@@ -1,23 +1,23 @@
+import { BLEND_MODES } from "pixi.js";
 import {
   IMondrianData,
   IMondrianInteractData,
   IMondrianStateData,
   MondrianDataType,
-} from "../data-manager";
-import { BrushName } from "./brush-plugin";
-import { PencilBrushPlugin } from "./pencil-plugin";
-import { PluginType } from "./plugin";
+} from "../../data-manager";
+import { PencilBrushPlugin } from "./pencil.plugin";
+import { PluginType, BrushName } from "../base";
 
-export class HighlighterBrushPlugin extends PencilBrushPlugin {
+export class EraserBrushPlugin extends PencilBrushPlugin {
   static override Type = PluginType.ConsumerExcludesive;
 
-  static override PID = Symbol("highlighter-plugin");
+  static override PID = Symbol("eraser-plugin");
 
   static override predicate(data: IMondrianData | null): boolean {
     if (data === null) return false;
     if (data.type === MondrianDataType.SET_STATE) {
       if (data as IMondrianStateData) {
-        if (data.data.player.brush.brushName === BrushName.Highlighter) {
+        if (data.data.player.brush.brushName === BrushName.Eraser) {
           return true;
         }
       }
@@ -29,9 +29,9 @@ export class HighlighterBrushPlugin extends PencilBrushPlugin {
     if (!super.reactDragStart(data)) return false;
     this.handler.config({
       enableDiscrete: false,
-      canCacheAsBitmap: true,
+      canCacheAsBitmap: false,
     });
-    this.handler.c.filters = [this.sharedAlphaFilter];
+    this.handler.g.blendMode = BLEND_MODES.ERASE;
     return true;
   }
 }

@@ -3,10 +3,10 @@ import {
   IMondrianStateData,
   MondrianDataType,
   IMondrianInteractData,
-} from "../data-manager";
-import { BrushName } from "./brush-plugin";
-import { PluginType } from "./plugin";
-import { ShapePlugin } from "./shape-plugin";
+} from "../../data-manager";
+import { BrushName } from "../base/brush-common";
+import { PluginType } from "../base/plugin";
+import { ShapePlugin } from "../base/shape.plugin";
 
 export class StrokePlugin extends ShapePlugin {
   static override Type = PluginType.ConsumerExcludesive;

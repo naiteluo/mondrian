@@ -1,5 +1,5 @@
-import { IMondrianData } from "../data-manager";
-import { MondrianPlugin, PluginType } from "./plugin";
+import { IMondrianData } from "../../data-manager";
+import { MondrianPlugin, PluginType } from "../base/plugin";
 
 export class HistoryPlugin extends MondrianPlugin {
   static Type = PluginType.Global;
