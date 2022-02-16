@@ -1,5 +1,6 @@
 import { DashLine, DashLineOptions } from "pixi-dashed-line";
 import { Container, Graphics, ILineStyleOptions, MSAA_QUALITY } from "pixi.js";
+import { TextInput } from "../common/pixi-text-input";
 import { MondrianShared } from "../shared";
 import { MondrianRenderer } from "./renderer";
 
@@ -165,10 +166,17 @@ export class MondrianGraphicsHandler {
   } = {};
 
   /**
-   *  references to  dashline instances
+   *  references to dashline instances
    */
   public dashlines: {
     [name: string]: DashLine;
+  } = {};
+
+  /**
+   *  references to text instances
+   */
+  public texts: {
+    [name: string]: TextInput;
   } = {};
 
   public createDashLine(g: Graphics, options?: DashLineOptions) {

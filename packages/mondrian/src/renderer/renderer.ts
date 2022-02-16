@@ -18,7 +18,6 @@ import {
   MondrianGraphicsHandlerOptions,
 } from "./grapichs-handler";
 import { MondrianContainerManager } from "../container-manager";
-import { MondrianUtils } from "../common/utils";
 import { Viewport } from "pixi-viewport";
 
 const enum TrashType {

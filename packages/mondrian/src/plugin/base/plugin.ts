@@ -109,4 +109,12 @@ export class MondrianPlugin
   reactInput(event: unknown): boolean {
     return true;
   }
+
+  reactFocus(event: unknown): boolean {
+    return true;
+  }
+
+  reactBlur(event: unknown): boolean {
+    return true;
+  }
 }

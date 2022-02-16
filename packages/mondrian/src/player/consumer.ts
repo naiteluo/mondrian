@@ -92,6 +92,15 @@ export class MondrianConsumer extends MondrianPlayer {
             case MondrianInteractType.POINTER_UP:
               plugin.reactDragEnd(data);
               break;
+            case MondrianInteractType.INPUT:
+              plugin.reactInput(data);
+              break;
+            case MondrianInteractType.FOCUS:
+              plugin.reactFocus(data);
+              break;
+            case MondrianInteractType.BLUR:
+              plugin.reactBlur(data);
+              break;
             default:
               break;
           }

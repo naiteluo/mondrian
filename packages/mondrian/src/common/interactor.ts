@@ -21,4 +21,6 @@ export interface IMondrianInteractor {
 
   onClick(event: unknown): void;
   onInput(event: unknown): void;
+  onFocus(event: unknown): void;
+  onBlur(event: unknown): void;
 }
