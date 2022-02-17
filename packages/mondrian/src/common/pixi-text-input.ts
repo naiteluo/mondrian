@@ -482,6 +482,11 @@ export class TextInput extends Container {
         0 + this._deriveSurrogatePadding()[3] * 2 ||
         this.text.length * parseFloat(this.inputStyle.fontSize as string)) +
       "px";
+    this.domInput.style.height =
+      (this.textMetrics?.height ||
+        0 + this._deriveSurrogatePadding()[3] * 2 ||
+        this.text.length * parseFloat(this.inputStyle.fontSize as string)) +
+      "px";
     this.previousBoxInfoSnapshot.canvas_bounds = this._canvas_bounds;
     this.previousBoxInfoSnapshot.world_transform = this.worldTransform.clone();
     this.previousBoxInfoSnapshot.world_alpha = this.worldAlpha;

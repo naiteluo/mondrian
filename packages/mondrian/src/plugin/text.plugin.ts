@@ -52,19 +52,16 @@ export class TextPlugin extends BrushPlugin {
       },
       box: {
         default: {
-          // fill: 0xe8e9f3,
-          // rounded: 12,
-          stroke: { color: 0xcbcee0, width: 3 },
+          stroke: { color: 0xcbaaaa, width: 1 },
         },
-        // focused: {
-        //   fill: 0xe1e3ee,
-        //   rounded: 12,
-        //   stroke: { color: 0xabafc6, width: 3 },
-        // },
-        // disabled: { fill: 0xdbdbdb, rounded: 12 },
+        focused: {
+          stroke: { color: 0xaacbaa, width: 1 },
+        },
+        disabled: {
+          stroke: { color: 0xaaaacb, width: 1 },
+        },
       },
     });
-    input.placeholder = "Hello";
     input.x = data.data.x;
     input.y = data.data.y;
 
