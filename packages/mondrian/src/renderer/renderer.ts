@@ -131,6 +131,10 @@ export class MondrianRenderer extends MondrianModuleBase {
     private shared: MondrianShared
   ) {
     super();
+
+    console.log(this.shared.settings.historySize);
+    this.dynamicLevel = this.shared.settings.historySize || DefaultDynamicLevel;
+
     this.initializePIXIApplication();
   }
 
@@ -329,8 +333,8 @@ export class MondrianRenderer extends MondrianModuleBase {
     if (this.dynamicCache.length <= this.dynamicLevel) {
       return;
     }
-    // keep size just right as DefaultDynamicLevel
-    while (this.dynamicCache.length > DefaultDynamicLevel) {
+    // keep size just right as this.dynamicLevel
+    while (this.dynamicCache.length > this.dynamicLevel) {
       const handler = this.dynamicCache.shift();
       if (handler) {
         this.dynamicCacheIndex--;

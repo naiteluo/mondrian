@@ -37,6 +37,18 @@ export interface IMondrianSettings {
    * @defaultValue 1
    */
   resolution?: number;
+  /**
+   * history size
+   *
+   * @remarks
+   *
+   * size of grahpic handler cache. If cache exceeded, grahpic handler will be texturized.
+   * if viewport controls is on,
+   * cache will not be texturized and has no limit(might have performance issue when drawing tons of things).
+   *
+   * @defaultValue 20
+   */
+  historySize?: number;
   autoStart?: boolean;
   chunkLimit?: number;
   channel?: string;
@@ -171,4 +183,5 @@ export const DefaultMondrianSettings: IMondrianSettings = {
   useBuiltinClient: false,
   builtintClientUrl: "ws://localhost:3000",
   fullscreen: false,
+  historySize: 20,
 };
