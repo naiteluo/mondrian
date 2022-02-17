@@ -6,7 +6,7 @@ set -e
 cd "$(dirname $0)"
 
 ALI_REMOTE_URL="git@codeup.aliyun.com:mob/naiteluo/mondrian.git"
-ZYB_REMOTE_URL="xxxx"
+ZYB_REMOTE_URL="git@git.zuoyebang.cc:yike_fe/mondrian.git"
 
 REMOTE_URL=$ALI_REMOTE_URL
 
