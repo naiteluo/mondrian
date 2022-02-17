@@ -34,7 +34,6 @@ To have a maintainable and flexible drawing board, here are our design goals:
 ## Development
 
 ```
-yarn
-yarn dev
-yarn build
+npm install
+npm run start
 ```
