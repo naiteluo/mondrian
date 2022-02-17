@@ -22,6 +22,9 @@
     "sync:ali": "sh ./utils/push-others.sh --ali",
     "sync:ali:master": "sh ./utils/push-others.sh --ali --master"
   },
+  "engines": {
+    "npm": ">=8"
+  },
   "author": "naiteluo",
   "license": "MIT",
   "workspaces": [
