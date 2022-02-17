@@ -345,6 +345,12 @@ export class TextInput extends Container {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (this.domInput.style as any)[key] = `${this.inputStyle[key]}`;
     }
+
+    // set the same default font family as pixi text style
+    // to keep bound rect same
+    if (!this.inputStyle.fontFamily) {
+      this.domInput.style.fontFamily = "Arial";
+    }
   }
 
   _addListeners() {

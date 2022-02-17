@@ -48,7 +48,7 @@ export class TextPlugin extends BrushPlugin {
         padding: "2px 4px",
         // width: "200px",
         color: "#26272E",
-        multiline: false,
+        multiline: true,
       },
       box: {
         default: {
@@ -103,7 +103,6 @@ export class TextPlugin extends BrushPlugin {
   }
 
   override reactFocus(data: IMondrianInteractData): boolean {
-    console.log("focus", data.data.targetID, data.playerID);
     const input = this.handler.texts["text"];
     if (input && input.inputID === data.data.targetID) {
       this.hasFocus = true;
@@ -112,7 +111,6 @@ export class TextPlugin extends BrushPlugin {
   }
 
   override reactBlur(data: IMondrianInteractData): boolean {
-    console.log("blur", data.data.targetID);
     const input = this.handler.texts["text"];
     if (input && input.inputID === data.data.targetID) {
       input.disabled = true;
