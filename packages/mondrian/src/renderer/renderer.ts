@@ -560,12 +560,8 @@ export class MondrianRenderer extends MondrianModuleBase {
       this.textureMem = tmpMemSize;
       this.graphicsCount = tmpGraphicsCount;
       if (this.$panel) {
-        this.$panel.innerHTML = `
-        <div style="display:block">tx mem: ${this.textureMem.toFixed(
-          2
-        )} MB | </div> 
-        <div> g count: ${tmpGraphicsCount}</div>
-      `;
+        this.shared.logTextureMem(`${this.textureMem.toFixed(2)} MB`);
+        this.shared.logGCount(tmpGraphicsCount);
       }
     }
     this.__debug_checkUnfinishedHandler();
