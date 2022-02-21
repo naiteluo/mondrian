@@ -97,7 +97,7 @@ export interface BrushPluginState {
  */
 
 export const DefaultMondrianBrushOptions: BrushPluginState = {
-  brushName: BrushName.Text,
+  brushName: BrushName.Pencil,
   brushColor: 0x000000,
   brushWidth: 5,
   dash: false,
