@@ -340,6 +340,7 @@ export class MondrianRenderer extends MondrianModuleBase {
         this.dynamicCacheIndex--;
         handler.detach();
         this.staticLayer.addChild(handler.c);
+        handler.afterDetach();
         handler.destroy();
       }
 

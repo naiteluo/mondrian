@@ -150,7 +150,7 @@ export class TextInput extends Container {
   /**
    * text body in canvas
    */
-  private surrogate?: Text;
+  public surrogate?: Text;
 
   /**
    * text hitbox in canvas
@@ -539,13 +539,15 @@ export class TextInput extends Container {
     this.surrogateHitbox.on("pointerdown", this._onSurrogateFocus);
     this.addChild(this.surrogateHitbox);
 
-    this.surrogateMask = new Graphics();
-    this.addChild(this.surrogateMask);
+    // todo disable mask for now, render texture do not work properly with mask here.
+
+    // this.surrogateMask = new Graphics();
+    // this.addChild(this.surrogateMask);
 
     this.surrogate = new Text("", {});
     this.addChild(this.surrogate);
 
-    this.surrogate.mask = this.surrogateMask;
+    // this.surrogate.mask = this.surrogateMask;
 
     this._updateFontMetrics();
     this._updateSurrogate();
@@ -581,7 +583,7 @@ export class TextInput extends Container {
     }
 
     this._updateSurrogateHitbox(input_bounds);
-    this._updateSurrogateMask(input_bounds, padding);
+    // this._updateSurrogateMask(input_bounds, padding);
   }
 
   _updateSurrogateHitbox(bounds: DOMRect) {
@@ -603,6 +605,7 @@ export class TextInput extends Container {
       bounds.width - padding[3] - padding[1],
       bounds.height
     );
+    // this.surrogateMask.drawRect(0, 0, 100, 100);
     this.surrogateMask.endFill();
   }
 

@@ -46,20 +46,19 @@ export class TextPlugin extends BrushPlugin {
       input: {
         fontSize: "36px",
         padding: "2px 4px",
-        // width: "200px",
         color: "#26272E",
         multiline: true,
       },
       box: {
         default: {
-          stroke: { color: 0xcbaaaa, width: 1 },
+          // stroke: { color: 0xcbaaaa, width: 1 },
         },
-        focused: {
-          stroke: { color: 0xaacbaa, width: 1 },
-        },
-        disabled: {
-          stroke: { color: 0xaaaacb, width: 1 },
-        },
+        // focused: {
+        //   stroke: { color: 0xaacbaa, width: 1 },
+        // },
+        // disabled: {
+        //   stroke: { color: 0xaaaacb, width: 1 },
+        // },
       },
     });
     input.x = data.data.x;
@@ -94,6 +93,8 @@ export class TextPlugin extends BrushPlugin {
     if (input) {
       if (input.inputID === data.data.targetID) {
         input.text = data.data.value || "";
+      } else {
+        throw new Error(`Can't find input: ${data.data.targetID}`);
       }
     }
     return true;
