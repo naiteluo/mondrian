@@ -11,5 +11,8 @@ export interface IMondrianReactor {
   reactKeyDown(event: IMondrianData): boolean;
   reactKeyUp(event: IMondrianData): boolean;
   reactClick(event: unknown): boolean;
+
   reactInput(event: unknown): boolean;
+  reactFocus(event: unknown): boolean;
+  reactBlur(event: unknown): boolean;
 }

@@ -1,5 +1,6 @@
 import { DashLine, DashLineOptions } from "pixi-dashed-line";
 import { Container, Graphics, ILineStyleOptions, MSAA_QUALITY } from "pixi.js";
+import { TextInput } from "../common/pixi-text-input";
 import { MondrianShared } from "../shared";
 import { MondrianRenderer } from "./renderer";
 
@@ -129,10 +130,25 @@ export class MondrianGraphicsHandler {
     return this.layer.removeChild(this.c);
   }
 
+  afterDetach() {
+    // pixijs Text is lazy by default.
+    // mannualy trigger texture update here
+    // before draw Texts to renderTexture.
+    // without this step, text will be in wrong position
+    // after draw static layer to render texture.
+    for (const key in this.texts) {
+      if (Object.prototype.hasOwnProperty.call(this.texts, key)) {
+        const text = this.texts[key];
+        text.surrogate?.updateText(true);
+      }
+    }
+  }
+
   destroy() {
     // remove references
     this.children = {};
     this.dashlines = {};
+    this.texts = {};
     this._g = undefined;
     this._c = undefined;
     this.layer = undefined;
@@ -165,10 +181,17 @@ export class MondrianGraphicsHandler {
   } = {};
 
   /**
-   *  references to  dashline instances
+   *  references to dashline instances
    */
   public dashlines: {
     [name: string]: DashLine;
+  } = {};
+
+  /**
+   *  references to text instances
+   */
+  public texts: {
+    [name: string]: TextInput;
   } = {};
 
   public createDashLine(g: Graphics, options?: DashLineOptions) {

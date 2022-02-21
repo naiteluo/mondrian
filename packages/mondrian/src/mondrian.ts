@@ -157,6 +157,10 @@ export class Mondrian extends MondrianModuleBase {
     return this.shared;
   }
 
+  public get containers() {
+    return this.containerManager;
+  }
+
   public showPannel() {
     this.containerManager.showPannel();
   }

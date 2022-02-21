@@ -20,7 +20,12 @@
     "build:mondrian": "npm run build:types && npm run build:lib && npm run build:rollup",
     "build": "npm run build:mondrian && npm run build:client",
     "sync:ali": "sh ./utils/push-others.sh --ali",
-    "sync:ali:master": "sh ./utils/push-others.sh --ali --master"
+    "sync:ali:master": "sh ./utils/push-others.sh --ali --master",
+    "sync:zyb": "sh ./utils/push-others.sh --zyb",
+    "sync:zyb:master": "sh ./utils/push-others.sh --zyb --master"
+  },
+  "engines": {
+    "npm": ">=8"
   },
   "author": "naiteluo",
   "license": "MIT",
