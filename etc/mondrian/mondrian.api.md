@@ -11,10 +11,16 @@ import { Container as Container_2 } from 'pixi.js';
 import { DashLine } from 'pixi-dashed-line';
 import { DashLineOptions } from 'pixi-dashed-line';
 import { Graphics } from 'pixi.js';
+import { IDestroyOptions } from 'pixi.js';
 import { ILineStyleOptions } from '@pixi/graphics';
 import { ILineStyleOptions as ILineStyleOptions_2 } from 'pixi.js';
 import { InteractionEvent } from '@pixi/interaction';
+import { InteractionEvent as InteractionEvent_2 } from 'pixi.js';
+import { Matrix } from 'pixi.js';
 import { ObservablePoint } from 'pixi.js';
+import { Renderer } from 'pixi.js';
+import { Text as Text_2 } from 'pixi.js';
+import { TextStyle } from 'pixi.js';
 import { Ticker } from 'pixi.js';
 import { Viewport } from 'pixi-viewport';
 
@@ -50,6 +56,8 @@ export const enum BrushName {
     Sphere = "Sphere",
     // (undocumented)
     Stroke = "Stroke",
+    // (undocumented)
+    Text = "Text",
     // (undocumented)
     Trapezoid = "Trapezoid",
     // (undocumented)
@@ -117,6 +125,8 @@ export interface IMondrianInteractData extends IMondrianCommonData {
         altKey?: boolean;
         ctrlKey?: boolean;
         spaceKey?: boolean;
+        value?: string;
+        targetID?: number;
     };
     // (undocumented)
     type: MondrianDataType.INTERACT;
@@ -140,6 +150,7 @@ export interface IMondrianSettings {
     // (undocumented)
     disableCursor?: boolean;
     fullscreen?: boolean;
+    historySize?: number;
     isProducer?: boolean;
     resolution?: number;
     useBuiltinClient: boolean;
@@ -183,6 +194,10 @@ export class Mondrian extends MondrianModuleBase {
     //
     // (undocumented)
     get __debugShared(): MondrianShared;
+    // Warning: (ae-forgotten-export) The symbol "MondrianContainerManager" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    get containers(): MondrianContainerManager;
     // (undocumented)
     get dm(): MondrianDataManager;
     fitCenter(): void;
@@ -292,6 +307,14 @@ export class MondrianEvents {
 
 // @public (undocumented)
 export const enum MondrianInteractType {
+    // (undocumented)
+    BLUR = "b",
+    // (undocumented)
+    FOCUS = "f",
+    // (undocumented)
+    INPUT = "i",
+    // (undocumented)
+    INPUT_ADD = "ia",
     // (undocumented)
     KEY_DOWN = "kd",
     // (undocumented)

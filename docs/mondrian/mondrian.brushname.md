@@ -31,6 +31,7 @@ export declare const enum BrushName
 |  SemiCircle | <code>&quot;SemiCircle&quot;</code> |  |
 |  Sphere | <code>&quot;Sphere&quot;</code> |  |
 |  Stroke | <code>&quot;Stroke&quot;</code> |  |
+|  Text | <code>&quot;Text&quot;</code> |  |
 |  Trapezoid | <code>&quot;Trapezoid&quot;</code> |  |
 |  Triangle | <code>&quot;Triangle&quot;</code> |  |
 

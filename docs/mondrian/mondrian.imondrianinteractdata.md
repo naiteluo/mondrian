@@ -15,6 +15,6 @@ export interface IMondrianInteractData extends IMondrianCommonData
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [data](./mondrian.imondrianinteractdata.data.md) | { subType: [MondrianInteractType](./mondrian.mondrianinteracttype.md)<!-- -->; x: number; y: number; code?: string; shiftKey?: boolean; altKey?: boolean; ctrlKey?: boolean; spaceKey?: boolean; } |  |
+|  [data](./mondrian.imondrianinteractdata.data.md) | { subType: [MondrianInteractType](./mondrian.mondrianinteracttype.md)<!-- -->; x: number; y: number; code?: string; shiftKey?: boolean; altKey?: boolean; ctrlKey?: boolean; spaceKey?: boolean; value?: string; targetID?: number; } |  |
 |  [type](./mondrian.imondrianinteractdata.type.md) | [MondrianDataType.INTERACT](./mondrian.mondriandatatype.md) |  |
 

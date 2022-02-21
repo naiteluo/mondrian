@@ -14,6 +14,10 @@ export declare const enum MondrianInteractType
 
 |  Member | Value | Description |
 |  --- | --- | --- |
+|  BLUR | <code>&quot;b&quot;</code> |  |
+|  FOCUS | <code>&quot;f&quot;</code> |  |
+|  INPUT | <code>&quot;i&quot;</code> |  |
+|  INPUT\_ADD | <code>&quot;ia&quot;</code> |  |
 |  KEY\_DOWN | <code>&quot;kd&quot;</code> |  |
 |  KEY\_UP | <code>&quot;ku&quot;</code> |  |
 |  POINTER\_DOWN | <code>&quot;pd&quot;</code> |  |

@@ -16,5 +16,7 @@ data: {
         altKey?: boolean;
         ctrlKey?: boolean;
         spaceKey?: boolean;
+        value?: string;
+        targetID?: number;
     };
 ```

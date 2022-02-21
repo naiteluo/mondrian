@@ -24,6 +24,7 @@ export declare class Mondrian extends MondrianModuleBase
 |  --- | --- | --- | --- |
 |  [\_\_debugPixiApp](./mondrian.mondrian.__debugpixiapp.md) |  | import("pixi.js").Application |  |
 |  [\_\_debugShared](./mondrian.mondrian.__debugshared.md) |  | MondrianShared |  |
+|  [containers](./mondrian.mondrian.containers.md) |  | MondrianContainerManager |  |
 |  [dm](./mondrian.mondrian.dm.md) |  | [MondrianDataManager](./mondrian.mondriandatamanager.md) |  |
 |  [ID](./mondrian.mondrian.id.md) |  | string |  |
 |  [interaction](./mondrian.mondrian.interaction.md) |  | MondrianEventProxier |  |
