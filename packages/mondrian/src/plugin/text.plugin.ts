@@ -44,9 +44,9 @@ export class TextPlugin extends BrushPlugin {
     this.handler.lineStyle = this.lineStyle;
     const input = new TextInput({
       input: {
-        fontSize: "36px",
+        fontSize: `${10 + (this.lineStyle.width || 0)}px`,
         padding: "2px 4px",
-        color: "#26272E",
+        color: `#${(this.lineStyle.color || 0x000000).toString(16)}`,
         multiline: true,
       },
       box: {
