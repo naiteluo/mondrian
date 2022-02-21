@@ -92,6 +92,15 @@ export class MondrianConsumer extends MondrianPlayer {
             case MondrianInteractType.POINTER_UP:
               plugin.reactDragEnd(data);
               break;
+            case MondrianInteractType.INPUT:
+              plugin.reactInput(data);
+              break;
+            case MondrianInteractType.FOCUS:
+              plugin.reactFocus(data);
+              break;
+            case MondrianInteractType.BLUR:
+              plugin.reactBlur(data);
+              break;
             default:
               break;
           }
@@ -106,5 +115,9 @@ export class MondrianConsumer extends MondrianPlayer {
   private dataXyToLeftTop(data: IMondrianInteractData) {
     data.data.x = this.renderer.worldRect.width / 2 + data.data.x;
     data.data.y = this.renderer.worldRect.height / 2 + data.data.y;
+
+    if (this.shared.settings.debug) {
+      this.shared.logXY(data.data.x, data.data.y);
+    }
   }
 }

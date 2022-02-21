@@ -74,4 +74,19 @@ export class MondrianShared extends MondrianModuleBase {
       console.log(key, pair.deltaMs);
     });
   }
+
+  logTextureMem(data: string) {
+    this.mondrian.containers.printInPannel("tx-mem", data);
+  }
+
+  logGCount(data: number) {
+    this.mondrian.containers.printInPannel("g-count", data);
+  }
+
+  logXY(x: number, y: number) {
+    this.mondrian.containers.printInPannel(
+      "pos",
+      `${Math.round(x)}, ${Math.round(y)}`
+    );
+  }
 }

@@ -137,8 +137,50 @@ export class MondrianProducer
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onInput(_event: unknown): void {
-    console.log("implement it");
+  onInput(event: { value: string; targetID: number }): void {
+    this.dataManager.push([
+      {
+        playerID: this.id,
+        type: MondrianDataType.INTERACT,
+        data: {
+          subType: MondrianInteractType.INPUT,
+          x: 0,
+          y: 0,
+          value: event.value,
+          targetID: event.targetID,
+        },
+      },
+    ]);
+  }
+
+  onFocus(event: { targetID: number }): void {
+    this.dataManager.push([
+      {
+        playerID: this.id,
+        type: MondrianDataType.INTERACT,
+        data: {
+          subType: MondrianInteractType.FOCUS,
+          x: 0,
+          y: 0,
+          targetID: event.targetID,
+        },
+      },
+    ]);
+  }
+
+  onBlur(event: { targetID: number }): void {
+    this.dataManager.push([
+      {
+        playerID: this.id,
+        type: MondrianDataType.INTERACT,
+        data: {
+          subType: MondrianInteractType.BLUR,
+          x: 0,
+          y: 0,
+          targetID: event.targetID,
+        },
+      },
+    ]);
   }
 
   private packEvent(

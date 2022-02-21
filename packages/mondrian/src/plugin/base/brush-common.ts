@@ -28,7 +28,10 @@ export const enum BrushName {
   Cuboid = "Cuboid",
   Sphere = "Sphere",
   Cylinder = "Cylinder",
-  Cone = "Cone"
+  Cone = "Cone",
+
+  // text
+  Text = "Text",
 }
 /**
  * brush name list
@@ -58,6 +61,7 @@ export const MondrianDefaultBrushPluginList = [
   BrushName.Sphere,
   BrushName.Cylinder,
   BrushName.Cone,
+  BrushName.Text,
 ];
 /**
  * state of the brush in playerState

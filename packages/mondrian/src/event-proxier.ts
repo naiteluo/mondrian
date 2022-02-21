@@ -41,16 +41,22 @@ export class MondrianEventProxier extends MondrianEventEmitter {
 
   public startPixiEventWatch() {
     this.stage.interactive = true;
-    this.interaction.on("pointerdown", this.onDragStart);
-    this.interaction.on("pointermove", this.onDragMove);
-    this.interaction.on("pointerup", this.onDragEnd);
+    this.stage.on("pointerdown", this.onDragStart);
+    this.stage.on("pointermove", this.onDragMove);
+    this.stage.on("pointerup", this.onDragEnd);
+    this.interaction.on("input", this.onInput);
+    this.interaction.on("focus", this.onFocus);
+    this.interaction.on("blur", this.onBlur);
   }
 
   public stopPixiEventWatch() {
     this.stage.interactive = false;
-    this.interaction.off("pointerdown", this.onDragStart);
-    this.interaction.off("pointermove", this.onDragMove);
-    this.interaction.off("pointerup", this.onDragEnd);
+    this.stage.off("pointerdown", this.onDragStart);
+    this.stage.off("pointermove", this.onDragMove);
+    this.stage.off("pointerup", this.onDragEnd);
+    this.interaction.off("input", this.onInput);
+    this.interaction.off("focus", this.onFocus);
+    this.interaction.off("blur", this.onBlur);
   }
 
   public startSelfEventWatch() {
@@ -156,6 +162,18 @@ export class MondrianEventProxier extends MondrianEventEmitter {
 
   private onWheel = (event: MouseEvent) => {
     event.preventDefault();
+  };
+
+  private onInput = (event: { value: string; targetID: number }) => {
+    this.interactor.onInput(event);
+  };
+
+  private onFocus = (event: { targetID: number }) => {
+    this.interactor.onFocus(event);
+  };
+
+  private onBlur = (event: { targetID: number }) => {
+    this.interactor.onBlur(event);
   };
 
   private resizeEventHandler = () => {

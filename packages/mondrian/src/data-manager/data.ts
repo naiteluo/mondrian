@@ -12,6 +12,10 @@ export const enum MondrianInteractType {
   POINTER_UP = "pu",
   KEY_DOWN = "kd",
   KEY_UP = "ku",
+  INPUT = "i",
+  INPUT_ADD = "ia",
+  FOCUS = "f",
+  BLUR = "b",
 }
 
 export const enum MondrianActionType {
@@ -41,6 +45,8 @@ export interface IMondrianInteractData extends IMondrianCommonData {
     altKey?: boolean;
     ctrlKey?: boolean;
     spaceKey?: boolean;
+    value?: string;
+    targetID?: number;
   };
 }
 

@@ -50,7 +50,6 @@ export class MondrianContainerManager extends MondrianModuleBase {
   private initialzieDebugPanel() {
     this._$panel = document.createElement("div");
     this._$panel.id = "debug-panel";
-    this._$panel.style.width = "100px;";
     this._$panel.style.height = "100px;";
     this._$panel.style.zIndex = "2";
     this._$panel.style.position = "fixed";
@@ -64,7 +63,9 @@ export class MondrianContainerManager extends MondrianModuleBase {
     this._$panel.style.opacity = "0.8";
     this._$panel.style.alignItems = "center";
     this._$panel.style.fontFamily = "monospace";
-    this._$panel.innerHTML = "debug panel";
+    this.createStatisticItem("tx-mem", "tx mem:");
+    this.createStatisticItem("g-count", "g count:");
+    this.createStatisticItem("pos", "(x, y):");
     document.body.appendChild(this._$panel);
   }
 
@@ -92,5 +93,38 @@ export class MondrianContainerManager extends MondrianModuleBase {
       return;
     }
     this._$panel.style.visibility = "visible";
+  }
+
+  createStatisticItem(name: string, description: string) {
+    if (!this.$panel) return;
+    const $div = document.createElement("div");
+    const $span = document.createElement("span");
+    $div.style.marginRight = "5px";
+    $div.style.paddingRight = "5px";
+    $div.style.borderRight = "solid 1px #13c039";
+    $div.style.lineHeight = "1em";
+    $div.className = `${name}`;
+    $span.className = `${name}-value`;
+    $div.appendChild(document.createTextNode(description));
+    $div.appendChild($span);
+    this.$panel.appendChild($div);
+  }
+
+  getStatisticItem(name: string) {
+    if (!this.$panel) return;
+    return this.$panel.getElementsByClassName(`${name}`)[0];
+  }
+
+  getStatisticValueItem(name: string) {
+    if (!this.$panel) return;
+    return this.$panel.getElementsByClassName(`${name}-value`)[0];
+  }
+
+  printInPannel(name: string, data: string | number) {
+    if (!this.$panel) return;
+    const $span = this.getStatisticValueItem(name);
+    if ($span) {
+      $span.innerHTML = `${data}`;
+    }
   }
 }

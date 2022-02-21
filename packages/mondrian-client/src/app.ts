@@ -156,6 +156,11 @@ export class ClientApplication {
       .listen()
       .name("fullscreen")
       .onFinishChange(this.onMondrianSettingsChange);
+    settingsFolder
+      .add(this.appSettings.mondrianSettings, "historySize")
+      .listen()
+      .name("histroySize")
+      .onFinishChange(this.onMondrianSettingsChange);
   }
 
   private setupStageControls() {

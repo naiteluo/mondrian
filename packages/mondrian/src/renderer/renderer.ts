@@ -18,7 +18,6 @@ import {
   MondrianGraphicsHandlerOptions,
 } from "./grapichs-handler";
 import { MondrianContainerManager } from "../container-manager";
-import { MondrianUtils } from "../common/utils";
 import { Viewport } from "pixi-viewport";
 
 const enum TrashType {
@@ -132,6 +131,10 @@ export class MondrianRenderer extends MondrianModuleBase {
     private shared: MondrianShared
   ) {
     super();
+
+    console.log(this.shared.settings.historySize);
+    this.dynamicLevel = this.shared.settings.historySize || DefaultDynamicLevel;
+
     this.initializePIXIApplication();
   }
 
@@ -330,13 +333,14 @@ export class MondrianRenderer extends MondrianModuleBase {
     if (this.dynamicCache.length <= this.dynamicLevel) {
       return;
     }
-    // keep size just right as DefaultDynamicLevel
-    while (this.dynamicCache.length > DefaultDynamicLevel) {
+    // keep size just right as this.dynamicLevel
+    while (this.dynamicCache.length > this.dynamicLevel) {
       const handler = this.dynamicCache.shift();
       if (handler) {
         this.dynamicCacheIndex--;
         handler.detach();
         this.staticLayer.addChild(handler.c);
+        handler.afterDetach();
         handler.destroy();
       }
 
@@ -557,12 +561,8 @@ export class MondrianRenderer extends MondrianModuleBase {
       this.textureMem = tmpMemSize;
       this.graphicsCount = tmpGraphicsCount;
       if (this.$panel) {
-        this.$panel.innerHTML = `
-        <div style="display:block">tx mem: ${this.textureMem.toFixed(
-          2
-        )} MB | </div> 
-        <div> g count: ${tmpGraphicsCount}</div>
-      `;
+        this.shared.logTextureMem(`${this.textureMem.toFixed(2)} MB`);
+        this.shared.logGCount(tmpGraphicsCount);
       }
     }
     this.__debug_checkUnfinishedHandler();

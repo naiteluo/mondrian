@@ -36,6 +36,7 @@ import { ConePlugin } from "./shapes/cone.plugin";
 import { EraserBrushPlugin } from "./brushworks/eraser.plugin";
 import { HighlighterBrushPlugin } from "./brushworks/highlighter.plugin";
 import { PencilBrushPlugin } from "./brushworks/pencil.plugin";
+import { TextPlugin } from "./text.plugin";
 
 interface IMondrianPluginInstanceRecord {
   classRef: IMondrianPluginConstructor;
@@ -68,6 +69,8 @@ export class MondrianPluginManager {
     this.register(SpherePlugin);
     this.register(CylinderPlugin);
     this.register(ConePlugin);
+
+    this.register(TextPlugin);
   }
 
   private _instanceRecordMap: {
