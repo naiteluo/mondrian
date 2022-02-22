@@ -1,6 +1,6 @@
 {
   "name": "mondrian-workspace",
-  "version": "0.0.7-next.0",
+  "version": "0.0.7-rc.0",
   "description": "mondrian",
   "main": "index.js",
   "scripts": {
