@@ -4,7 +4,7 @@
   "description": "sketch board library",
   "main": "lib/index.js",
   "browser": "dist/index.umd.js",
-  "typings": "types/index.d.ts",
+  "typings": "types/mondrian.public.d.ts",
   "namespace": "Mondrian",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
