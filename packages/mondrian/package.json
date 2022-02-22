@@ -1,6 +1,6 @@
 {
   "name": "@mondrian/mondrian",
-  "version": "0.0.6",
+  "version": "0.0.7-rc.0",
   "description": "sketch board library",
   "main": "lib/index.js",
   "browser": "dist/index.umd.js",
