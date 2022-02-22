@@ -37,3 +37,7 @@ To have a maintainable and flexible drawing board, here are our design goals:
 npm install
 npm run start
 ```
+
+## Package installation tests
+
+Here is a [simple project](https://github.com/naiteluo/mondrian-install-test) to be used to test released `@mondrian/mondrian` packages.
