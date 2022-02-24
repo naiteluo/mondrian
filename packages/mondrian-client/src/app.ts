@@ -49,7 +49,7 @@ export class ClientApplication {
     }
 
     if (!this.appSettings.mondrianSettings.useBuiltinClient) {
-      this.appSettings.mondrianSettings.client = new CustomizedDataClient();
+      // this.appSettings.mondrianSettings.client = new CustomizedDataClient();
     }
 
     // create mondrian instance
@@ -94,7 +94,8 @@ export class ClientApplication {
     });
     this.gui.add(this, "onStart").name("Start");
     this.msgCtrl = this.gui.add(this, "msg").name("Message:");
-    this.setupSettingControls();
+    this.setupMondrianSettingControls();
+    this.setupAppSettingControls();
     this.setupChannelControls();
     // enable stage size pannel when fullscreen is disabled
     if (!this.appSettings.mondrianSettings.fullscreen) {
@@ -105,8 +106,8 @@ export class ClientApplication {
     this.setupBrushControls();
   }
 
-  private setupSettingControls() {
-    const settingsFolder = this.gui.addFolder("Settings").close();
+  private setupMondrianSettingControls() {
+    const settingsFolder = this.gui.addFolder("Settings");
     settingsFolder
       .add(this.appSettings.mondrianSettings, "resolution", 1, 3, 1)
       .listen()
@@ -161,6 +162,10 @@ export class ClientApplication {
       .listen()
       .name("histroySize")
       .onFinishChange(this.onMondrianSettingsChange);
+  }
+
+  private setupAppSettingControls() {
+    const appSettingsFolder = this.gui.addFolder("AppSetting");
   }
 
   private setupStageControls() {

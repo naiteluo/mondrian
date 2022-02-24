@@ -1,6 +1,17 @@
 import { IMondrianSettings, DefaultMondrianSettings } from "mondrian/lib/index";
 
+let ResetSettings = false;
+
+if (window.location.search.includes("reset=1")) {
+  ResetSettings = true;
+}
+
 export const __localMondrianSettingsKey = "__mo_config_mondrian_settings";
+
+// remove save settings when vivisting with reset search
+if (ResetSettings) {
+  localStorage.removeItem(__localMondrianSettingsKey);
+}
 
 export const setMondrianSettings = (r: Partial<IMondrianSettings>) => {
   localStorage.setItem(__localMondrianSettingsKey, JSON.stringify(r));
