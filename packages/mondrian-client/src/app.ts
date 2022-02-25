@@ -8,7 +8,12 @@ import {
 } from "mondrian/lib/index";
 import { Controller, GUI } from "lil-gui";
 import { AutoDrawController } from "./auto-draw-controller";
-import { getMondrianSettings, setMondrianSettings } from "./utils/app-helper";
+import {
+  getBrushConfig,
+  getMondrianSettings,
+  setBrushConfig,
+  setMondrianSettings,
+} from "./utils/app-helper";
 import { CustomizedDataClient } from "./customized-data-client";
 
 const NoGUI = window.location.search.includes("gui=0");
@@ -22,7 +27,7 @@ export class ClientApplication {
     mondrianSettings: getMondrianSettings(),
   };
 
-  brushConfig: BrushPluginState = DefaultMondrianBrushOptions;
+  brushConfig: BrushPluginState = getBrushConfig();
 
   gui!: GUI;
 
@@ -255,11 +260,7 @@ export class ClientApplication {
   }
 
   initialBrush() {
-    this.mondrian.interaction.emit("state:change", {
-      player: {
-        brush: DefaultMondrianBrushOptions,
-      },
-    });
+    this.onBrushStateChange();
   }
 
   private applyBrushChanges() {
@@ -276,6 +277,7 @@ export class ClientApplication {
   };
 
   private onBrushStateChange = () => {
+    setBrushConfig(this.brushConfig);
     this.applyBrushChanges();
   };
 
