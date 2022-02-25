@@ -19,6 +19,9 @@ if (ResetSettings) {
 }
 
 export const setMondrianSettings = (r: Partial<IMondrianSettings>) => {
+  const target = JSON.parse(JSON.stringify(r));
+  // client property is a class instance, should not be save to localstorage.
+  target.client = undefined;
   localStorage.setItem(__localMondrianSettingsKey, JSON.stringify(r));
 };
 
