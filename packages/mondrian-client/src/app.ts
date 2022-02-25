@@ -56,7 +56,8 @@ export class ClientApplication {
     }
 
     if (!this.appSettings.mondrianSettings.useBuiltinClient) {
-      // this.appSettings.mondrianSettings.client = new CustomizedDataClient();
+      this.appSettings.mondrianSettings.client = new CustomizedDataClient();
+      this.appSettings.mondrianSettings.client = undefined;
     }
 
     // create mondrian instance
