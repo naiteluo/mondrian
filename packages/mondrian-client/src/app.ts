@@ -11,6 +11,8 @@ import { AutoDrawController } from "./auto-draw-controller";
 import { getMondrianSettings, setMondrianSettings } from "./utils/app-helper";
 import { CustomizedDataClient } from "./customized-data-client";
 
+const NoGUI = window.location.search.includes("gui=0");
+
 export class ClientApplication {
   $div: HTMLElement;
 
@@ -70,8 +72,9 @@ export class ClientApplication {
     );
 
     this.autoDrawController = new AutoDrawController(this.mondrian, this);
-
-    this.initialLilGUI();
+    if (!NoGUI) {
+      this.initialLilGUI();
+    }
   }
 
   private resetGlobalStyle() {
@@ -323,7 +326,9 @@ export class ClientApplication {
 
   logMsg(str: string, isError = false) {
     this.msg = str;
-    this.msgCtrl.updateDisplay();
+    if (this.msgCtrl) {
+      this.msgCtrl.updateDisplay();
+    }
     if (isError) {
       console.error(str);
     } else {
