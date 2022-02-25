@@ -44,6 +44,9 @@ export class MondrianLoading {
         visibility: visible;
         opacity: 1;
     }
+    .${this.wrapClassNameWithMid}.hide {
+        display: none;
+    }
     .${this.wrapClassNameWithMid} .lds-ripple {
         display: inline-block;
         position: relative;
@@ -100,6 +103,11 @@ export class MondrianLoading {
 
   show() {
     this.$dom.classList.add("show");
+    // set modal display none when transition done,
+    // prevent css animation trigger css recalcations
+    this.$dom.ontransitionend = () => {
+      this.$dom.classList.add("hide");
+    };
   }
 
   hide() {
