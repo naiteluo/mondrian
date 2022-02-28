@@ -1,7 +1,6 @@
 import {
   Mondrian,
   BrushPluginState,
-  DefaultMondrianBrushOptions,
   MondrianDefaultBrushPluginList,
   MondrianEvents,
   MondrianBuiltinWsClient,
@@ -17,6 +16,7 @@ import {
 import { CustomizedDataClient } from "./customized-data-client";
 
 const NoGUI = window.location.search.includes("gui=0");
+const IsAuto = window.location.search.includes("auto=1");
 
 export class ClientApplication {
   $div: HTMLElement;
@@ -74,6 +74,9 @@ export class ClientApplication {
       ({ size }: { size: number }) => {
         this.logMsg(`data size: ${size}`);
         this.initialBrush();
+        if (IsAuto) {
+          this.autoDrawController.toggle();
+        }
       }
     );
 
