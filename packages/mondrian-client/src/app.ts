@@ -39,7 +39,7 @@ export class ClientApplication {
 
   autoDrawController: AutoDrawController;
 
-  stageOptions = { width: 500, height: 400 };
+  stageOptions = { width: 800, height: 600 };
 
   constructor() {
     this.resetGlobalStyle();
@@ -105,6 +105,7 @@ export class ClientApplication {
       title: "Mondrian",
     });
     this.gui.add(this, "onStart").name("Start");
+    this.gui.add(this, "onSnapshot").name("Snapshot");
     this.msgCtrl = this.gui.add(this, "msg").name("Message:");
     this.setupMondrianSettingControls();
     this.setupAppSettingControls();
@@ -299,6 +300,19 @@ export class ClientApplication {
 
   private onStart() {
     this.mondrian.start();
+  }
+
+  private $snapshotList?: HTMLDivElement;
+
+  public onSnapshot() {
+    if (!this.$snapshotList) {
+      this.$snapshotList = document.createElement("div") as HTMLDivElement;
+      this.$snapshotList.style.position = "absolute";
+      this.$snapshotList.style.bottom = "0px";
+      document.body.appendChild(this.$snapshotList);
+    }
+    this.$snapshotList.innerHTML = "";
+    this.$snapshotList.appendChild(this.mondrian.renderer.exportToImage());
   }
 
   private onAutoDrawToggle() {

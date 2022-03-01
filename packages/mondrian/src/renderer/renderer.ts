@@ -132,7 +132,6 @@ export class MondrianRenderer extends MondrianModuleBase {
   ) {
     super();
 
-    console.log(this.shared.settings.historySize);
     this.dynamicLevel = this.shared.settings.historySize || DefaultDynamicLevel;
 
     this.initializePIXIApplication();
@@ -295,6 +294,40 @@ export class MondrianRenderer extends MondrianModuleBase {
     this.containerManager.$container.appendChild(this.$canvas);
   }
 
+  public exportToImage(): any {
+    const tmpTexture = RenderTexture.create({
+      width: this.shared.settings.worldWidth,
+      height: this.shared.settings.worldHeight,
+    });
+    this.app.renderer.render(this.fixedSprite, {
+      renderTexture: tmpTexture,
+    });
+
+    const img = this.app.renderer.plugins.extract.image(
+      tmpTexture,
+      "image/png"
+    );
+    tmpTexture.destroy(true);
+    return img;
+  }
+
+  public exportToBase64(): string {
+    const tmpTexture = RenderTexture.create({
+      width: this.shared.settings.worldWidth,
+      height: this.shared.settings.worldHeight,
+    });
+    this.app.renderer.render(this.fixedSprite, {
+      renderTexture: tmpTexture,
+    });
+
+    const str = this.app.renderer.plugins.extract.base64(
+      tmpTexture,
+      "image/png"
+    );
+    tmpTexture.destroy(true);
+    return str;
+  }
+
   resize() {
     this.app.view.style.width = `${this.containerManager.$container.clientWidth}px`;
     this.app.view.style.height = `${this.containerManager.$container.clientHeight}px`;
@@ -453,10 +486,11 @@ export class MondrianRenderer extends MondrianModuleBase {
 
     // nothing in static layer, no need to update texture
     // if viewport control opens, no need to update texture
-    if (
-      this.staticLayer.children.length === 0 ||
-      this.shared.settings.viewport
-    ) {
+    // if (
+    //   this.staticLayer.children.length === 0 ||
+    //   this.shared.settings.viewport
+    // ) {
+    if (this.staticLayer.children.length === 0) {
       return;
     }
 

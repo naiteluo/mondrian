@@ -32,7 +32,8 @@ export class Mondrian extends MondrianModuleBase {
 
   private loading: MondrianLoading;
 
-  private renderer: MondrianRenderer;
+  // todo reset to private
+  public renderer: MondrianRenderer;
 
   private playerManager: MondrianPlayerManager;
 
