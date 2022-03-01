@@ -18,7 +18,7 @@ export const enum MondrianInteractType {
   BLUR = "b",
 }
 
-export const enum MondrianActionType {
+export const enum MondrianCommandType {
   UNDO = "ud",
   REDO = "rd",
   CLEAR = "cl",
@@ -60,10 +60,10 @@ export interface IMondrianStateData extends IMondrianCommonData {
   data: IMondrianState;
 }
 
-export interface IMondrianActionData extends IMondrianCommonData {
+export interface IMondrianCommandData extends IMondrianCommonData {
   type: MondrianDataType.COMMAND;
   data: {
-    subType: MondrianActionType;
+    subType: MondrianCommandType;
     [key: string]: string | number | boolean | object;
   };
 }
@@ -71,4 +71,4 @@ export interface IMondrianActionData extends IMondrianCommonData {
 export type IMondrianData =
   | IMondrianInteractData
   | IMondrianStateData
-  | IMondrianActionData;
+  | IMondrianCommandData;

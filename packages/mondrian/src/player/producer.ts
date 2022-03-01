@@ -8,7 +8,7 @@ import {
   IMondrianData,
   MondrianDataManager,
   MondrianInteractType,
-  MondrianActionType,
+  MondrianCommandType,
   IMondrianState,
 } from "../data-manager";
 import { MondrianPlayer } from "./player";
@@ -70,7 +70,7 @@ export class MondrianProducer
       {
         playerID: this.id,
         type: MondrianDataType.COMMAND,
-        data: { subType: MondrianActionType.UNDO },
+        data: { subType: MondrianCommandType.UNDO },
       },
     ]);
   }
@@ -81,7 +81,7 @@ export class MondrianProducer
       {
         playerID: this.id,
         type: MondrianDataType.COMMAND,
-        data: { subType: MondrianActionType.REDO },
+        data: { subType: MondrianCommandType.REDO },
       },
     ]);
   }
@@ -92,7 +92,7 @@ export class MondrianProducer
       {
         playerID: this.id,
         type: MondrianDataType.COMMAND,
-        data: { subType: MondrianActionType.CLEAR },
+        data: { subType: MondrianCommandType.CLEAR },
       },
     ]);
   }

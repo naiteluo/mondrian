@@ -2,7 +2,7 @@ import {
   MondrianDataType,
   IMondrianData,
   MondrianInteractType,
-  MondrianActionType,
+  MondrianCommandType,
   IMondrianInteractData,
 } from "../data-manager";
 import { MondrianRenderer } from "../renderer/renderer";
@@ -49,13 +49,13 @@ export class MondrianConsumer extends MondrianPlayer {
         const subType = data.data.subType;
         this.pluginManager.interateInstances((plugin) => {
           switch (subType) {
-            case MondrianActionType.UNDO:
+            case MondrianCommandType.UNDO:
               plugin.reactUndo(undefined);
               break;
-            case MondrianActionType.REDO:
+            case MondrianCommandType.REDO:
               plugin.reactRedo(undefined);
               break;
-            case MondrianActionType.CLEAR:
+            case MondrianCommandType.CLEAR:
               plugin.reactClear(undefined);
               break;
             default:
