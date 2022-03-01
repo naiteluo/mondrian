@@ -1,8 +1,7 @@
 import {
   MondrianDataType,
   IMondrianData,
-  MondrianInteractType,
-  MondrianCommandType,
+  MondrianDataSubType,
   IMondrianInteractData,
 } from "../data-manager";
 import { MondrianRenderer } from "../renderer/renderer";
@@ -49,13 +48,13 @@ export class MondrianConsumer extends MondrianPlayer {
         const subType = data.data.subType;
         this.pluginManager.interateInstances((plugin) => {
           switch (subType) {
-            case MondrianCommandType.UNDO:
+            case MondrianDataSubType.UNDO:
               plugin.reactUndo(undefined);
               break;
-            case MondrianCommandType.REDO:
+            case MondrianDataSubType.REDO:
               plugin.reactRedo(undefined);
               break;
-            case MondrianCommandType.CLEAR:
+            case MondrianDataSubType.CLEAR:
               plugin.reactClear(undefined);
               break;
             default:
@@ -72,33 +71,33 @@ export class MondrianConsumer extends MondrianPlayer {
       if (data.type === MondrianDataType.INTERACT) {
         const subType = data.data.subType;
         this.dataXyToLeftTop(data);
-        if (data.data.subType === MondrianInteractType.KEY_DOWN) {
+        if (data.data.subType === MondrianDataSubType.KEY_DOWN) {
           this.pluginManager.predicateAndLoad(data);
         }
         this.pluginManager.interateInstances((plugin) => {
           switch (subType) {
-            case MondrianInteractType.KEY_DOWN:
+            case MondrianDataSubType.KEY_DOWN:
               plugin.reactKeyDown(data);
               break;
-            case MondrianInteractType.KEY_UP:
+            case MondrianDataSubType.KEY_UP:
               plugin.reactKeyUp(data);
               break;
-            case MondrianInteractType.POINTER_DOWN:
+            case MondrianDataSubType.POINTER_DOWN:
               plugin.reactDragStart(data);
               break;
-            case MondrianInteractType.POINTER_MOVE:
+            case MondrianDataSubType.POINTER_MOVE:
               plugin.reactDragMove(data);
               break;
-            case MondrianInteractType.POINTER_UP:
+            case MondrianDataSubType.POINTER_UP:
               plugin.reactDragEnd(data);
               break;
-            case MondrianInteractType.INPUT:
+            case MondrianDataSubType.INPUT:
               plugin.reactInput(data);
               break;
-            case MondrianInteractType.FOCUS:
+            case MondrianDataSubType.FOCUS:
               plugin.reactFocus(data);
               break;
-            case MondrianInteractType.BLUR:
+            case MondrianDataSubType.BLUR:
               plugin.reactBlur(data);
               break;
             default:

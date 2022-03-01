@@ -7,8 +7,7 @@ import {
   MondrianDataType,
   IMondrianData,
   MondrianDataManager,
-  MondrianInteractType,
-  MondrianCommandType,
+  MondrianDataSubType,
   IMondrianState,
 } from "../data-manager";
 import { MondrianPlayer } from "./player";
@@ -41,6 +40,7 @@ export class MondrianProducer
       {
         playerID: this.id,
         type: MondrianDataType.SET_STATE,
+        subType: MondrianDataSubType.SET_STATE,
         data: { ...states },
       },
     ]);
@@ -48,19 +48,19 @@ export class MondrianProducer
 
   onDragStart(event: IMondrianMockInteractionEvent): void {
     this.dataManager.push([
-      this.packEvent(MondrianInteractType.POINTER_DOWN, event),
+      this.packEvent(MondrianDataSubType.POINTER_DOWN, event),
     ]);
   }
 
   onDragMove(event: IMondrianMockInteractionEvent): void {
     this.dataManager.push([
-      this.packEvent(MondrianInteractType.POINTER_MOVE, event),
+      this.packEvent(MondrianDataSubType.POINTER_MOVE, event),
     ]);
   }
 
   onDragEnd(event: IMondrianMockInteractionEvent): void {
     this.dataManager.push([
-      this.packEvent(MondrianInteractType.POINTER_UP, event),
+      this.packEvent(MondrianDataSubType.POINTER_UP, event),
     ]);
   }
 
@@ -70,7 +70,8 @@ export class MondrianProducer
       {
         playerID: this.id,
         type: MondrianDataType.COMMAND,
-        data: { subType: MondrianCommandType.UNDO },
+        subType: MondrianDataSubType.UNDO,
+        data: { subType: MondrianDataSubType.UNDO },
       },
     ]);
   }
@@ -81,7 +82,8 @@ export class MondrianProducer
       {
         playerID: this.id,
         type: MondrianDataType.COMMAND,
-        data: { subType: MondrianCommandType.REDO },
+        subType: MondrianDataSubType.REDO,
+        data: { subType: MondrianDataSubType.REDO },
       },
     ]);
   }
@@ -92,7 +94,8 @@ export class MondrianProducer
       {
         playerID: this.id,
         type: MondrianDataType.COMMAND,
-        data: { subType: MondrianCommandType.CLEAR },
+        subType: MondrianDataSubType.CLEAR,
+        data: { subType: MondrianDataSubType.CLEAR },
       },
     ]);
   }
@@ -103,8 +106,9 @@ export class MondrianProducer
         {
           playerID: this.id,
           type: MondrianDataType.INTERACT,
+          subType: MondrianDataSubType.KEY_DOWN,
           data: {
-            subType: MondrianInteractType.KEY_DOWN,
+            subType: MondrianDataSubType.KEY_DOWN,
             x: 0,
             y: 0,
             code: event.code,
@@ -120,8 +124,9 @@ export class MondrianProducer
         {
           playerID: this.id,
           type: MondrianDataType.INTERACT,
+          subType: MondrianDataSubType.KEY_UP,
           data: {
-            subType: MondrianInteractType.KEY_UP,
+            subType: MondrianDataSubType.KEY_UP,
             x: 0,
             y: 0,
             code: event.code,
@@ -142,8 +147,9 @@ export class MondrianProducer
       {
         playerID: this.id,
         type: MondrianDataType.INTERACT,
+        subType: MondrianDataSubType.INPUT,
         data: {
-          subType: MondrianInteractType.INPUT,
+          subType: MondrianDataSubType.INPUT,
           x: 0,
           y: 0,
           value: event.value,
@@ -158,8 +164,9 @@ export class MondrianProducer
       {
         playerID: this.id,
         type: MondrianDataType.INTERACT,
+        subType: MondrianDataSubType.FOCUS,
         data: {
-          subType: MondrianInteractType.FOCUS,
+          subType: MondrianDataSubType.FOCUS,
           x: 0,
           y: 0,
           targetID: event.targetID,
@@ -173,8 +180,9 @@ export class MondrianProducer
       {
         playerID: this.id,
         type: MondrianDataType.INTERACT,
+        subType: MondrianDataSubType.BLUR,
         data: {
-          subType: MondrianInteractType.BLUR,
+          subType: MondrianDataSubType.BLUR,
           x: 0,
           y: 0,
           targetID: event.targetID,
@@ -184,12 +192,13 @@ export class MondrianProducer
   }
 
   private packEvent(
-    subType: MondrianInteractType,
+    subType: MondrianDataSubType,
     event: IMondrianMockInteractionEvent
   ): IMondrianData {
     const newEvent: IMondrianData = {
       playerID: this.id,
       type: MondrianDataType.INTERACT,
+      subType: subType,
       data: {
         subType,
         ...this.getXyFromEvent(event),

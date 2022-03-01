@@ -1,4 +1,4 @@
-import { IMondrianData, MondrianCommandType, MondrianDataType } from "./data";
+import { IMondrianData, MondrianDataSubType, MondrianDataType } from "./data";
 
 export interface IMondrianDataClient {
   /**
@@ -165,14 +165,15 @@ export class MondrianDataClient {
   }
 
   /**
-   * 
-   * @returns 
+   *
+   * @returns
    */
   protected generateLastData(): IMondrianData {
     return {
       type: MondrianDataType.COMMAND,
+      subType: MondrianDataSubType.SYSTEM,
       data: {
-        subType: MondrianCommandType.SYSTEM,
+        subType: MondrianDataSubType.SYSTEM,
       },
       local: true,
       extra: {
