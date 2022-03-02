@@ -362,7 +362,6 @@ export class MondrianRenderer extends MondrianModuleBase {
    */
   private shiftGrapicsHandlersToStatic() {
     // determine whether trigger cache shift
-    // console.log(this.dynamicCache.length, this.dynamicLevel);
     if (this.dynamicCache.length <= this.dynamicLevel) {
       return;
     }

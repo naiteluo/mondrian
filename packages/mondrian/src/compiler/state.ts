@@ -1,19 +1,19 @@
 import { MondrianDataSubType } from "../data-manager/data";
 
 export enum MondrianPatternStates {
-  Initial = "0",
+  Initial = "i",
 
-  DragStarted = "1",
+  DragStarted = "ds",
 
-  Dragging = "2",
+  Dragging = "dg",
 
-  ExecDrag = "3",
+  ExecDrag = "ed",
 
-  Discarded = "4",
+  Discarded = "d",
 
-  ExecSetState = "5",
+  ExecSetState = "es",
 
-  ExecCommand = "6",
+  ExecCommand = "ec",
 }
 
 export const MondrianPatternStatesTranstitions: {
@@ -42,7 +42,6 @@ export const MondrianPatternStatesTranstitions: {
 export function IsStateStable(state: MondrianPatternStates) {
   return (
     state === MondrianPatternStates.ExecDrag ||
-    state === MondrianPatternStates.Discarded ||
     state === MondrianPatternStates.ExecSetState ||
     state === MondrianPatternStates.ExecCommand
   );
@@ -53,8 +52,11 @@ export function ShiftState(
   directive: MondrianDataSubType
 ): MondrianPatternStates {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return MondrianPatternStatesTranstitions[state]![directive]!;
+    return (
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      MondrianPatternStatesTranstitions[state]![directive]! ||
+      MondrianPatternStates.Discarded
+    );
   } catch (e) {
     return MondrianPatternStates.Discarded;
   }
