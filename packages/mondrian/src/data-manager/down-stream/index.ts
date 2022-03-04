@@ -2,6 +2,7 @@ import { MondrianSharedBuffer } from "../shared-buffer";
 import { MondrianShared } from "../../shared";
 import { MondrianRenderer } from "../../renderer/renderer";
 import { IMondrianDataClient } from "..";
+import { Ticker } from "pixi.js";
 
 export class MondrianWsDownStreamSource implements UnderlyingSource {
   startTimeStamp?: number;
@@ -45,6 +46,8 @@ export class MondrianWsDownStreamSource implements UnderlyingSource {
   start(controller: ReadableStreamDefaultController) {
     this.step = (dt: number) => {
       if (this.sharedBuffer.buffer.length > 0) {
+        this.renderer.ticker.start();
+
         this.justifyChunkLimit(dt);
         const tmp = this.sharedBuffer.buffer.splice(
           0,
@@ -56,12 +59,18 @@ export class MondrianWsDownStreamSource implements UnderlyingSource {
           controller.enqueue(tmp);
           this.shared.log(`data dumped: ${tmp.length}`);
         }
+      } else {
+        if (this.renderer.ticker.started) {
+          requestAnimationFrame(() => {
+            this.renderer.ticker.stop();
+          });
+        }
       }
     };
-    this.renderer.ticker.add(this.step);
+    Ticker.system.add(this.step);
   }
 
   cancel() {
-    this.renderer.ticker.remove(this.step);
+    Ticker.system.remove(this.step);
   }
 }
