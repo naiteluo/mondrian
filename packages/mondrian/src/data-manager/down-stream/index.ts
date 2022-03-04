@@ -43,9 +43,15 @@ export class MondrianWsDownStreamSource implements UnderlyingSource {
 
   private step!: (dt: number) => void;
 
+  private idleStopTickerTimeoutHandler?: number;
+
   start(controller: ReadableStreamDefaultController) {
     this.step = (dt: number) => {
       if (this.sharedBuffer.buffer.length > 0) {
+        if (this.idleStopTickerTimeoutHandler) {
+          window.clearTimeout(this.idleStopTickerTimeoutHandler);
+          this.idleStopTickerTimeoutHandler = undefined;
+        }
         this.renderer.ticker.start();
 
         this.justifyChunkLimit(dt);
@@ -60,10 +66,17 @@ export class MondrianWsDownStreamSource implements UnderlyingSource {
           this.shared.log(`data dumped: ${tmp.length}`);
         }
       } else {
-        if (this.renderer.ticker.started) {
-          requestAnimationFrame(() => {
-            this.renderer.ticker.stop();
-          });
+        if (
+          this.renderer.ticker.started &&
+          !this.idleStopTickerTimeoutHandler
+        ) {
+          // add delay to stop renderer's ticker, leave time space for interaction like pinch to zoom or viewport dragging.
+          this.idleStopTickerTimeoutHandler = window.setTimeout(() => {
+            requestAnimationFrame(() => {
+              this.renderer.ticker.stop();
+            });
+            this.idleStopTickerTimeoutHandler = undefined;
+          }, 2000);
         }
       }
     };
