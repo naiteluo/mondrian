@@ -105,7 +105,7 @@ export class ClientApplication {
       title: "Mondrian",
     });
     this.gui.add(this, "onStart").name("Start");
-    this.gui.add(this, "onSnapshot").name("Snapshot");
+    this.gui.add(this, "onReset").name("Reset");
     this.msgCtrl = this.gui.add(this, "msg").name("Message:");
     this.setupMondrianSettingControls();
     this.setupAppSettingControls();
@@ -117,6 +117,7 @@ export class ClientApplication {
     this.setupAutomationControls();
     this.setupCommandControls();
     this.setupBrushControls();
+    this.setupSnapshotControls();
   }
 
   private setupMondrianSettingControls() {
@@ -264,6 +265,19 @@ export class ClientApplication {
       .$widget.setAttribute("data-test-id", "brushColor");
   }
 
+  private setupSnapshotControls() {
+    const folder = this.gui.addFolder("Snapshot");
+    folder.add(this, "onSnapshot1").name("Snapshot 1");
+    folder.add(this, "onSnapshot2").name("Snapshot 2");
+    folder.add(this, "onSnapshot3").name("Snapshot 3");
+    folder.add(this, "onSnapshot4").name("Snapshot 4");
+
+    folder.add(this, "onApplySnapshot1").name("Apply 1");
+    folder.add(this, "onApplySnapshot2").name("Apply 2");
+    folder.add(this, "onApplySnapshot3").name("Apply 3");
+    folder.add(this, "onApplySnapshot4").name("Apply 4");
+  }
+
   initialBrush() {
     this.onBrushStateChange();
   }
@@ -302,17 +316,63 @@ export class ClientApplication {
     this.mondrian.start();
   }
 
-  private $snapshotList?: HTMLDivElement;
+  private onReset() {
+    this.mondrian.renderer.clear();
+  }
 
-  public onSnapshot() {
-    if (!this.$snapshotList) {
-      this.$snapshotList = document.createElement("div") as HTMLDivElement;
-      this.$snapshotList.style.position = "absolute";
-      this.$snapshotList.style.bottom = "0px";
-      document.body.appendChild(this.$snapshotList);
+  private snapshotStorageKey = "__mondrian_snapshot__";
+
+  public onSnapshot(signiture: number | string): void {
+    const t0 = performance.now();
+    const data = this.mondrian.renderer.exportToBase64();
+    localStorage.setItem(`${this.snapshotStorageKey}${signiture}`, data);
+    console.log("snapshot saved. size: ", data.length);
+    console.log("snapshot saved take times: ", performance.now() - t0);
+  }
+
+  public async onApplySnapshot(signiture: number | string) {
+    const data = localStorage.getItem(`${this.snapshotStorageKey}${signiture}`);
+    if (data) {
+      console.log("snapshot read. size:", data.length);
+      const t0 = performance.now();
+      this.mondrian.renderer.clear();
+      await this.mondrian.renderer.updateFixedTexture(data);
+      console.log("snapshot apply take times: ", performance.now() - t0);
+    } else {
+      console.error("snapshot do not exsist");
     }
-    this.$snapshotList.innerHTML = "";
-    this.$snapshotList.appendChild(this.mondrian.renderer.exportToImage());
+  }
+
+  public onSnapshot1(): void {
+    this.onSnapshot(1);
+  }
+
+  public onSnapshot2(): void {
+    this.onSnapshot(2);
+  }
+
+  public onSnapshot3(): void {
+    this.onSnapshot(3);
+  }
+
+  public onSnapshot4(): void {
+    this.onSnapshot(4);
+  }
+
+  public onApplySnapshot1(): void {
+    this.onApplySnapshot(1);
+  }
+
+  public onApplySnapshot2(): void {
+    this.onApplySnapshot(2);
+  }
+
+  public onApplySnapshot3(): void {
+    this.onApplySnapshot(3);
+  }
+
+  public onApplySnapshot4(): void {
+    this.onApplySnapshot(4);
   }
 
   private onAutoDrawToggle() {

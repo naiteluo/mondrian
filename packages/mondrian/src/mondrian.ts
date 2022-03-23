@@ -88,6 +88,7 @@ export class Mondrian extends MondrianModuleBase {
 
     if (this.settings.autoStart) {
       this.start();
+      this.connect();
     }
 
     window.mo = this;
@@ -95,39 +96,45 @@ export class Mondrian extends MondrianModuleBase {
 
   override async start() {
     super.start();
-    this.shared.time(PERF_LOAD);
-    /**
-     * create players' instances
-     */
-    this.loading.show();
-    this.loading.setText("Fetching data...");
+
     this.containerManager.start();
     this.eventProxier.resize();
     this.renderer.start();
     this.eventProxier.start();
     this.playerManager.start();
+    this.dataManager.start();
+    return true;
+  }
+
+  async connect() {
+    this.shared.time(PERF_LOAD);
+    /**
+     * create players' instances
+     */
+    this.loading.show();
+    this.loading.setText("Data client: Connecting...");
     this.dataManager.once(MondrianEvents.EVENT_RECOVER_CONSUMED, () => {
       this.loading.hide();
       this.emit(MondrianEvents.EVENT_RECOVER_CONSUMED);
       this.shared.time(PERF_PROCESS);
       this.shared.printTimes();
     });
-    const { success, size } = (await this.dataManager.start()) as {
+    const { success, size } = (await this.dataManager.connect()) as {
       success: boolean;
       size: number;
     };
-    this.shared.time(PERF_LOAD);
-    this.shared.time(PERF_PROCESS);
-    this.loading.setText(`${size} Data received. Processing...`);
+
     if (success) {
-      console.log(`Start success, recovered data size: ${size}`);
+      this.shared.time(PERF_LOAD);
+      console.log(`Connect success, recovered data size: ${size}`);
+      this.loading.setText(`Data client: ${size} Data received. Processing...`);
       this.emit(MondrianEvents.EVNET_RECOVER_RECEIVED, {
         size,
       });
+      this.shared.time(PERF_PROCESS);
     } else {
       throw new Error("Start fails.");
     }
-    return true;
   }
 
   get ID() {

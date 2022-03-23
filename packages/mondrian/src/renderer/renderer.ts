@@ -3,6 +3,7 @@ import { Container, DisplayObject } from "@pixi/display";
 import { BaseTextureCache } from "@pixi/utils";
 import { MondrianModuleBase } from "../common/module-base";
 import {
+  BaseTexture,
   ENV,
   Graphics,
   MSAA_QUALITY,
@@ -144,16 +145,7 @@ export class MondrianRenderer extends MondrianModuleBase {
     this.dynamicLayer = new Container();
     this.staticLayer = new Container();
 
-    // init a big enough texture,
-    // draw static layer to this fixedTexture, and reuse this texture,
-    // instead of creating new texture again an again.
-    this.fixedTexture = RenderTexture.create({
-      width: this.shared.settings.worldWidth,
-      height: this.shared.settings.worldHeight,
-      multisample: MSAA_QUALITY.MEDIUM,
-      resolution: this.shared.settings.resolution,
-    });
-    this.fixedSprite = new Sprite(this.fixedTexture);
+    this.initializeFixedTexture();
 
     /**
      * use mask to clip out of bound elements
@@ -294,6 +286,10 @@ export class MondrianRenderer extends MondrianModuleBase {
     this.containerManager.$container.appendChild(this.$canvas);
   }
 
+  /**
+   *
+   * @returns image object
+   */
   public exportToImage(): any {
     const tmpTexture = RenderTexture.create({
       width: this.shared.settings.worldWidth,
@@ -311,6 +307,10 @@ export class MondrianRenderer extends MondrianModuleBase {
     return img;
   }
 
+  /**
+   *
+   * @returns image base64 string
+   */
   public exportToBase64(): string {
     const tmpTexture = RenderTexture.create({
       width: this.shared.settings.worldWidth,
@@ -326,6 +326,92 @@ export class MondrianRenderer extends MondrianModuleBase {
     );
     tmpTexture.destroy(true);
     return str;
+  }
+
+  async updateFixedTexture(img: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.src = img;
+      image.onload = () => {
+        const sprite = Sprite.from(image);
+        this.pixiApp.renderer.render(sprite, {
+          renderTexture: this.fixedTexture,
+          clear: true,
+        });
+        this.blitFrameBuffer();
+        // manually render the whole stage imediately.
+        this.pixiApp.renderer.render(this.pixiApp.stage);
+        resolve();
+      };
+    });
+  }
+
+  private initializeFixedTexture(): void {
+    const hasOldTexture = this.fixedTexture;
+    if (hasOldTexture) {
+      this.fixedTexture.destroy(true);
+    }
+    // init a big enough texture,
+    // draw static layer to this fixedTexture, and reuse this texture,
+    // instead of creating new texture again an again.
+    this.fixedTexture = RenderTexture.create({
+      width: this.shared.settings.worldWidth,
+      height: this.shared.settings.worldHeight,
+      multisample: MSAA_QUALITY.MEDIUM,
+      resolution: this.shared.settings.resolution,
+    });
+    if (hasOldTexture) {
+      this.fixedSprite.texture = this.fixedTexture;
+    } else {
+      this.fixedSprite = new Sprite(this.fixedTexture);
+    }
+  }
+
+  private blitFrameBuffer() {
+    if (this.fixedTexture.multisample > 0) {
+      // mannualy trigger framebuffer blit() to solve below issue
+      // https://github.com/pixijs/pixijs/pull/7633/commits/4fed9efb876b4d505fd862ba2e822b72b55f8240
+      // todo might have better solution
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      this.pixiApp.renderer.framebuffer.blit();
+    }
+  }
+
+  clear() {
+    this.initializeFixedTexture();
+    this.clearStaticLayer();
+    this.clearDynamicLayer();
+    this.gc();
+  }
+
+  private clearDynamicLayer() {
+    while (this.dynamicCache.length > 0) {
+      const handler = this.dynamicCache.shift();
+      if (handler) {
+        handler.detach();
+        this.markGc({ type: TrashType.DisplayObject, target: handler.c });
+        handler.afterDetach();
+        handler.destroy();
+      }
+    }
+    while (this.dynamicBufferingCache.length > 0) {
+      const handler = this.dynamicCache.shift();
+      if (handler) {
+        handler.detach();
+        this.markGc({ type: TrashType.DisplayObject, target: handler.c });
+        handler.afterDetach();
+        handler.destroy();
+      }
+    }
+    this.dynamicCacheIndex = -1;
+  }
+
+  private clearStaticLayer() {
+    this.staticLayer.removeChildren().forEach((v) => {
+      v.visible = false;
+      this.markGc({ type: TrashType.DisplayObject, target: v });
+    });
   }
 
   resize() {
@@ -502,22 +588,10 @@ export class MondrianRenderer extends MondrianModuleBase {
       clear: false,
     });
 
-    if (this.fixedTexture.multisample > 0) {
-      // mannualy trigger framebuffer blit() to solve below issue
-      // https://github.com/pixijs/pixijs/pull/7633/commits/4fed9efb876b4d505fd862ba2e822b72b55f8240
-      // todo might have better solution
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      this.pixiApp.renderer.framebuffer.blit();
-    }
+    this.blitFrameBuffer();
 
-    this.staticLayer.removeChildren().forEach((v) => {
-      v.visible = false;
-      this.markGc({ type: TrashType.DisplayObject, target: v });
-    });
+    this.clearStaticLayer();
   };
-
-  unfinishedCount = 0;
 
   /**
    * gc loop
