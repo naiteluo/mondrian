@@ -29,15 +29,20 @@ export declare class Mondrian extends MondrianModuleBase
 |  [ID](./mondrian.mondrian.id.md) |  | string |  |
 |  [interaction](./mondrian.mondrian.interaction.md) |  | MondrianEventProxier |  |
 |  [player](./mondrian.mondrian.player.md) |  | import("./player").MondrianProducer |  |
+|  [renderer](./mondrian.mondrian.renderer.md) |  | MondrianRenderer |  |
 |  [settings](./mondrian.mondrian.settings.md) |  | [IMondrianSettings](./mondrian.imondriansettings.md) |  |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [applySnapshot(data)](./mondrian.mondrian.applysnapshot.md) |  | draw the passed image base64 string data to stage |
+|  [clearAll()](./mondrian.mondrian.clearall.md) |  | clear all stuffs in the renderer |
+|  [connect()](./mondrian.mondrian.connect.md) |  |  |
 |  [fitCenter()](./mondrian.mondrian.fitcenter.md) |  | reset viewport's postion and scale to container's center |
 |  [hidePannel()](./mondrian.mondrian.hidepannel.md) |  |  |
 |  [resize()](./mondrian.mondrian.resize.md) |  | resize mondrian stage manually. |
 |  [showPannel()](./mondrian.mondrian.showpannel.md) |  |  |
 |  [start()](./mondrian.mondrian.start.md) |  |  |
+|  [takeSnapshot()](./mondrian.mondrian.takesnapshot.md) |  | take a snapshot of current stage and export as base64 string |
 

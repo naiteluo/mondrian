@@ -19,16 +19,15 @@
 |  Enumeration | Description |
 |  --- | --- |
 |  [BrushName](./mondrian.brushname.md) | brush name enum |
-|  [MondrianActionType](./mondrian.mondrianactiontype.md) |  |
+|  [MondrianDataSubType](./mondrian.mondriandatasubtype.md) |  |
 |  [MondrianDataType](./mondrian.mondriandatatype.md) |  |
-|  [MondrianInteractType](./mondrian.mondrianinteracttype.md) |  |
 
 ## Interfaces
 
 |  Interface | Description |
 |  --- | --- |
 |  [BrushPluginState](./mondrian.brushpluginstate.md) | state of the brush in playerState |
-|  [IMondrianActionData](./mondrian.imondrianactiondata.md) |  |
+|  [IMondrianCommandData](./mondrian.imondriancommanddata.md) |  |
 |  [IMondrianDataClient](./mondrian.imondriandataclient.md) |  |
 |  [IMondrianInteractData](./mondrian.imondrianinteractdata.md) |  |
 |  [IMondrianSettings](./mondrian.imondriansettings.md) | Mondrian Settings |

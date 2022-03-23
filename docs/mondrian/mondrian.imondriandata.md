@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-export declare type IMondrianData = IMondrianInteractData | IMondrianStateData | IMondrianActionData;
+export declare type IMondrianData = IMondrianInteractData | IMondrianStateData | IMondrianCommandData;
 ```
-<b>References:</b> [IMondrianInteractData](./mondrian.imondrianinteractdata.md)<!-- -->, [IMondrianStateData](./mondrian.imondrianstatedata.md)<!-- -->, [IMondrianActionData](./mondrian.imondrianactiondata.md)
+<b>References:</b> [IMondrianInteractData](./mondrian.imondrianinteractdata.md)<!-- -->, [IMondrianStateData](./mondrian.imondrianstatedata.md)<!-- -->, [IMondrianCommandData](./mondrian.imondriancommanddata.md)
 
