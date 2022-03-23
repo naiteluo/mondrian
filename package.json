@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run server --workspace=@mondrian/server & npm run build:lib:watch & npm run start --workspace=@mondrian/client",
-    "test": "playwright test",
-    "test:debug": "playwright test --debug",
+    "test": "playwright test spec",
+    "test:debug": "playwright test spec --debug",
     "test:record": "playwright codegen http://localhost:8080",
     "eslint": "eslint --ext ts,tsx .",
     "clean": "rimraf out && npm run clean --workspace=@mondrian/mondrian && npm run clean --workspace=@mondrian/client",
