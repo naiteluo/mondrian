@@ -60,17 +60,22 @@ export class MondrianDataManager extends MondrianModuleBase {
         this.shared
       )
     );
-    return new Promise((resolve) => {
+    this.startRead();
+    this.startWrite();
+  }
+
+  async connect() {
+    const p = new Promise((resolve) => {
       if (!this.client) {
         throw new Error("client had not been bind!");
       }
       this.client.bindRecoveredListener((success) => {
         resolve(success);
       });
-      this.client.start();
-      this.startRead();
-      this.startWrite();
     });
+
+    this.client.start();
+    return p;
   }
 
   override stop() {

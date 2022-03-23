@@ -6,7 +6,7 @@ export const enum MondrianDataType {
   COMMAND = "a",
 }
 
-export const enum MondrianInteractType {
+export const enum MondrianDataSubType {
   POINTER_DOWN = "pd",
   POINTER_MOVE = "pm",
   POINTER_UP = "pu",
@@ -16,9 +16,9 @@ export const enum MondrianInteractType {
   INPUT_ADD = "ia",
   FOCUS = "f",
   BLUR = "b",
-}
 
-export const enum MondrianActionType {
+  SET_STATE = "s",
+
   UNDO = "ud",
   REDO = "rd",
   CLEAR = "cl",
@@ -28,6 +28,7 @@ export const enum MondrianActionType {
 interface IMondrianCommonData {
   seq?: number;
   playerID?: string;
+  subType: MondrianDataSubType;
   extra?: {
     last: boolean;
   };
@@ -37,7 +38,7 @@ interface IMondrianCommonData {
 export interface IMondrianInteractData extends IMondrianCommonData {
   type: MondrianDataType.INTERACT;
   data: {
-    subType: MondrianInteractType;
+    subType: MondrianDataSubType;
     x: number;
     y: number;
     code?: string;
@@ -60,10 +61,10 @@ export interface IMondrianStateData extends IMondrianCommonData {
   data: IMondrianState;
 }
 
-export interface IMondrianActionData extends IMondrianCommonData {
+export interface IMondrianCommandData extends IMondrianCommonData {
   type: MondrianDataType.COMMAND;
   data: {
-    subType: MondrianActionType;
+    subType: MondrianDataSubType;
     [key: string]: string | number | boolean | object;
   };
 }
@@ -71,4 +72,4 @@ export interface IMondrianActionData extends IMondrianCommonData {
 export type IMondrianData =
   | IMondrianInteractData
   | IMondrianStateData
-  | IMondrianActionData;
+  | IMondrianCommandData;

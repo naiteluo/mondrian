@@ -182,6 +182,6 @@ export const DefaultMondrianSettings: IMondrianSettings = {
   worldHeight: 760,
   useBuiltinClient: false,
   builtintClientUrl: "ws://localhost:3000",
-  fullscreen: false,
+  fullscreen: true,
   historySize: 20,
 };

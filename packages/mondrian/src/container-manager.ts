@@ -24,7 +24,9 @@ export class MondrianContainerManager extends MondrianModuleBase {
     if (this.shared.settings.debug) {
       this.initialzieDebugPanel();
     }
-    this.setCursorVisible(false);
+    if (this.shared.settings.disableCursor) {
+      this.setCursorVisible(true);
+    }
   }
 
   resize() {
@@ -70,7 +72,7 @@ export class MondrianContainerManager extends MondrianModuleBase {
   }
 
   public setCursorVisible(flag: boolean) {
-    this.$container.style.cursor = flag ? "pointer" : "none";
+    this.$container.style.cursor = flag ? "default" : "none";
   }
 
   public get $container() {

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mondrian example - use built in client</title>
+    <script src="../packages/mondrian/dist/index.umd.js"></script>
+  </head>
+  <body>
+    <div
+      id="draw-container"
+      style="width: 400px; height: 300px; border: red solid 1px"
+    ></div>
+    <div
+      id="snapshot-container"
+      style="position: absolute; top: 0px; right: 0px"
+    ></div>
+  </body>
+  <script type="module">
+    const mondrian = new Mondrian.Mondrian({
+      container: document.getElementById("draw-container"),
+      viewport: true,
+      background: true,
+      debug: false,
+      useBuiltinClient: true,
+      worldWidth: 400,
+      worldHeight: 300,
+      builtintClientUrl: "ws://localhost:3000",
+      channel: "test2",
+    });
+
+    mondrian.interaction.emit("state:change", {
+      player: {
+        brush: Mondrian.DefaultMondrianBrushOptions,
+      },
+    });
+  </script>
+</html>

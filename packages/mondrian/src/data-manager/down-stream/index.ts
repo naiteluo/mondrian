@@ -2,6 +2,7 @@ import { MondrianSharedBuffer } from "../shared-buffer";
 import { MondrianShared } from "../../shared";
 import { MondrianRenderer } from "../../renderer/renderer";
 import { IMondrianDataClient } from "..";
+import { Ticker } from "pixi.js";
 
 export class MondrianWsDownStreamSource implements UnderlyingSource {
   startTimeStamp?: number;
@@ -42,9 +43,17 @@ export class MondrianWsDownStreamSource implements UnderlyingSource {
 
   private step!: (dt: number) => void;
 
+  private idleStopTickerTimeoutHandler?: number;
+
   start(controller: ReadableStreamDefaultController) {
     this.step = (dt: number) => {
       if (this.sharedBuffer.buffer.length > 0) {
+        if (this.idleStopTickerTimeoutHandler) {
+          window.clearTimeout(this.idleStopTickerTimeoutHandler);
+          this.idleStopTickerTimeoutHandler = undefined;
+        }
+        this.renderer.ticker.start();
+
         this.justifyChunkLimit(dt);
         const tmp = this.sharedBuffer.buffer.splice(
           0,
@@ -56,12 +65,25 @@ export class MondrianWsDownStreamSource implements UnderlyingSource {
           controller.enqueue(tmp);
           this.shared.log(`data dumped: ${tmp.length}`);
         }
+      } else {
+        if (
+          this.renderer.ticker.started &&
+          !this.idleStopTickerTimeoutHandler
+        ) {
+          // add delay to stop renderer's ticker, leave time space for interaction like pinch to zoom or viewport dragging.
+          this.idleStopTickerTimeoutHandler = window.setTimeout(() => {
+            requestAnimationFrame(() => {
+              this.renderer.ticker.stop();
+            });
+            this.idleStopTickerTimeoutHandler = undefined;
+          }, 2000);
+        }
       }
     };
-    this.renderer.ticker.add(this.step);
+    Ticker.system.add(this.step);
   }
 
   cancel() {
-    this.renderer.ticker.remove(this.step);
+    Ticker.system.remove(this.step);
   }
 }

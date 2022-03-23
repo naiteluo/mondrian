@@ -2,7 +2,7 @@ import {
   IMondrianData,
   MondrianDataType,
   IMondrianInteractData,
-  MondrianInteractType,
+  MondrianDataSubType,
 } from "../../data-manager";
 import { MondrianShared } from "../../shared";
 import { MondrianPlugin, PluginType } from "../base/plugin";
@@ -23,7 +23,7 @@ export class ViewportPlugin extends MondrianPlugin {
     if (data.type === MondrianDataType.INTERACT) {
       if (data as IMondrianInteractData) {
         if (
-          data.data.subType === MondrianInteractType.KEY_DOWN &&
+          data.data.subType === MondrianDataSubType.KEY_DOWN &&
           data.data.code === "Space"
         ) {
           return true;
