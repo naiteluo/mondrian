@@ -195,4 +195,29 @@ export class Mondrian extends MondrianModuleBase {
   public fitCenter() {
     this.renderer.fitViewportToCenter();
   }
+
+  /**
+   * take a snapshot of current stage and export as base64 string
+   *
+   * @returns image base64 data
+   */
+  public takeSnapshot(): string {
+    return this.renderer.exportToBase64();
+  }
+
+  /**
+   * draw the passed image base64 string data to stage
+   *
+   * @param data image base64 data
+   */
+  public async applySnapshot(data: string) {
+    return this.renderer.updateFixedTexture(data);
+  }
+
+  /**
+   * clear all stuffs in the renderer
+   */
+  public clearAll() {
+    this.renderer.clear();
+  }
 }

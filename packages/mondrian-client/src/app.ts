@@ -314,17 +314,18 @@ export class ClientApplication {
 
   private onStart() {
     this.mondrian.start();
+    this.mondrian.connect();
   }
 
   private onReset() {
-    this.mondrian.renderer.clear();
+    this.mondrian.clearAll();
   }
 
   private snapshotStorageKey = "__mondrian_snapshot__";
 
   public onSnapshot(signiture: number | string): void {
     const t0 = performance.now();
-    const data = this.mondrian.renderer.exportToBase64();
+    const data = this.mondrian.takeSnapshot();
     localStorage.setItem(`${this.snapshotStorageKey}${signiture}`, data);
     console.log("snapshot saved. size: ", data.length);
     console.log("snapshot saved take times: ", performance.now() - t0);
@@ -335,8 +336,8 @@ export class ClientApplication {
     if (data) {
       console.log("snapshot read. size:", data.length);
       const t0 = performance.now();
-      this.mondrian.renderer.clear();
-      await this.mondrian.renderer.updateFixedTexture(data);
+      this.mondrian.clearAll();
+      await this.mondrian.applySnapshot(data);
       console.log("snapshot apply take times: ", performance.now() - t0);
     } else {
       console.error("snapshot do not exsist");
