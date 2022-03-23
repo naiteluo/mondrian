@@ -14,8 +14,8 @@ import { Graphics } from 'pixi.js';
 import { IDestroyOptions } from 'pixi.js';
 import { ILineStyleOptions } from '@pixi/graphics';
 import { ILineStyleOptions as ILineStyleOptions_2 } from 'pixi.js';
-import { InteractionEvent } from '@pixi/interaction';
-import { InteractionEvent as InteractionEvent_2 } from 'pixi.js';
+import { InteractionEvent } from 'pixi.js';
+import { InteractionEvent as InteractionEvent_2 } from '@pixi/interaction';
 import { Matrix } from 'pixi.js';
 import { ObservablePoint } from 'pixi.js';
 import { Renderer } from 'pixi.js';
@@ -87,10 +87,10 @@ export const DefaultMondrianSettings: IMondrianSettings;
 // Warning: (ae-forgotten-export) The symbol "IMondrianCommonData" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
-export interface IMondrianActionData extends IMondrianCommonData {
+export interface IMondrianCommandData extends IMondrianCommonData {
     // (undocumented)
     data: {
-        subType: MondrianActionType;
+        subType: MondrianDataSubType;
         [key: string]: string | number | boolean | object;
     };
     // (undocumented)
@@ -98,7 +98,7 @@ export interface IMondrianActionData extends IMondrianCommonData {
 }
 
 // @public (undocumented)
-export type IMondrianData = IMondrianInteractData | IMondrianStateData | IMondrianActionData;
+export type IMondrianData = IMondrianInteractData | IMondrianStateData | IMondrianCommandData;
 
 // @public (undocumented)
 export interface IMondrianDataClient {
@@ -117,7 +117,7 @@ export interface IMondrianDataClient {
 export interface IMondrianInteractData extends IMondrianCommonData {
     // (undocumented)
     data: {
-        subType: MondrianInteractType;
+        subType: MondrianDataSubType;
         x: number;
         y: number;
         code?: string;
@@ -194,6 +194,10 @@ export class Mondrian extends MondrianModuleBase {
     //
     // (undocumented)
     get __debugShared(): MondrianShared;
+    applySnapshot(data: string): Promise<void>;
+    clearAll(): void;
+    // (undocumented)
+    connect(): Promise<void>;
     // Warning: (ae-forgotten-export) The symbol "MondrianContainerManager" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -213,6 +217,10 @@ export class Mondrian extends MondrianModuleBase {
     //
     // (undocumented)
     get player(): MondrianProducer;
+    // Warning: (ae-forgotten-export) The symbol "MondrianRenderer" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    renderer: MondrianRenderer;
     resize(): void;
     // (undocumented)
     get settings(): IMondrianSettings;
@@ -220,18 +228,7 @@ export class Mondrian extends MondrianModuleBase {
     showPannel(): void;
     // (undocumented)
     start(): Promise<boolean>;
-}
-
-// @public (undocumented)
-export const enum MondrianActionType {
-    // (undocumented)
-    CLEAR = "cl",
-    // (undocumented)
-    REDO = "rd",
-    // (undocumented)
-    SYSTEM = "sy",
-    // (undocumented)
-    UNDO = "ud"
+    takeSnapshot(): string;
 }
 
 // @public
@@ -263,10 +260,11 @@ export type MondrianDataClientReceivedListener = (datas: IMondrianData[], isReco
 // @public (undocumented)
 export class MondrianDataManager extends MondrianModuleBase {
     // Warning: (ae-forgotten-export) The symbol "MondrianPlayerManager" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "MondrianRenderer" needs to be exported by the entry point index.d.ts
     constructor(playerManager: MondrianPlayerManager, renderer: MondrianRenderer, shared: MondrianShared);
     // (undocumented)
     client: IMondrianDataClient;
+    // (undocumented)
+    connect(): Promise<unknown>;
     // (undocumented)
     dispatch(datas: IMondrianData[]): void;
     // (undocumented)
@@ -276,13 +274,45 @@ export class MondrianDataManager extends MondrianModuleBase {
     // (undocumented)
     sharedBuffer: MondrianSharedBuffer;
     // (undocumented)
-    start(): Promise<unknown>;
+    start(): Promise<void>;
     // (undocumented)
     startRead(): Promise<void>;
     // (undocumented)
     startWrite(): Promise<void>;
     // (undocumented)
     stop(): void;
+}
+
+// @public (undocumented)
+export const enum MondrianDataSubType {
+    // (undocumented)
+    BLUR = "b",
+    // (undocumented)
+    CLEAR = "cl",
+    // (undocumented)
+    FOCUS = "f",
+    // (undocumented)
+    INPUT = "i",
+    // (undocumented)
+    INPUT_ADD = "ia",
+    // (undocumented)
+    KEY_DOWN = "kd",
+    // (undocumented)
+    KEY_UP = "ku",
+    // (undocumented)
+    POINTER_DOWN = "pd",
+    // (undocumented)
+    POINTER_MOVE = "pm",
+    // (undocumented)
+    POINTER_UP = "pu",
+    // (undocumented)
+    REDO = "rd",
+    // (undocumented)
+    SET_STATE = "s",
+    // (undocumented)
+    SYSTEM = "sy",
+    // (undocumented)
+    UNDO = "ud"
 }
 
 // @public (undocumented)
@@ -303,28 +333,6 @@ export class MondrianEvents {
     static readonly EVENT_RECOVER_CONSUMED = "recover:consumed";
     static readonly EVENT_RESIZE = "resize";
     static readonly EVNET_RECOVER_RECEIVED = "recover:received";
-}
-
-// @public (undocumented)
-export const enum MondrianInteractType {
-    // (undocumented)
-    BLUR = "b",
-    // (undocumented)
-    FOCUS = "f",
-    // (undocumented)
-    INPUT = "i",
-    // (undocumented)
-    INPUT_ADD = "ia",
-    // (undocumented)
-    KEY_DOWN = "kd",
-    // (undocumented)
-    KEY_UP = "ku",
-    // (undocumented)
-    POINTER_DOWN = "pd",
-    // (undocumented)
-    POINTER_MOVE = "pm",
-    // (undocumented)
-    POINTER_UP = "pu"
 }
 
 // (No @packageDocumentation comment for this package)

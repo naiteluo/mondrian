@@ -8,7 +8,7 @@
 
 ```typescript
 data: {
-        subType: MondrianInteractType;
+        subType: MondrianDataSubType;
         x: number;
         y: number;
         code?: string;

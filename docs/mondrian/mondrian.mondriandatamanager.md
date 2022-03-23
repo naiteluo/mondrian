@@ -28,6 +28,7 @@ export declare class MondrianDataManager extends MondrianModuleBase
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [connect()](./mondrian.mondriandatamanager.connect.md) |  |  |
 |  [dispatch(datas)](./mondrian.mondriandatamanager.dispatch.md) |  |  |
 |  [push(datas)](./mondrian.mondriandatamanager.push.md) |  |  |
 |  [start()](./mondrian.mondriandatamanager.start.md) |  |  |

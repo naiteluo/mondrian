@@ -7,9 +7,9 @@
 <b>Signature:</b>
 
 ```typescript
-start(): Promise<unknown>;
+start(): Promise<void>;
 ```
 <b>Returns:</b>
 
-Promise&lt;unknown&gt;
+Promise&lt;void&gt;
 
