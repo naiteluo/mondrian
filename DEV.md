@@ -47,10 +47,14 @@ npm run build:api # generate typings and api docs
 
 # opt 1. touch a prerelease rc version and publish
 npm version prerelease --preid=rc
+cd packages/mondrian && npm version prerelease --preid=rc && cd ../..
+# commit changes
 sh ./utils/publish-npm.sh --release-candidate
 
 # opt 2. touch a release version and publish
 npm version release
+cd packages/mondrian && npm version release && cd ../..
+# commit changes
 sh ./utils/publish-npm.sh --release
 
 ```
